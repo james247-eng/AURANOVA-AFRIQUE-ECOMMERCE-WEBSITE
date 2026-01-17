@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orders - AURANOVA Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/admin.css">
+    <link rel="stylesheet" href="assets/css/orders.css">
+</head>
+<body>
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h2>AURANOVA</h2>
+            <p>Admin Panel</p>
+        </div>
+
+        <nav class="sidebar-nav">
+            <a href="index.html" class="nav-item">
+                <span class="material-icons">dashboard</span>
+                <span>Dashboard</span>
+            </a>
+            <a href="products.html" class="nav-item">
+                <span class="material-icons">inventory_2</span>
+                <span>Products</span>
+            </a>
+            <a href="orders.html" class="nav-item active">
+                <span class="material-icons">shopping_bag</span>
+                <span>Orders</span>
+                <span class="badge" id="ordersBadge">0</span>
+            </a>
+            <a href="customers.html" class="nav-item">
+                <span class="material-icons">people</span>
+                <span>Customers</span>
+            </a>
+            <a href="messages.html" class="nav-item">
+                <span class="material-icons">mail</span>
+                <span>Messages</span>
+                <span class="badge" id="messagesBadge">0</span>
+            </a>
+            <a href="settings.html" class="nav-item">
+                <span class="material-icons">settings</span>
+                <span>Settings</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <button class="btn-logout" id="logoutBtn">
+                <span class="material-icons">logout</span>
+                <span>Logout</span>
+            </button>
+        </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+        <!-- TOP BAR -->
+        <header class="top-bar">
+            <button class="menu-toggle" id="menuToggle">
+                <span class="material-icons">menu</span>
+            </button>
+
+            <div class="top-bar-right">
+                <div class="notification-dropdown">
+                    <button class="notification-btn" id="notificationBtn">
+                        <span class="material-icons">notifications</span>
+                        <span class="notification-count" id="notificationCount">0</span>
+                    </button>
+                    <div class="notification-panel" id="notificationPanel">
+                        <div class="notification-header">
+                            <h3>Notifications</h3>
+                            <button id="markAllRead">Mark all read</button>
+                        </div>
+                        <div class="notification-list" id="notificationList">
+                            <p class="no-notifications">No new notifications</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="admin-profile">
+                    <span class="material-icons">account_circle</span>
+                    <span id="adminName">Admin</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- ORDERS CONTENT -->
+        <div class="content-wrapper">
+            <div class="page-header">
+                <h1 class="page-title">Orders Management</h1>
+            </div>
+
+            <!-- TOOLBAR -->
+            <div class="orders-toolbar">
+                <div class="search-box">
+                    <span class="material-icons">search</span>
+                    <input type="text" placeholder="Search orders by ID, customer..." id="searchOrders">
+                </div>
+
+                <div class="toolbar-filters">
+                    <select id="statusFilter">
+                        <option value="">All Status</option>
+                        <option value="pending">Pending</option>
+                        <option value="processing">Processing</option>
+                        <option value="shipped">Shipped</option>
+                        <option value="delivered">Delivered</option>
+                        <option value="cancelled">Cancelled</option>
+                    </select>
+
+                    <select id="dateFilter">
+                        <option value="">All Time</option>
+                        <option value="today">Today</option>
+                        <option value="week">Last 7 Days</option>
+                        <option value="month">Last 30 Days</option>
+                    </select>
+
+                    <button class="btn btn-secondary" id="exportOrders">
+                        <span class="material-icons">download</span>
+                        Export
+                    </button>
+                </div>
+            </div>
+
+            <!-- ORDERS TABLE -->
+            <div class="dashboard-card">
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Customer</th>
+                                <th>Date</th>
+                                <th>Items</th>
+                                <th>Total</th>
+                                <th>Payment</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ordersTableBody">
+                            <tr>
+                                <td colspan="7" class="no-data">Loading orders...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- PAGINATION -->
+                <div class="pagination" id="pagination">
+                    <button class="pagination-btn" id="prevPage" disabled>
+                        <span class="material-icons">chevron_left</span>
+                    </button>
+                    <span class="pagination-info">Page <span id="currentPage">1</span> of <span id="totalPages">1</span></span>
+                    <button class="pagination-btn" id="nextPage">
+                        <span class="material-icons">chevron_right</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- NOTIFICATION SOUND -->
+    <audio id="notificationSound" preload="auto">
+        <source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBTGH0fPTgjMGHm7A7+OZURE=" type="audio/wav">
+    </audio>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
+    <script src="assets/js/firebase-config.js"></script>
+    <script src="assets/js/admin-auth.js"></script>
+    <script src="assets/js/admin-main.js"></script>
+    <script src="assets/js/admin-orders.js"></script>
+</body>
+</html>

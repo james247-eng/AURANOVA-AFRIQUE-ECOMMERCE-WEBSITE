@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Account - AURANOVA-AFRIQUE</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    
+    <link rel="stylesheet" href="../assets/css/global.css">
+    <link rel="stylesheet" href="../assets/css/my-account.css">
+</head>
+<body>
+    <div class="preloader" id="preloader">
+        <div class="preloader-content">
+            <div class="preloader-logo">AURANOVA</div>
+            <div class="preloader-subtitle">AFRIQUE</div>
+            <div class="loader-bar"></div>
+        </div>
+    </div>
+
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="../index.html" class="nav-logo">
+                <span class="logo-main">AURANOVA</span>
+                <span class="logo-sub">AFRIQUE</span>
+            </a>
+            <ul class="nav-menu" id="navMenu">
+                <li class="nav-item"><a href="../index.html" class="nav-link">Home</a></li>
+                <li class="nav-item dropdown">
+                    <a href="shop.html" class="nav-link">Shop <span class="material-icons dropdown-icon">keyboard_arrow_down</span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="shop.html?category=all">All Products</a></li>
+                        <li><a href="shop.html?category=caftans">Premium Caftans</a></li>
+                        <li><a href="shop.html?category=english">English Wears</a></li>
+                        <li><a href="shop.html?category=yoruba-caps">Yoruba Caps</a></li>
+                        <li><a href="shop.html?category=face-caps">Face Caps</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link">Collections <span class="material-icons dropdown-icon">keyboard_arrow_down</span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="trending.html">Trending Now</a></li>
+                        <li><a href="new-arrivals.html">New Arrivals</a></li>
+                        <li><a href="limited-edition.html">Limited Edition</a></li>
+                        <li><a href="custom-orders.html">Custom Orders</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item"><a href="about.html" class="nav-link">About</a></li>
+                <li class="nav-item"><a href="contact.html" class="nav-link">Contact</a></li>
+            </ul>
+            <div class="nav-actions">
+                <button class="nav-icon-btn" id="searchBtn"><span class="material-icons">search</span></button>
+                <a href="wishlist.html" class="nav-icon-btn">
+                    <span class="material-icons">favorite_border</span>
+                    <span class="icon-badge" id="wishlistCount">0</span>
+                </a>
+                <a href="cart.html" class="nav-icon-btn">
+                    <span class="material-icons">shopping_cart</span>
+                    <span class="icon-badge" id="cartCount">0</span>
+                </a>
+                <button class="nav-icon-btn" id="accountBtn"><span class="material-icons">person_outline</span></button>
+            </div>
+            <button class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <div class="breadcrumb">
+        <div class="container">
+            <a href="../index.html">Home</a>
+            <span class="material-icons">chevron_right</span>
+            <span>My Account</span>
+        </div>
+    </div>
+
+    <section class="account-section">
+        <div class="container">
+            <div class="account-layout">
+                <!-- SIDEBAR -->
+                <aside class="account-sidebar">
+                    <div class="user-profile">
+                        <div class="user-avatar">
+                            <span class="material-icons">person</span>
+                        </div>
+                        <h3 id="userName">Loading...</h3>
+                        <p id="userEmail">user@email.com</p>
+                    </div>
+
+                    <nav class="account-nav">
+                        <button class="account-nav-item active" data-tab="dashboard">
+                            <span class="material-icons">dashboard</span>
+                            Dashboard
+                        </button>
+                        <button class="account-nav-item" data-tab="orders">
+                            <span class="material-icons">shopping_bag</span>
+                            My Orders
+                        </button>
+                        <button class="account-nav-item" data-tab="profile">
+                            <span class="material-icons">person</span>
+                            Profile Settings
+                        </button>
+                        <button class="account-nav-item" data-tab="addresses">
+                            <span class="material-icons">location_on</span>
+                            Addresses
+                        </button>
+                        <button class="account-nav-item" data-tab="password">
+                            <span class="material-icons">lock</span>
+                            Change Password
+                        </button>
+                        <button class="account-nav-item logout-btn" id="logoutBtn">
+                            <span class="material-icons">logout</span>
+                            Logout
+                        </button>
+                    </nav>
+                </aside>
+
+                <!-- CONTENT -->
+                <div class="account-content">
+                    <!-- DASHBOARD TAB -->
+                    <div class="account-tab active" id="dashboard">
+                        <h2>Dashboard</h2>
+                        <div class="dashboard-stats">
+                            <div class="stat-card">
+                                <span class="material-icons">shopping_bag</span>
+                                <div>
+                                    <h3 id="totalOrders">0</h3>
+                                    <p>Total Orders</p>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <span class="material-icons">pending</span>
+                                <div>
+                                    <h3 id="pendingOrders">0</h3>
+                                    <p>Pending Orders</p>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <span class="material-icons">favorite</span>
+                                <div>
+                                    <h3 id="wishlistItems">0</h3>
+                                    <p>Wishlist Items</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="recent-orders">
+                            <h3>Recent Orders</h3>
+                            <div class="orders-list" id="recentOrdersList">
+                                <p class="no-data">No orders yet</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ORDERS TAB -->
+                    <div class="account-tab" id="orders">
+                        <h2>My Orders</h2>
+                        <div class="orders-filter">
+                            <button class="filter-btn active" data-status="all">All Orders</button>
+                            <button class="filter-btn" data-status="pending">Pending</button>
+                            <button class="filter-btn" data-status="processing">Processing</button>
+                            <button class="filter-btn" data-status="completed">Completed</button>
+                            <button class="filter-btn" data-status="cancelled">Cancelled</button>
+                        </div>
+                        <div class="orders-table" id="ordersTable">
+                            <!-- Orders will be loaded here -->
+                        </div>
+                    </div>
+
+                    <!-- PROFILE TAB -->
+                    <div class="account-tab" id="profile">
+                        <h2>Profile Settings</h2>
+                        <form class="profile-form" id="profileForm">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>First Name</label>
+                                    <input type="text" name="firstName" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Last Name</label>
+                                    <input type="text" name="lastName" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Email Address</label>
+                                <input type="email" name="email" required disabled>
+                            </div>
+                            <div class="form-group">
+                                <label>Phone Number</label>
+                                <input type="tel" name="phone">
+                            </div>
+                            <button type="submit" class="btn btn-primary">Update Profile</button>
+                        </form>
+                    </div>
+
+                    <!-- ADDRESSES TAB -->
+                    <div class="account-tab" id="addresses">
+                        <div class="addresses-header">
+                            <h2>Saved Addresses</h2>
+                            <button class="btn btn-primary" id="addAddressBtn">
+                                <span class="material-icons">add</span> Add New Address
+                            </button>
+                        </div>
+                        <div class="addresses-grid" id="addressesGrid">
+                            <!-- Addresses will be loaded here -->
+                        </div>
+                    </div>
+
+                    <!-- PASSWORD TAB -->
+                    <div class="account-tab" id="password">
+                        <h2>Change Password</h2>
+                        <form class="password-form" id="passwordForm">
+                            <div class="form-group">
+                                <label>Current Password</label>
+                                <input type="password" name="currentPassword" required>
+                            </div>
+                            <div class="form-group">
+                                <label>New Password</label>
+                                <input type="password" name="newPassword" required minlength="8">
+                            </div>
+                            <div class="form-group">
+                                <label>Confirm New Password</label>
+                                <input type="password" name="confirmPassword" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Change Password</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-logo">
+                        <span class="logo-main">AURANOVA</span>
+                        <span class="logo-sub">AFRIQUE</span>
+                    </div>
+                    <p class="footer-desc">Premium Nigerian fashion brand redefining African luxury.</p>
+                    <div class="social-links">
+                        <a href="#" class="social-link"><span class="material-icons">camera_alt</span></a>
+                        <a href="#" class="social-link"><span class="material-icons">facebook</span></a>
+                        <a href="#" class="social-link"><span class="material-icons">chat_bubble_outline</span></a>
+                        <a href="#" class="social-link"><span class="material-icons">chat</span></a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h4 class="footer-heading">Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="shop.html">Shop</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4 class="footer-heading">Customer Service</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Size Guide</a></li>
+                        <li><a href="#">Shipping & Returns</a></li>
+                        <li><a href="#">FAQs</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4 class="footer-heading">Contact</h4>
+                    <ul class="footer-contact">
+                        <li><span class="material-icons">location_on</span><span>Lagos, Nigeria</span></li>
+                        <li><span class="material-icons">phone</span><span>+234 XXX XXX XXXX</span></li>
+                        <li><span class="material-icons">email</span><span>info@auranova-afrique.com</span></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 AURANOVA-AFRIQUE. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../assets/js/main.js"></script>
+    <!-- <script src="..//assets/js/my-account.js"></script> -->
+</body>
+</html>

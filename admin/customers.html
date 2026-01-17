@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customers - AURANOVA Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/admin.css">
+    <link rel="stylesheet" href="assets/css/customers.css">
+</head>
+<body>
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h2>AURANOVA</h2>
+            <p>Admin Panel</p>
+        </div>
+
+        <nav class="sidebar-nav">
+            <a href="index.html" class="nav-item">
+                <span class="material-icons">dashboard</span>
+                <span>Dashboard</span>
+            </a>
+            <a href="products.html" class="nav-item">
+                <span class="material-icons">inventory_2</span>
+                <span>Products</span>
+            </a>
+            <a href="orders.html" class="nav-item">
+                <span class="material-icons">shopping_bag</span>
+                <span>Orders</span>
+                <span class="badge" id="ordersBadge">0</span>
+            </a>
+            <a href="customers.html" class="nav-item active">
+                <span class="material-icons">people</span>
+                <span>Customers</span>
+            </a>
+            <a href="messages.html" class="nav-item">
+                <span class="material-icons">mail</span>
+                <span>Messages</span>
+                <span class="badge" id="messagesBadge">0</span>
+            </a>
+            <a href="settings.html" class="nav-item">
+                <span class="material-icons">settings</span>
+                <span>Settings</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <button class="btn-logout" id="logoutBtn">
+                <span class="material-icons">logout</span>
+                <span>Logout</span>
+            </button>
+        </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+        <!-- TOP BAR -->
+        <header class="top-bar">
+            <button class="menu-toggle" id="menuToggle">
+                <span class="material-icons">menu</span>
+            </button>
+
+            <div class="top-bar-right">
+                <div class="notification-dropdown">
+                    <button class="notification-btn" id="notificationBtn">
+                        <span class="material-icons">notifications</span>
+                        <span class="notification-count" id="notificationCount">0</span>
+                    </button>
+                    <div class="notification-panel" id="notificationPanel">
+                        <div class="notification-header">
+                            <h3>Notifications</h3>
+                            <button id="markAllRead">Mark all read</button>
+                        </div>
+                        <div class="notification-list" id="notificationList">
+                            <p class="no-notifications">No new notifications</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="admin-profile">
+                    <span class="material-icons">account_circle</span>
+                    <span id="adminName">Admin</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- CUSTOMERS CONTENT -->
+        <div class="content-wrapper">
+            <div class="page-header">
+                <h1 class="page-title">Customers</h1>
+                <button class="btn btn-primary" id="exportCustomersBtn">
+                    <span class="material-icons">download</span>
+                    Export Customers
+                </button>
+            </div>
+
+            <!-- STATS CARDS -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <span class="material-icons">people</span>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="totalCustomers">0</h3>
+                        <p>Total Customers</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <span class="material-icons">person_add</span>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="newCustomers">0</h3>
+                        <p>New This Month</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <span class="material-icons">star</span>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="activeCustomers">0</h3>
+                        <p>Active Customers</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <span class="material-icons">trending_up</span>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="avgOrderValue">₦0</h3>
+                        <p>Avg. Order Value</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TOOLBAR -->
+            <div class="customers-toolbar">
+                <div class="search-box">
+                    <span class="material-icons">search</span>
+                    <input type="text" placeholder="Search customers by name, email..." id="searchCustomers">
+                </div>
+
+                <div class="toolbar-filters">
+                    <select id="sortBy">
+                        <option value="newest">Newest First</option>
+                        <option value="oldest">Oldest First</option>
+                        <option value="most-orders">Most Orders</option>
+                        <option value="highest-spend">Highest Spend</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- CUSTOMERS TABLE -->
+            <div class="dashboard-card">
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Customer</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Total Orders</th>
+                                <th>Total Spent</th>
+                                <th>Joined Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="customersTableBody">
+                            <tr>
+                                <td colspan="7" class="no-data">Loading customers...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- PAGINATION -->
+                <div class="pagination" id="pagination">
+                    <button class="pagination-btn" id="prevPage" disabled>
+                        <span class="material-icons">chevron_left</span>
+                    </button>
+                    <span class="pagination-info">Page <span id="currentPage">1</span> of <span id="totalPages">1</span></span>
+                    <button class="pagination-btn" id="nextPage">
+                        <span class="material-icons">chevron_right</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CUSTOMER DETAILS MODAL -->
+    <div class="modal" id="customerModal">
+        <div class="modal-content customer-modal">
+            <div class="modal-header">
+                <h3>Customer Details</h3>
+                <button class="modal-close" id="closeModal">
+                    <span class="material-icons">close</span>
+                </button>
+            </div>
+
+            <div class="customer-details-content" id="customerDetailsContent">
+                <!-- Details loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
+    <script src="assets/js/firebase-config.js"></script>
+    <script src="assets/js/admin-auth.js"></script>
+    <script src="assets/js/admin-main.js"></script>
+    <script src="assets/js/admin-customers.js"></script>
+</body>
+</html>

@@ -1,0 +1,398 @@
+/* ==========================================
+   ADD/EDIT PRODUCT PAGE STYLES
+   Use this for both add-product.html and edit-product.html
+   ========================================== */
+
+.page-header {
+  margin-bottom: 2rem;
+}
+
+.page-header > div {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--primary);
+  text-decoration: none;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.back-link:hover {
+  text-decoration: underline;
+}
+
+.page-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-dark);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  text-decoration: none;
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: #000;
+}
+
+.btn-primary:hover {
+  background: var(--primary-dark);
+}
+
+.btn-secondary {
+  background: #f5f5f5;
+  color: #333;
+}
+
+.btn-danger {
+  background: var(--danger);
+  color: white;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Form Grid */
+.form-grid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 2rem;
+}
+
+.form-column {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Form Card */
+.form-card {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  margin-bottom: 2rem;
+}
+
+.form-card h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  color: var(--text-dark);
+}
+
+/* Form Group */
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group:last-child {
+  margin-bottom: 0;
+}
+
+.form-group label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: var(--text-dark);
+  font-size: 0.95rem;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: "Outfit", sans-serif;
+  transition: all 0.3s;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+.form-group small {
+  display: block;
+  margin-top: 0.3rem;
+  color: #666;
+  font-size: 0.85rem;
+}
+
+.helper-text {
+  font-size: 0.9rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+/* Form Row */
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+/* Checkbox Group */
+.checkbox-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.checkbox-label input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+
+/* Image Upload */
+.image-upload-area {
+  border: 2px dashed var(--border);
+  border-radius: 8px;
+  padding: 3rem 2rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s;
+  background: #fafafa;
+}
+
+.image-upload-area:hover {
+  border-color: var(--primary);
+  background: rgba(212, 175, 55, 0.05);
+}
+
+.image-upload-area .material-icons {
+  font-size: 3rem;
+  color: var(--primary);
+  margin-bottom: 1rem;
+  display: block;
+}
+
+.image-upload-area p {
+  color: #666;
+  margin: 0;
+}
+
+/* Image Preview Grid */
+.image-preview-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.image-preview-item {
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 2px solid var(--border);
+  background: white;
+}
+
+.image-preview-item img {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+  display: block;
+}
+
+.remove-image {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  background: rgba(244, 67, 54, 0.9);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.remove-image:hover {
+  background: #f44336;
+  transform: scale(1.1);
+}
+
+.primary-badge {
+  position: absolute;
+  bottom: 0.5rem;
+  left: 0.5rem;
+  background: var(--primary);
+  color: #000;
+  padding: 0.3rem 0.6rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+/* Upload Progress */
+.upload-progress {
+  margin-top: 1.5rem;
+  display: none;
+}
+
+.progress-bar {
+  height: 8px;
+  background: #e0e0e0;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--primary);
+  transition: width 0.3s;
+  width: 0%;
+}
+
+#progressText {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+/* Existing Images (Edit Page) */
+#existingImagesContainer h4 {
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+  color: #666;
+  font-weight: 600;
+}
+
+/* Form Actions */
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.form-actions .btn {
+  flex: 1;
+}
+
+/* Modal */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 10000;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  max-width: 500px;
+  width: 90%;
+}
+
+.modal-content h3 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.modal-content p {
+  margin-bottom: 1.5rem;
+  color: #666;
+  line-height: 1.6;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+}
+
+/* Loading State */
+#loadingState {
+  text-align: center;
+  padding: 4rem 2rem;
+}
+
+#loadingState .spinner {
+  width: 50px;
+  height: 50px;
+  margin: 0 auto 1rem;
+  border-width: 4px;
+}
+
+#loadingState p {
+  color: #666;
+  font-size: 1.1rem;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .form-card {
+    padding: 1.5rem;
+  }
+
+  .image-upload-area {
+    padding: 2rem 1rem;
+  }
+
+  .image-preview-grid {
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+}

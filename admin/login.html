@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - AURANOVA-AFRIQUE</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .login-container {
+            background: white;
+            padding: 3rem;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            width: 100%;
+            max-width: 450px;
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #D4AF37;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        input {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #D4AF37;
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 1rem;
+            background: #D4AF37;
+            color: #000;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-login:hover {
+            background: #B8941F;
+            transform: translateY(-2px);
+        }
+
+        .alert {
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .alert.error {
+            background: #ffebee;
+            color: #c62828;
+            border: 1px solid #ef5350;
+        }
+
+        .alert.success {
+            background: #e8f5e9;
+            color: #2e7d32;
+            border: 1px solid #66bb6a;
+        }
+
+        .back-link {
+            text-align: center;
+            margin-top: 1.5rem;
+        }
+
+        .back-link a {
+            color: #D4AF37;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-header">
+            <div class="logo">AURANOVA-AFRIQUE</div>
+            <p class="subtitle">Admin Panel Login</p>
+        </div>
+
+        <div class="alert" id="alert"></div>
+
+        <form id="adminLoginForm">
+            <div class="form-group">
+                <label>Email Address</label>
+                <input type="email" name="email" required autofocus>
+            </div>
+
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" name="password" required>
+            </div>
+
+            <button type="submit" class="btn-login">Login to Admin Panel</button>
+        </form>
+
+        <div class="back-link">
+            <a href="../index.html">← Back to Main Site</a>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('adminLoginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const email = this.email.value;
+            const password = this.password.value;
+            const alert = document.getElementById('alert');
+            const btn = this.querySelector('.btn-login');
+            
+            btn.textContent = 'Logging in...';
+            btn.disabled = true;
+            
+            // TODO: Firebase Auth with role check
+            // const auth = firebase.auth();
+            // const userCredential = await auth.signInWithEmailAndPassword(email, password);
+            // const user = userCredential.user;
+            // const db = firebase.firestore();
+            // const userDoc = await db.collection('users').doc(user.uid).get();
+            // if (userDoc.data().role !== 'admin') {
+            //     throw new Error('Unauthorized');
+            // }
+            
+            // Mock login (REMOVE IN PRODUCTION)
+            setTimeout(() => {
+                if (email === 'admin@auranova.com' && password === 'admin123') {
+                    localStorage.setItem('admin_user', JSON.stringify({
+                        email: email,
+                        role: 'admin',
+                        uid: 'admin_123'
+                    }));
+                    alert.className = 'alert success';
+                    alert.textContent = 'Login successful! Redirecting...';
+                    alert.style.display = 'block';
+                    setTimeout(() => window.location.href = 'index.html', 1000);
+                } else {
+                    alert.className = 'alert error';
+                    alert.textContent = 'Invalid credentials or unauthorized access';
+                    alert.style.display = 'block';
+                    btn.textContent = 'Login to Admin Panel';
+                    btn.disabled = false;
+                }
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

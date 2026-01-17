@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="AURANOVA-AFRIQUE - Premium Nigerian Fashion | Drive Your Obsession">
+    <meta name="keywords" content="Nigerian fashion, luxury fashion, African fashion, premium caftans">
+    <title>AURANOVA-AFRIQUE - Drive Your Obsession | Premium Nigerian Fashion</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Google Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="assets/css/global.css">
+    <link rel="stylesheet" href="assets/css/home.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="assets/images/favicon.png">
+</head>
+<body>
+    <!-- PRELOADER -->
+    <div class="preloader" id="preloader">
+        <div class="preloader-content">
+            <div class="preloader-logo">AURANOVA</div>
+            <div class="preloader-subtitle">AFRIQUE</div>
+            <div class="loader-bar"></div>
+        </div>
+    </div>
+
+    <!-- IMPROVED NAVIGATION WITH DROPDOWNS -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <!-- Logo -->
+            <a href="index.html" class="nav-logo">
+                <!-- <span class="logo-main">AURANOVA</span>
+                <span class="logo-sub">AFRIQUE</span> -->
+            </a>
+
+            <!-- Navigation Links with Dropdowns -->
+            <ul class="nav-menu" id="navMenu">
+                <li class="nav-item">
+                    <a href="index.html" class="nav-link active">Home</a>
+                </li>
+                
+                <!-- SHOP DROPDOWN -->
+                <li class="nav-item dropdown">
+                    <a href="pages/shop.html" class="nav-link ">
+                        Shop <span class="material-icons dropdown-icon">keyboard_arrow_down</span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a href="pages/shop.html?category=all">All Products</a></li>
+                        <li><a href="pages/shop.html?category=caftans">Premium Caftans</a></li>
+                        <li><a href="pages/shop.html?category=english">English Wears</a></li>
+                        <li><a href="pages/shop.html?category=yoruba-caps">Yoruba Caps</a></li>
+                        <li><a href="pages/shop.html?category=face-caps">Face Caps</a></li>
+                    </ul>
+                </li>
+
+                <!-- COLLECTIONS DROPDOWN -->
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link">
+                        Collections <span class="material-icons dropdown-icon">keyboard_arrow_down</span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a href="pages/trending.html">Trending Now</a></li>
+                        <li><a href="pages/new-arrivals.html">New Arrivals</a></li>
+                        <li><a href="pages/limited-edition.html">Limited Edition</a></li>
+                        <li><a href="pages/custom-orders.html">Custom Orders</a></li>
+                    </ul>
+                </li>
+
+                <li class="nav-item">
+                    <a href="pages/about.html" class="nav-link">About</a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="pages/contact.html" class="nav-link">Contact</a>
+                </li>
+            </ul>
+
+            <!-- Navigation Icons -->
+            <div class="nav-actions">
+                <button class="nav-icon-btn" id="searchBtn" aria-label="Search">
+                    <span class="material-icons">search</span>
+                </button>
+                
+                <a href="pages/wishlist.html" class="nav-icon-btn" aria-label="Wishlist">
+                    <span class="material-icons">favorite_border</span>
+                    <span class="icon-badge" id="wishlistCount">0</span>
+                </a>
+                
+                <a href="pages/cart.html" class="nav-icon-btn" aria-label="Shopping Cart">
+                    <span class="material-icons">shopping_cart</span>
+                    <span class="icon-badge" id="cartCount">0</span>
+                </a>
+                <a href="pages/my-account.html">
+                    <button class="nav-icon-btn" id="accountBtn" aria-label="Account">
+                        <span class="material-icons">person_outline</span>
+                    </button>
+                </a>
+            </div>
+
+            <!-- Mobile Menu Toggle -->
+            <button class="hamburger" id="hamburger" aria-label="Toggle Menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION WITH SLIDESHOW -->
+    <section class="hero" id="hero">
+        <!-- Hero Slides -->
+        <div class="hero-slides">
+            <div class="hero-slide active">
+                <img src="assets/images/her.jpg" alt="Premium Fashion Collection">
+                <div class="hero-overlay"></div>
+            </div>
+            <div class="hero-slide">
+                <img src="assets/images/hero.jpg" alt="Luxury African Wear">
+                <div class="hero-overlay"></div>
+            </div>
+            <div class="hero-slide">
+                <img src="assets/images/hero2.jpg" alt="Exclusive Designs">
+                <div class="hero-overlay"></div>
+            </div>
+        </div>
+
+        <!-- Hero Content -->
+        <div class="hero-content">
+            <h1 class="hero-title">
+                <span class="title-main">AURANOVA</span>
+                <span class="title-sub">AFRIQUE</span>
+            </h1>
+            <div class="hero-slogans">
+                <p class="slogan slogan-1">DRIVE YOUR OBSESSION</p>
+                <p class="slogan slogan-2">BE A MANIAC IN STYLE</p>
+                <p class="slogan slogan-3">STYLES AREN'T FAR FROM MANIACS</p>
+            </div>
+            <div class="hero-cta">
+                <a href="pages/shop.html" class="btn btn-primary">Explore Collections</a>
+                <a href="pages/custom-orders.html" class="btn btn-secondary">Custom Orders</a>
+            </div>
+        </div>
+
+        <!-- Slide Navigation -->
+        <div class="hero-nav">
+            <button class="hero-nav-btn prev" id="heroPrev" aria-label="Previous Slide">
+                <span class="material-icons">chevron_left</span>
+            </button>
+            <button class="hero-nav-btn next" id="heroNext" aria-label="Next Slide">
+                <span class="material-icons">chevron_right</span>
+            </button>
+        </div>
+
+        <!-- Slide Indicators -->
+        <div class="hero-indicators">
+            <button class="indicator active" data-slide="0"></button>
+            <button class="indicator" data-slide="1"></button>
+            <button class="indicator" data-slide="2"></button>
+        </div>
+
+        <!-- Scroll Indicator 
+        <div class="scroll-indicator">
+            <span class="material-icons">keyboard_arrow_down</span>
+            <span class="scroll-text">Scroll to explore</span>
+        </div>
+        -->
+    </section>
+
+    <!-- FEATURED COLLECTIONS -->
+    <section class="featured-collections section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Featured Collections</h2>
+                <p class="section-subtitle">Discover our signature styles</p>
+            </div>
+
+            <div class="collections-grid">
+                <div class="collection-card">
+                    <div class="collection-image">
+                        <img src="assets/images/product 2.jpg" alt="Premium Caftans">
+                        <div class="collection-overlay">
+                            <h3 class="collection-title">Premium Caftans</h3>
+                            <p class="collection-desc">Luxurious African-inspired designs</p>
+                            <a href="pages/shop.html?category=caftans" class="collection-link">
+                                View Collection <span class="material-icons">arrow_forward</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="collection-card">
+                    <div class="collection-image">
+                        <img src="https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=800&q=80" alt="English Wears">
+                        <div class="collection-overlay">
+                            <h3 class="collection-title">English Wears</h3>
+                            <p class="collection-desc">Sophisticated formal attire</p>
+                            <a href="pages/shop.html?category=english" class="collection-link">
+                                View Collection <span class="material-icons">arrow_forward</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="collection-card">
+                    <div class="collection-image">
+                        <img src="assets/images/capp.jpg" alt="Signature Caps">
+                        <div class="collection-overlay">
+                            <h3 class="collection-title">Signature Caps</h3>
+                            <p class="collection-desc">Traditional & modern caps</p>
+                            <a href="pages/shop.html?category=caps" class="collection-link">
+                                View Collection <span class="material-icons">arrow_forward</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- LATEST ARRIVALS -->
+    <section class="latest-arrivals section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Latest Arrivals</h2>
+                <p class="section-subtitle">Fresh styles, timeless elegance</p>
+            </div>
+
+            <div class="products-grid" id="latestProducts">
+                <!-- Products will be dynamically loaded here -->
+            </div>
+
+            <div class="section-footer">
+                <a href="pages/new-arrivals.html" class="btn btn-outline">View All New Arrivals</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- LIMITED EDITION BANNER -->
+    <section class="limited-edition-banner">
+        <div class="limited-overlay"></div>
+        <div class="limited-content">
+            <span class="limited-label">Exclusive</span>
+            <h2 class="limited-title">Limited Edition Collection</h2>
+            <p class="limited-desc">Only 50 pieces worldwide. Handcrafted perfection.</p>
+            <a href="pages/limited-edition.html" class="btn btn-gold">Shop Limited Edition</a>
+        </div>
+    </section>
+
+    <!-- PRODUCT CATEGORIES -->
+    <section class="categories section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Shop By Category</h2>
+                <p class="section-subtitle">Find your perfect style</p>
+            </div>
+
+            <div class="categories-grid">
+                <a href="pages/shop.html?category=caftans" class="category-card">
+                    <div class="category-icon">
+                        <span class="material-icons">checkroom</span>
+                    </div>
+                    <h3 class="category-name">Premium Caftans</h3>
+                    <p class="category-count">45+ Designs</p>
+                </a>
+
+                <a href="pages/shop.html?category=english" class="category-card">
+                    <div class="category-icon">
+                        <span class="material-icons">business_center</span>
+                    </div>
+                    <h3 class="category-name">English Wears</h3>
+                    <p class="category-count">38+ Styles</p>
+                </a>
+
+                <a href="pages/shop.html?category=yoruba-caps" class="category-card">
+                    <div class="category-icon">
+                        <span class="material-icons">radio_button_checked</span>
+                    </div>
+                    <h3 class="category-name">Yoruba Caps</h3>
+                    <p class="category-count">28+ Designs</p>
+                </a>
+
+                <a href="pages/shop.html?category=face-caps" class="category-card">
+                    <div class="category-icon">
+                        <span class="material-icons">stars</span>
+                    </div>
+                    <h3 class="category-name">Face Caps</h3>
+                    <p class="category-count">22+ Styles</p>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- TESTIMONIALS -->
+    <section class="testimonials section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">What Our Clients Say</h2>
+                <p class="section-subtitle">Excellence recognized by those who matter</p>
+            </div>
+
+            <div class="testimonials-slider" id="testimonialsSlider">
+                <!-- Testimonials will be dynamically loaded -->
+            </div>
+        </div>
+    </section>
+
+    <!-- NEWSLETTER -->
+    <section class="newsletter section">
+        <div class="container">
+            <div class="newsletter-content">
+                <h2 class="newsletter-title">Join The Elite</h2>
+                <p class="newsletter-text">Subscribe for exclusive access to new collections and limited editions</p>
+                <form class="newsletter-form" id="newsletterForm">
+                    <input type="email" placeholder="Enter your email" required class="newsletter-input">
+                    <button type="submit" class="btn btn-gold">Subscribe</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <!-- Brand Column -->
+                <div class="footer-col">
+                    <div class="footer-logo">
+                        <span class="logo-main">AURANOVA</span>
+                        <span class="logo-sub">AFRIQUE</span>
+                    </div>
+                    <p class="footer-desc">
+                        Premium Nigerian fashion brand redefining African luxury. 
+                        Handcrafted excellence in every stitch.
+                    </p>
+                    <div class="social-links">
+                        <a href="#" class="social-link" aria-label="Instagram"><span class="material-icons">camera_alt</span></a>
+                        <a href="#" class="social-link" aria-label="Facebook"><span class="material-icons">facebook</span></a>
+                        <a href="#" class="social-link" aria-label="Twitter"><span class="material-icons">chat_bubble_outline</span></a>
+                        <a href="#" class="social-link" aria-label="WhatsApp"><span class="material-icons">chat</span></a>
+                    </div>
+                </div>
+
+                <!-- Quick Links -->
+                <div class="footer-col">
+                    <h4 class="footer-heading">Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="pages/about.html">About Us</a></li>
+                        <li><a href="pages/shop.html">Shop</a></li>
+                        <li><a href="pages/custom-orders.html">Custom Orders</a></li>
+                        <li><a href="pages/booking.html">Book Appointment</a></li>
+                        <li><a href="pages/contact.html">Contact</a></li>
+                    </ul>
+                </div>
+
+                <!-- Customer Service -->
+                <div class="footer-col">
+                    <h4 class="footer-heading">Customer Service</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Size Guide</a></li>
+                        <li><a href="#">Shipping & Returns</a></li>
+                        <li><a href="#">FAQs</a></li>
+                        <li><a href="#">Track Order</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact Info -->
+                <div class="footer-col">
+                    <h4 class="footer-heading">Get In Touch</h4>
+                    <ul class="footer-contact">
+                        <li>
+                            <span class="material-icons">location_on</span>
+                            <span>Lagos, Nigeria</span>
+                        </li>
+                        <li>
+                            <span class="material-icons">phone</span>
+                            <span>+234 XXX XXX XXXX</span>
+                        </li>
+                        <li>
+                            <span class="material-icons">email</span>
+                            <span>info@auranova-afrique.com</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2026 AURANOVA-AFRIQUE. All rights reserved. | Designed & Developed with Excellence</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript Files -->
+    <script src="assets/js/main.js"></script>
+    <script src="assets/js/slider.js"></script>
+    <script src="assets/js/products.js"></script>
+    <script src="assets/js/cart.js"></script>
+</body>
+</html>

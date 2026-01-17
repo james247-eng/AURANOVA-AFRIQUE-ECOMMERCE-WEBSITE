@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Product Details - AURANOVA-AFRIQUE Premium Fashion">
+    <title>Product Details - AURANOVA-AFRIQUE</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Google Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="../assets/css/global.css">
+    <link rel="stylesheet" href="../assets/css/product-details.css">
+</head>
+<body>
+    <!-- PRELOADER -->
+    <div class="preloader" id="preloader">
+        <div class="preloader-content">
+            <div class="preloader-logo">AURANOVA</div>
+            <div class="preloader-subtitle">AFRIQUE</div>
+            <div class="loader-bar"></div>
+        </div>
+    </div>
+
+    <!-- NAVIGATION -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <!-- Logo -->
+            <a href="../index.html" class="nav-logo">
+                <span class="logo-main">AURANOVA</span>
+                <span class="logo-sub">AFRIQUE</span>
+            </a>
+
+            <!-- Navigation Links with Dropdowns -->
+            <ul class="nav-menu" id="navMenu">
+                <li class="nav-item">
+                    <a href="../index.html" class="nav-link">Home</a>
+                </li>
+                
+                <!-- SHOP DROPDOWN -->
+                <li class="nav-item dropdown">
+                    <a href="shop.html" class="nav-link">
+                        Shop <span class="material-icons dropdown-icon">keyboard_arrow_down</span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a href="shop.html?category=all">All Products</a></li>
+                        <li><a href="shop.html?category=caftans">Premium Caftans</a></li>
+                        <li><a href="shop.html?category=english">English Wears</a></li>
+                        <li><a href="shop.html?category=yoruba-caps">Yoruba Caps</a></li>
+                        <li><a href="shop.html?category=face-caps">Face Caps</a></li>
+                    </ul>
+                </li>
+
+                <!-- COLLECTIONS DROPDOWN -->
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link">
+                        Collections <span class="material-icons dropdown-icon">keyboard_arrow_down</span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a href="trending.html">Trending Now</a></li>
+                        <li><a href="new-arrivals.html">New Arrivals</a></li>
+                        <li><a href="limited-edition.html">Limited Edition</a></li>
+                        <li><a href="custom-orders.html">Custom Orders</a></li>
+                    </ul>
+                </li>
+
+                <li class="nav-item">
+                    <a href="about.html" class="nav-link">About</a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="contact.html" class="nav-link">Contact</a>
+                </li>
+            </ul>
+
+            <!-- Navigation Icons -->
+            <div class="nav-actions">
+                <button class="nav-icon-btn" id="searchBtn" aria-label="Search">
+                    <span class="material-icons">search</span>
+                </button>
+                
+                <a href="wishlist.html" class="nav-icon-btn" aria-label="Wishlist">
+                    <span class="material-icons">favorite_border</span>
+                    <span class="icon-badge" id="wishlistCount">0</span>
+                </a>
+                
+                <a href="cart.html" class="nav-icon-btn" aria-label="Shopping Cart">
+                    <span class="material-icons">shopping_cart</span>
+                    <span class="icon-badge" id="cartCount">0</span>
+                </a>
+                
+                <button class="nav-icon-btn" id="accountBtn" aria-label="Account">
+                    <span class="material-icons">person_outline</span>
+                </button>
+            </div>
+
+            <!-- Mobile Menu Toggle -->
+            <button class="hamburger" id="hamburger" aria-label="Toggle Menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- BREADCRUMB -->
+    <div class="breadcrumb">
+        <div class="container">
+            <a href="../index.html">Home</a>
+            <span class="material-icons">chevron_right</span>
+            <a href="shop.html">Shop</a>
+            <span class="material-icons">chevron_right</span>
+            <span id="breadcrumbCategory">Premium Caftans</span>
+            <span class="material-icons">chevron_right</span>
+            <span id="breadcrumbProduct">Product</span>
+        </div>
+    </div>
+
+    <!-- PRODUCT DETAILS SECTION -->
+    <section class="product-details-section">
+        <div class="container">
+            <div class="product-layout">
+                <!-- PRODUCT IMAGES -->
+                <div class="product-images">
+                    <!-- Main Image -->
+                    <div class="main-image-container">
+                        <img src="" alt="Product" id="mainImage" class="main-image">
+                        <button class="zoom-btn" id="zoomBtn" aria-label="Zoom Image">
+                            <span class="material-icons">zoom_in</span>
+                        </button>
+                        <button class="wishlist-float-btn" id="wishlistFloatBtn" aria-label="Add to Wishlist">
+                            <span class="material-icons">favorite_border</span>
+                        </button>
+                    </div>
+
+                    <!-- Thumbnail Gallery -->
+                    <div class="thumbnail-gallery" id="thumbnailGallery">
+                        <!-- Thumbnails will be loaded dynamically -->
+                    </div>
+                </div>
+
+                <!-- PRODUCT INFO -->
+                <div class="product-info-section">
+                    <!-- Product Title & Meta -->
+                    <div class="product-header">
+                        <span class="product-category" id="productCategory">Category</span>
+                        <h1 class="product-title" id="productTitle">Product Name</h1>
+                        
+                        <!-- Rating -->
+                        <div class="product-rating">
+                            <div class="stars">
+                                <span class="material-icons filled">star</span>
+                                <span class="material-icons filled">star</span>
+                                <span class="material-icons filled">star</span>
+                                <span class="material-icons filled">star</span>
+                                <span class="material-icons">star_half</span>
+                            </div>
+                            <span class="rating-text">(4.5) - 24 Reviews</span>
+                        </div>
+
+                        <!-- Price -->
+                        <div class="product-price-section">
+                            <span class="product-price" id="productPrice">₦85,000</span>
+                            <span class="product-badge" id="productBadge">NEW</span>
+                        </div>
+                    </div>
+
+                    <!-- Product Description -->
+                    <div class="product-description">
+                        <p id="productDescription">Premium handcrafted fashion piece.</p>
+                    </div>
+
+                    <!-- Size Selection -->
+                    <div class="product-option">
+                        <label class="option-label">Select Size:</label>
+                        <div class="size-selector" id="sizeSelector">
+                            <!-- Sizes will be loaded dynamically -->
+                        </div>
+                    </div>
+
+                    <!-- Color Selection -->
+                    <div class="product-option">
+                        <label class="option-label">Select Color:</label>
+                        <div class="color-selector" id="colorSelector">
+                            <!-- Colors will be loaded dynamically -->
+                        </div>
+                    </div>
+
+                    <!-- Quantity -->
+                    <div class="product-option">
+                        <label class="option-label">Quantity:</label>
+                        <div class="quantity-selector">
+                            <button class="qty-btn" id="decreaseQty" aria-label="Decrease">
+                                <span class="material-icons">remove</span>
+                            </button>
+                            <input type="number" value="1" min="1" max="10" id="productQuantity" class="qty-input">
+                            <button class="qty-btn" id="increaseQty" aria-label="Increase">
+                                <span class="material-icons">add</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="product-actions">
+                        <button class="btn btn-add-cart" id="addToCartBtn">
+                            <span class="material-icons">shopping_cart</span>
+                            Add to Cart
+                        </button>
+                        <button class="btn btn-buy-now" id="buyNowBtn">
+                            Buy Now
+                        </button>
+                    </div>
+
+                    <!-- Additional Info -->
+                    <div class="product-meta">
+                        <div class="meta-item">
+                            <span class="material-icons">local_shipping</span>
+                            <div>
+                                <strong>Free Delivery</strong>
+                                <p>For orders above ₦50,000</p>
+                            </div>
+                        </div>
+                        <div class="meta-item">
+                            <span class="material-icons">replay</span>
+                            <div>
+                                <strong>Easy Returns</strong>
+                                <p>7 days return policy</p>
+                            </div>
+                        </div>
+                        <div class="meta-item">
+                            <span class="material-icons">verified_user</span>
+                            <div>
+                                <strong>Authentic</strong>
+                                <p>100% genuine products</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Share -->
+                    <div class="product-share">
+                        <span class="share-label">Share:</span>
+                        <div class="share-buttons">
+                            <button class="share-btn" aria-label="Share on Facebook">
+                                <span class="material-icons">facebook</span>
+                            </button>
+                            <button class="share-btn" aria-label="Share on Twitter">
+                                <span class="material-icons">chat_bubble_outline</span>
+                            </button>
+                            <button class="share-btn" aria-label="Share on WhatsApp">
+                                <span class="material-icons">chat</span>
+                            </button>
+                            <button class="share-btn" aria-label="Copy Link">
+                                <span class="material-icons">link</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PRODUCT TABS -->
+    <section class="product-tabs-section">
+        <div class="container">
+            <div class="tabs-header">
+                <button class="tab-btn active" data-tab="description">Description</button>
+                <button class="tab-btn" data-tab="specifications">Specifications</button>
+                <button class="tab-btn" data-tab="reviews">Reviews (24)</button>
+                <button class="tab-btn" data-tab="shipping">Shipping & Returns</button>
+            </div>
+
+            <div class="tabs-content">
+                <!-- Description Tab -->
+                <div class="tab-panel active" id="description">
+                    <h3>Product Description</h3>
+                    <p>Experience the epitome of African luxury with this exquisite piece from AURANOVA-AFRIQUE. Each garment is meticulously handcrafted by skilled artisans, combining traditional techniques with contemporary design.</p>
+                    <p>Our premium materials are sourced from the finest suppliers, ensuring durability and comfort. The attention to detail in every stitch reflects our commitment to excellence and your satisfaction.</p>
+                    <ul>
+                        <li>Premium quality fabric</li>
+                        <li>Handcrafted with precision</li>
+                        <li>Traditional African motifs</li>
+                        <li>Modern fit and styling</li>
+                        <li>Available for custom tailoring</li>
+                    </ul>
+                </div>
+
+                <!-- Specifications Tab -->
+                <div class="tab-panel" id="specifications">
+                    <h3>Product Specifications</h3>
+                    <table class="specs-table">
+                        <tr>
+                            <td><strong>Material:</strong></td>
+                            <td>Premium Cotton Blend</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Care Instructions:</strong></td>
+                            <td>Dry clean recommended</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Origin:</strong></td>
+                            <td>Handcrafted in Nigeria</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Fit:</strong></td>
+                            <td>Regular fit, true to size</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Weight:</strong></td>
+                            <td>Medium weight fabric</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <!-- Reviews Tab -->
+                <div class="tab-panel" id="reviews">
+                    <h3>Customer Reviews</h3>
+                    <div class="reviews-summary">
+                        <div class="overall-rating">
+                            <span class="rating-number">4.5</span>
+                            <div class="stars-large">
+                                <span class="material-icons">star</span>
+                                <span class="material-icons">star</span>
+                                <span class="material-icons">star</span>
+                                <span class="material-icons">star</span>
+                                <span class="material-icons">star_half</span>
+                            </div>
+                            <p>Based on 24 reviews</p>
+                        </div>
+                    </div>
+
+                    <div class="reviews-list">
+                        <div class="review-item">
+                            <div class="review-header">
+                                <strong>Chioma N.</strong>
+                                <div class="review-stars">
+                                    <span class="material-icons">star</span>
+                                    <span class="material-icons">star</span>
+                                    <span class="material-icons">star</span>
+                                    <span class="material-icons">star</span>
+                                    <span class="material-icons">star</span>
+                                </div>
+                            </div>
+                            <p class="review-text">Absolutely stunning! The quality is exceptional and the fit is perfect. Worth every naira.</p>
+                            <span class="review-date">2 days ago</span>
+                        </div>
+
+                        <div class="review-item">
+                            <div class="review-header">
+                                <strong>Adebayo O.</strong>
+                                <div class="review-stars">
+                                    <span class="material-icons">star</span>
+                                    <span class="material-icons">star</span>
+                                    <span class="material-icons">star</span>
+                                    <span class="material-icons">star</span>
+                                    <span class="material-icons">star_border</span>
+                                </div>
+                            </div>
+                            <p class="review-text">Great product! Delivery was fast and the craftsmanship is top-notch.</p>
+                            <span class="review-date">1 week ago</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Shipping Tab -->
+                <div class="tab-panel" id="shipping">
+                    <h3>Shipping & Returns</h3>
+                    <h4>Delivery Information</h4>
+                    <p>We offer fast and reliable delivery across Nigeria:</p>
+                    <ul>
+                        <li><strong>Lagos:</strong> 1-2 business days</li>
+                        <li><strong>Major Cities:</strong> 3-5 business days</li>
+                        <li><strong>Other Locations:</strong> 5-7 business days</li>
+                        <li><strong>Free Delivery:</strong> On orders above ₦50,000</li>
+                    </ul>
+
+                    <h4>Return Policy</h4>
+                    <p>We accept returns within 7 days of delivery if:</p>
+                    <ul>
+                        <li>Product is unused and in original condition</li>
+                        <li>Tags and packaging are intact</li>
+                        <li>You have the original receipt</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- RELATED PRODUCTS -->
+    <section class="related-products-section">
+        <div class="container">
+            <h2 class="section-title">You May Also Like</h2>
+            <div class="products-grid" id="relatedProducts">
+                <!-- Related products will be loaded dynamically -->
+            </div>
+        </div>
+    </section>
+
+    <!-- IMAGE ZOOM MODAL -->
+    <div class="zoom-modal" id="zoomModal">
+        <button class="zoom-close" id="zoomClose">
+            <span class="material-icons">close</span>
+        </button>
+        <img src="" alt="Zoomed Product" id="zoomedImage">
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-logo">
+                        <span class="logo-main">AURANOVA</span>
+                        <span class="logo-sub">AFRIQUE</span>
+                    </div>
+                    <p class="footer-desc">Premium Nigerian fashion brand redefining African luxury.</p>
+                    <div class="social-links">
+                        <a href="#" class="social-link"><span class="material-icons">camera_alt</span></a>
+                        <a href="#" class="social-link"><span class="material-icons">facebook</span></a>
+                        <a href="#" class="social-link"><span class="material-icons">chat_bubble_outline</span></a>
+                        <a href="#" class="social-link"><span class="material-icons">chat</span></a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h4 class="footer-heading">Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="shop.html">Shop</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4 class="footer-heading">Customer Service</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Size Guide</a></li>
+                        <li><a href="#">Shipping & Returns</a></li>
+                        <li><a href="#">FAQs</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4 class="footer-heading">Contact</h4>
+                    <ul class="footer-contact">
+                        <li><span class="material-icons">location_on</span><span>Lagos, Nigeria</span></li>
+                        <li><span class="material-icons">phone</span><span>+234 XXX XXX XXXX</span></li>
+                        <li><span class="material-icons">email</span><span>info@auranova-afrique.com</span></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 AURANOVA-AFRIQUE. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript Files -->
+    <script src="../assets/js/main.js"></script>
+    <script src="../assets/js/product-details.js"></script>
+    <script src="../assets/js/products.js"></script>
+    <script src="../assets/js/cart.js"></script>
+</body>
+</html>

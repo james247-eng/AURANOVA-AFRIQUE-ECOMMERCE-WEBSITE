@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Product - AURANOVA Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/admin.css">
+    <link rel="stylesheet" href="assets/css/add-edit-product.css">
+</head>
+<body>
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h2>AURANOVA</h2>
+            <p>Admin Panel</p>
+        </div>
+
+        <nav class="sidebar-nav">
+            <a href="index.html" class="nav-item">
+                <span class="material-icons">dashboard</span>
+                <span>Dashboard</span>
+            </a>
+            <a href="products.html" class="nav-item active">
+                <span class="material-icons">inventory_2</span>
+                <span>Products</span>
+            </a>
+            <a href="orders.html" class="nav-item">
+                <span class="material-icons">shopping_bag</span>
+                <span>Orders</span>
+                <span class="badge" id="ordersBadge">0</span>
+            </a>
+            <a href="customers.html" class="nav-item">
+                <span class="material-icons">people</span>
+                <span>Customers</span>
+            </a>
+            <a href="messages.html" class="nav-item">
+                <span class="material-icons">mail</span>
+                <span>Messages</span>
+                <span class="badge" id="messagesBadge">0</span>
+            </a>
+            <a href="settings.html" class="nav-item">
+                <span class="material-icons">settings</span>
+                <span>Settings</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <button class="btn-logout" id="logoutBtn">
+                <span class="material-icons">logout</span>
+                <span>Logout</span>
+            </button>
+        </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+        <!-- TOP BAR -->
+        <header class="top-bar">
+            <button class="menu-toggle" id="menuToggle">
+                <span class="material-icons">menu</span>
+            </button>
+
+            <div class="top-bar-right">
+                <div class="notification-dropdown">
+                    <button class="notification-btn" id="notificationBtn">
+                        <span class="material-icons">notifications</span>
+                        <span class="notification-count" id="notificationCount">0</span>
+                    </button>
+                    <div class="notification-panel" id="notificationPanel">
+                        <div class="notification-header">
+                            <h3>Notifications</h3>
+                            <button id="markAllRead">Mark all read</button>
+                        </div>
+                        <div class="notification-list" id="notificationList">
+                            <p class="no-notifications">No new notifications</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="admin-profile">
+                    <span class="material-icons">account_circle</span>
+                    <span id="adminName">Admin</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- EDIT PRODUCT CONTENT -->
+        <div class="content-wrapper">
+            <div class="page-header">
+                <div>
+                    <a href="products.html" class="back-link">
+                        <span class="material-icons">arrow_back</span> Back to Products
+                    </a>
+                    <h1 class="page-title">Edit Product</h1>
+                </div>
+                <button class="btn btn-danger" id="deleteProductBtn">
+                    <span class="material-icons">delete</span>
+                    Delete Product
+                </button>
+            </div>
+
+            <!-- LOADING STATE -->
+            <div id="loadingState" style="display: none; text-align: center; padding: 4rem;">
+                <div class="spinner" style="width: 50px; height: 50px; margin: 0 auto 1rem;"></div>
+                <p>Loading product...</p>
+            </div>
+
+            <!-- FORM -->
+            <form id="editProductForm" style="display: none;">
+                <div class="form-grid">
+                    <!-- LEFT COLUMN -->
+                    <div class="form-column">
+                        <div class="form-card">
+                            <h3>Basic Information</h3>
+
+                            <div class="form-group">
+                                <label>Product Name *</label>
+                                <input type="text" name="name" id="productName" required placeholder="Enter product name">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Description *</label>
+                                <textarea name="description" id="productDescription" rows="6" required placeholder="Enter product description"></textarea>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Category *</label>
+                                    <select name="category" id="productCategory" required>
+                                        <option value="">Select Category</option>
+                                        <option value="Premium Caftans">Premium Caftans</option>
+                                        <option value="English Wears">English Wears</option>
+                                        <option value="Yoruba Caps">Yoruba Caps</option>
+                                        <option value="Face Caps">Face Caps</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Price (₦) *</label>
+                                    <input type="number" name="price" id="productPrice" required min="0" placeholder="0">
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Stock Quantity *</label>
+                                    <input type="number" name="stock" id="productStock" required min="0" value="0">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>SKU (Optional)</label>
+                                    <input type="text" name="sku" id="productSku" placeholder="PRODUCT-001">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-card">
+                            <h3>Variants</h3>
+
+                            <div class="form-group">
+                                <label>Sizes</label>
+                                <div class="checkbox-group" id="sizesCheckboxes">
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" name="sizes" value="S"> S
+                                    </label>
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" name="sizes" value="M"> M
+                                    </label>
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" name="sizes" value="L"> L
+                                    </label>
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" name="sizes" value="XL"> XL
+                                    </label>
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" name="sizes" value="XXL"> XXL
+                                    </label>
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" name="sizes" value="One Size"> One Size
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Colors</label>
+                                <input type="text" name="colors" id="productColors" placeholder="Black, White, Navy (comma-separated)">
+                                <small>Enter colors separated by commas</small>
+                            </div>
+                        </div>
+
+                        <div class="form-card">
+                            <h3>Badges</h3>
+
+                            <div class="checkbox-group" id="badgesCheckboxes">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="badges" value="new"> NEW
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="badges" value="limited"> LIMITED EDITION
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="badges" value="trending"> TRENDING
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- RIGHT COLUMN -->
+                    <div class="form-column">
+                        <div class="form-card">
+                            <h3>Product Images</h3>
+                            
+                            <!-- EXISTING IMAGES -->
+                            <div id="existingImagesContainer">
+                                <h4 style="font-size: 0.9rem; margin-bottom: 1rem; color: #666;">Current Images</h4>
+                                <div class="image-preview-grid" id="existingImagesGrid"></div>
+                            </div>
+
+                            <!-- NEW IMAGES UPLOAD -->
+                            <div style="margin-top: 1.5rem;">
+                                <h4 style="font-size: 0.9rem; margin-bottom: 1rem; color: #666;">Add New Images</h4>
+                                <p class="helper-text">Upload new images (Max 5 total)</p>
+                                
+                                <div class="image-upload-area" id="imageUploadArea">
+                                    <span class="material-icons">add_photo_alternate</span>
+                                    <p>Click or drag images here to upload</p>
+                                    <input type="file" id="imageInput" accept="image/*" multiple style="display: none;">
+                                </div>
+
+                                <div class="image-preview-grid" id="newImagesGrid"></div>
+
+                                <div class="upload-progress" id="uploadProgress" style="display: none;">
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" id="progressFill"></div>
+                                    </div>
+                                    <span id="progressText">Uploading...</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-card">
+                            <h3>Status & Visibility</h3>
+
+                            <div class="form-group">
+                                <label>Product Status</label>
+                                <select name="status" id="productStatus">
+                                    <option value="published">Published</option>
+                                    <option value="draft">Draft</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="inStock" id="productInStock" checked> In Stock
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-secondary" onclick="window.location.href='products.html'">Cancel</button>
+                            <button type="submit" class="btn btn-primary" id="submitBtn">
+                                <span class="material-icons">check</span>
+                                Update Product
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- DELETE CONFIRMATION MODAL -->
+    <div class="modal" id="deleteModal">
+        <div class="modal-content">
+            <h3>Confirm Delete</h3>
+            <p>Are you sure you want to delete this product? This action cannot be undone.</p>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" id="cancelDelete">Cancel</button>
+                <button class="btn btn-danger" id="confirmDelete">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
+    <script src="assets/js/firebase-config.js"></script>
+    <script src="assets/js/admin-auth.js"></script>
+    <script src="assets/js/admin-main.js"></script>
+    <script src="assets/js/admin-edit-product.js"></script>
+</body>
+</html>

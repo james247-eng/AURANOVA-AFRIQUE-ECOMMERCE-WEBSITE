@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - AURANOVA-AFRIQUE</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    
+    <link rel="stylesheet" href="../assets/css/global.css">
+    <link rel="stylesheet" href="../assets/css/contact.css">
+</head>
+<body>
+    <div class="preloader" id="preloader">
+        <div class="preloader-content">
+            <div class="preloader-logo">AURANOVA</div>
+            <div class="preloader-subtitle">AFRIQUE</div>
+            <div class="loader-bar"></div>
+        </div>
+    </div>
+
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="../index.html" class="nav-logo">
+                <span class="logo-main">AURANOVA</span>
+                <span class="logo-sub">AFRIQUE</span>
+            </a>
+            <ul class="nav-menu" id="navMenu">
+                <li class="nav-item"><a href="../index.html" class="nav-link">Home</a></li>
+                <li class="nav-item dropdown">
+                    <a href="shop.html" class="nav-link">Shop <span class="material-icons dropdown-icon">keyboard_arrow_down</span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="shop.html?category=all">All Products</a></li>
+                        <li><a href="shop.html?category=caftans">Premium Caftans</a></li>
+                        <li><a href="shop.html?category=english">English Wears</a></li>
+                        <li><a href="shop.html?category=yoruba-caps">Yoruba Caps</a></li>
+                        <li><a href="shop.html?category=face-caps">Face Caps</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link">Collections <span class="material-icons dropdown-icon">keyboard_arrow_down</span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="trending.html">Trending Now</a></li>
+                        <li><a href="new-arrivals.html">New Arrivals</a></li>
+                        <li><a href="limited-edition.html">Limited Edition</a></li>
+                        <li><a href="custom-orders.html">Custom Orders</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item"><a href="about.html" class="nav-link">About</a></li>
+                <li class="nav-item"><a href="contact.html" class="nav-link">Contact</a></li>
+            </ul>
+            <div class="nav-actions">
+                <button class="nav-icon-btn" id="searchBtn"><span class="material-icons">search</span></button>
+                <a href="wishlist.html" class="nav-icon-btn">
+                    <span class="material-icons">favorite_border</span>
+                    <span class="icon-badge" id="wishlistCount">0</span>
+                </a>
+                <a href="cart.html" class="nav-icon-btn">
+                    <span class="material-icons">shopping_cart</span>
+                    <span class="icon-badge" id="cartCount">0</span>
+                </a>
+                <button class="nav-icon-btn" id="accountBtn"><span class="material-icons">person_outline</span></button>
+            </div>
+            <button class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <div class="breadcrumb">
+        <div class="container">
+            <a href="../index.html">Home</a>
+            <span class="material-icons">chevron_right</span>
+            <span>Contact Us</span>
+        </div>
+    </div>
+
+    <!-- CONTACT HERO -->
+    <section class="contact-hero">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <h1>Get In Touch</h1>
+            <p>We'd love to hear from you</p>
+        </div>
+    </section>
+
+    <!-- CONTACT SECTION -->
+    <section class="contact-section section">
+        <div class="container">
+            <div class="contact-layout">
+                <!-- CONTACT FORM -->
+                <div class="contact-form-section">
+                    <h2>Send Us a Message</h2>
+                    <p>Have questions? We'd love to hear from you.</p>
+                    
+                    <form class="contact-form" id="contactForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>First Name *</label>
+                                <input type="text" name="firstName" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Last Name *</label>
+                                <input type="text" name="lastName" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Email Address *</label>
+                            <input type="email" name="email" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Phone Number</label>
+                            <input type="tel" name="phone" placeholder="+234 XXX XXX XXXX">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Subject *</label>
+                            <input type="text" name="subject" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Message *</label>
+                            <textarea name="message" rows="6" required></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Send Message</button>
+                    </form>
+                </div>
+
+                <!-- CONTACT INFO -->
+                <div class="contact-info">
+                    <h3>Get In Touch</h3>
+                    <p>We'd love to hear from you. Our team is always here to help.</p>
+
+                    <div class="contact-methods">
+                        <div class="contact-item">
+                            <span class="material-icons">location_on</span>
+                            <div>
+                                <strong>Visit Our Showroom</strong>
+                                <p>123 Fashion Street, Victoria Island<br>Lagos, Nigeria</p>
+                            </div>
+                        </div>
+
+                        <div class="contact-item">
+                            <span class="material-icons">phone</span>
+                            <div>
+                                <strong>Call Us</strong>
+                                <p>+234 XXX XXX XXXX<br>Mon-Sat: 9AM - 6PM</p>
+                            </div>
+                        </div>
+
+                        <div class="contact-item">
+                            <span class="material-icons">email</span>
+                            <div>
+                                <strong>Email Us</strong>
+                                <p>info@auranova-afrique.com<br>support@auranova-afrique.com</p>
+                            </div>
+                        </div>
+
+                        <div class="contact-item">
+                            <span class="material-icons">chat</span>
+                            <div>
+                                <strong>WhatsApp</strong>
+                                <p>+234 XXX XXX XXXX<br>Available 24/7</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="social-section">
+                        <h4>Follow Us</h4>
+                        <div class="social-links-contact">
+                            <a href="#" class="social-btn"><span class="material-icons">camera_alt</span> Instagram</a>
+                            <a href="#" class="social-btn"><span class="material-icons">facebook</span> Facebook</a>
+                            <a href="#" class="social-btn"><span class="material-icons">chat_bubble_outline</span> Twitter</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- MAP SECTION -->
+    <section class="map-section">
+        <div class="map-container">
+            <iframe 
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3964.7361612752475!2d3.4207822!3d6.4280553!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNsKwMjUnNDEuMCJOIDPCsDI1JzE0LjgiRQ!5e0!3m2!1sen!2sng!4v1234567890"
+                width="100%" 
+                height="450" 
+                style="border:0;" 
+                allowfullscreen="" 
+                loading="lazy">
+            </iframe>
+        </div>
+    </section>
+
+    <!-- FAQ SECTION -->
+    <section class="faq-section section">
+        <div class="container">
+            <h2 class="section-title">Frequently Asked Questions</h2>
+            
+            <div class="faq-list">
+                <div class="faq-item">
+                    <button class="faq-question">
+                        <span>What are your delivery times?</span>
+                        <span class="material-icons">expand_more</span>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Lagos: 1-2 business days | Major Cities: 3-5 business days | Other Locations: 5-7 business days. Free delivery on orders above ₦50,000.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">
+                        <span>Do you offer custom tailoring?</span>
+                        <span class="material-icons">expand_more</span>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Yes! We offer premium custom tailoring services. Book an appointment and our expert tailors will create a perfect fit based on your measurements.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">
+                        <span>What is your return policy?</span>
+                        <span class="material-icons">expand_more</span>
+                    </button>
+                    <div class="faq-answer">
+                        <p>We accept returns within 7 days if the product is unused and in original condition with tags intact. Custom-made items are non-returnable.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">
+                        <span>How do I track my order?</span>
+                        <span class="material-icons">expand_more</span>
+                    </button>
+                    <div class="faq-answer">
+                        <p>You'll receive a tracking number via email once your order ships. You can track your order using this number on our website or contact us for assistance.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-logo">
+                        <span class="logo-main">AURANOVA</span>
+                        <span class="logo-sub">AFRIQUE</span>
+                    </div>
+                    <p class="footer-desc">Premium Nigerian fashion brand redefining African luxury.</p>
+                    <div class="social-links">
+                        <a href="#" class="social-link"><span class="material-icons">camera_alt</span></a>
+                        <a href="#" class="social-link"><span class="material-icons">facebook</span></a>
+                        <a href="#" class="social-link"><span class="material-icons">chat_bubble_outline</span></a>
+                        <a href="#" class="social-link"><span class="material-icons">chat</span></a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h4 class="footer-heading">Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="shop.html">Shop</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4 class="footer-heading">Customer Service</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Size Guide</a></li>
+                        <li><a href="#">Shipping & Returns</a></li>
+                        <li><a href="#">FAQs</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4 class="footer-heading">Contact</h4>
+                    <ul class="footer-contact">
+                        <li><span class="material-icons">location_on</span><span>Lagos, Nigeria</span></li>
+                        <li><span class="material-icons">phone</span><span>+234 XXX XXX XXXX</span></li>
+                        <li><span class="material-icons">email</span><span>info@auranova-afrique.com</span></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 AURANOVA-AFRIQUE. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../assets/js/main.js"></script>
+    <script src="../assets/js/contact.js"></script>
+</body>
+</html>

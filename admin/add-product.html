@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Product - AURANOVA Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/admin.css">
+    <link rel="stylesheet" href="assets/css/add-edit-product.css">
+</head>
+<body>
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h2>AURANOVA</h2>
+            <p>Admin Panel</p>
+        </div>
+
+        <nav class="sidebar-nav">
+            <a href="index.html" class="nav-item">
+                <span class="material-icons">dashboard</span>
+                <span>Dashboard</span>
+            </a>
+            <a href="products.html" class="nav-item active">
+                <span class="material-icons">inventory_2</span>
+                <span>Products</span>
+            </a>
+            <a href="orders.html" class="nav-item">
+                <span class="material-icons">shopping_bag</span>
+                <span>Orders</span>
+            </a>
+            <a href="customers.html" class="nav-item">
+                <span class="material-icons">people</span>
+                <span>Customers</span>
+            </a>
+            <a href="messages.html" class="nav-item">
+                <span class="material-icons">mail</span>
+                <span>Messages</span>
+            </a>
+            <a href="settings.html" class="nav-item">
+                <span class="material-icons">settings</span>
+                <span>Settings</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <button class="btn-logout" id="logoutBtn">
+                <span class="material-icons">logout</span>
+                <span>Logout</span>
+            </button>
+        </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+        <!-- TOP BAR -->
+        <header class="top-bar">
+            <button class="menu-toggle" id="menuToggle">
+                <span class="material-icons">menu</span>
+            </button>
+
+            <div class="top-bar-right">
+                <div class="admin-profile">
+                    <span class="material-icons">account_circle</span>
+                    <span id="adminName">Admin</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- ADD PRODUCT CONTENT -->
+        <div class="content-wrapper">
+            <div class="page-header">
+                <div>
+                    <a href="products.html" class="back-link">
+                        <span class="material-icons">arrow_back</span> Back to Products
+                    </a>
+                    <h1 class="page-title">Add New Product</h1>
+                </div>
+            </div>
+
+            <form id="addProductForm">
+                <div class="form-grid">
+                    <!-- LEFT COLUMN -->
+                    <div class="form-column">
+                        <div class="form-card">
+                            <h3>Basic Information</h3>
+
+                            <div class="form-group">
+                                <label>Product Name *</label>
+                                <input type="text" name="name" required placeholder="Enter product name">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Description *</label>
+                                <textarea name="description" rows="6" required placeholder="Enter product description"></textarea>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Category *</label>
+                                    <select name="category" required>
+                                        <option value="">Select Category</option>
+                                        <option value="Premium Caftans">Premium Caftans</option>
+                                        <option value="English Wears">English Wears</option>
+                                        <option value="Yoruba Caps">Yoruba Caps</option>
+                                        <option value="Face Caps">Face Caps</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Price (₦) *</label>
+                                    <input type="number" name="price" required min="0" placeholder="0">
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Stock Quantity *</label>
+                                    <input type="number" name="stock" required min="0" value="0">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>SKU (Optional)</label>
+                                    <input type="text" name="sku" placeholder="PRODUCT-001">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-card">
+                            <h3>Variants</h3>
+
+                            <div class="form-group">
+                                <label>Sizes</label>
+                                <div class="checkbox-group">
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" name="sizes" value="S"> S
+                                    </label>
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" name="sizes" value="M"> M
+                                    </label>
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" name="sizes" value="L"> L
+                                    </label>
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" name="sizes" value="XL"> XL
+                                    </label>
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" name="sizes" value="XXL"> XXL
+                                    </label>
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" name="sizes" value="One Size"> One Size
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Colors</label>
+                                <input type="text" name="colors" placeholder="Black, White, Navy (comma-separated)">
+                                <small>Enter colors separated by commas</small>
+                            </div>
+                        </div>
+
+                        <div class="form-card">
+                            <h3>Badges</h3>
+
+                            <div class="checkbox-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="badges" value="new"> NEW
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="badges" value="limited"> LIMITED EDITION
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="badges" value="trending"> TRENDING
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- RIGHT COLUMN -->
+                    <div class="form-column">
+                        <div class="form-card">
+                            <h3>Product Images *</h3>
+                            <p class="helper-text">Upload product images (Max 5 images)</p>
+
+                            <div class="image-upload-area" id="imageUploadArea">
+                                <span class="material-icons">add_photo_alternate</span>
+                                <p>Click or drag images here to upload</p>
+                                <input type="file" id="imageInput" accept="image/*" multiple style="display: none;">
+                            </div>
+
+                            <div class="image-preview-grid" id="imagePreviewGrid"></div>
+
+                            <div class="upload-progress" id="uploadProgress" style="display: none;">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" id="progressFill"></div>
+                                </div>
+                                <span id="progressText">Uploading...</span>
+                            </div>
+                        </div>
+
+                        <div class="form-card">
+                            <h3>Status & Visibility</h3>
+
+                            <div class="form-group">
+                                <label>Product Status</label>
+                                <select name="status">
+                                    <option value="published">Published</option>
+                                    <option value="draft">Draft</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="inStock" checked> In Stock
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-secondary" onclick="window.location.href='products.html'">Cancel</button>
+                            <button type="submit" class="btn btn-primary" id="submitBtn">
+                                <span class="material-icons">check</span>
+                                Add Product
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="assets/js/admin-main.js"></script>
+    <script src="assets/js/admin-add-product.js"></script>
+</body>
+</html>

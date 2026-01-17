@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - AURANOVA Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/admin.css">
+</head>
+<body>
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h2>AURANOVA</h2>
+            <p>Admin Panel</p>
+        </div>
+
+        <nav class="sidebar-nav">
+            <a href="index.html" class="nav-item active">
+                <span class="material-icons">dashboard</span>
+                <span>Dashboard</span>
+            </a>
+            <a href="products.html" class="nav-item">
+                <span class="material-icons">inventory_2</span>
+                <span>Products</span>
+            </a>
+            <a href="orders.html" class="nav-item">
+                <span class="material-icons">shopping_bag</span>
+                <span>Orders</span>
+                <span class="badge" id="ordersBadge">0</span>
+            </a>
+            <a href="customers.html" class="nav-item">
+                <span class="material-icons">people</span>
+                <span>Customers</span>
+            </a>
+            <a href="messages.html" class="nav-item">
+                <span class="material-icons">mail</span>
+                <span>Messages</span>
+                <span class="badge" id="messagesBadge">0</span>
+            </a>
+            <a href="settings.html" class="nav-item">
+                <span class="material-icons">settings</span>
+                <span>Settings</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <button class="btn-logout" id="logoutBtn">
+                <span class="material-icons">logout</span>
+                <span>Logout</span>
+            </button>
+        </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+        <!-- TOP BAR -->
+        <header class="top-bar">
+            <button class="menu-toggle" id="menuToggle">
+                <span class="material-icons">menu</span>
+            </button>
+
+            <div class="top-bar-right">
+                <!-- Notifications -->
+                <div class="notification-dropdown">
+                    <button class="notification-btn" id="notificationBtn">
+                        <span class="material-icons">notifications</span>
+                        <span class="notification-count" id="notificationCount">0</span>
+                    </button>
+                    <div class="notification-panel" id="notificationPanel">
+                        <div class="notification-header">
+                            <h3>Notifications</h3>
+                            <button id="markAllRead">Mark all read</button>
+                        </div>
+                        <div class="notification-list" id="notificationList">
+                            <p class="no-notifications">No new notifications</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="admin-profile">
+                    <span class="material-icons">account_circle</span>
+                    <span id="adminName">Admin</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- DASHBOARD CONTENT -->
+        <div class="content-wrapper">
+            <h1 class="page-title">Dashboard</h1>
+
+            <!-- STATS CARDS -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon blue">
+                        <span class="material-icons">shopping_cart</span>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="totalOrders">0</h3>
+                        <p>Total Orders</p>
+                        <span class="stat-change positive">+12% from last month</span>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon green">
+                        <span class="material-icons">trending_up</span>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="totalRevenue">₦0</h3>
+                        <p>Total Revenue</p>
+                        <span class="stat-change positive">+8% from last month</span>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon purple">
+                        <span class="material-icons">inventory_2</span>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="totalProducts">0</h3>
+                        <p>Total Products</p>
+                        <span class="stat-change">5 out of stock</span>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon orange">
+                        <span class="material-icons">people</span>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="totalCustomers">0</h3>
+                        <p>Total Customers</p>
+                        <span class="stat-change positive">+24 this week</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CHARTS & TABLES ROW -->
+            <div class="dashboard-grid">
+                <!-- REVENUE CHART -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3>Revenue Overview</h3>
+                        <select id="revenueFilter">
+                            <option>Last 7 Days</option>
+                            <option>Last 30 Days</option>
+                            <option>Last 90 Days</option>
+                        </select>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="revenueChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- RECENT ORDERS -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3>Recent Orders</h3>
+                        <a href="orders.html" class="view-all">View All</a>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Order ID</th>
+                                    <th>Customer</th>
+                                    <th>Total</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="recentOrdersTable">
+                                <tr>
+                                    <td colspan="4" class="no-data">No orders yet</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TOP PRODUCTS & LOW STOCK -->
+            <div class="dashboard-grid">
+                <!-- TOP SELLING PRODUCTS -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3>Top Selling Products</h3>
+                    </div>
+                    <div class="product-list" id="topProductsList">
+                        <p class="no-data">No data available</p>
+                    </div>
+                </div>
+
+                <!-- LOW STOCK ALERTS -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3>Low Stock Alerts</h3>
+                    </div>
+                    <div class="alert-list" id="lowStockList">
+                        <p class="no-data">All products in stock</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- NOTIFICATION SOUND (Hidden Audio) -->
+    <audio id="notificationSound" preload="auto">
+        <source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBTGH0fPTgjMGHm7A7+OZURE=" type="audio/wav">
+    </audio>
+
+    <script src="assets/js/admin-main.js"></script>
+</body>
+</html>

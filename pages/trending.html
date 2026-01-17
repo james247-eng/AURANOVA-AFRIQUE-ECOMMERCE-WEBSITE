@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Shop Premium Nigerian Fashion - AURANOVA-AFRIQUE">
+    <title>TRENDING - AURANOVA-AFRIQUE | Premium Nigerian Fashion</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Google Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="../assets/css/global.css">
+    <link rel="stylesheet" href="../assets/css/shop.css">
+</head>
+<body>
+    <!-- PRELOADER -->
+    <div class="preloader" id="preloader">
+        <div class="preloader-content">
+            <div class="preloader-logo">AURANOVA</div>
+            <div class="preloader-subtitle">AFRIQUE</div>
+            <div class="loader-bar"></div>
+        </div>
+    </div>
+
+    <!-- IMPROVED NAVIGATION WITH DROPDOWNS -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <!-- Logo -->
+            <a href="../index.html" class="nav-logo">
+                <span class="logo-main">AURANOVA</span>
+                <span class="logo-sub">AFRIQUE</span>
+            </a>
+
+            <!-- Navigation Links with Dropdowns -->
+            <ul class="nav-menu" id="navMenu">
+                <li class="nav-item">
+                    <a href="../index.html" class="nav-link">Home</a>
+                </li>
+                
+                <!-- SHOP DROPDOWN -->
+                <li class="nav-item dropdown">
+                    <a href="shop.html" class="nav-link active">
+                        Shop <span class="material-icons dropdown-icon">keyboard_arrow_down</span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a href="shop.html?category=all">All Products</a></li>
+                        <li><a href="shop.html?category=caftans">Premium Caftans</a></li>
+                        <li><a href="shop.html?category=english">English Wears</a></li>
+                        <li><a href="shop.html?category=yoruba-caps">Yoruba Caps</a></li>
+                        <li><a href="shop.html?category=face-caps">Face Caps</a></li>
+                    </ul>
+                </li>
+
+                <!-- COLLECTIONS DROPDOWN -->
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link">
+                        Collections <span class="material-icons dropdown-icon">keyboard_arrow_down</span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a href="trending.html">Trending Now</a></li>
+                        <li><a href="new-arrivals.html">New Arrivals</a></li>
+                        <li><a href="limited-edition.html">Limited Edition</a></li>
+                        <li><a href="custom-orders.html">Custom Orders</a></li>
+                    </ul>
+                </li>
+
+                <li class="nav-item">
+                    <a href="about.html" class="nav-link">About</a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="contact.html" class="nav-link">Contact</a>
+                </li>
+            </ul>
+
+            <!-- Navigation Icons -->
+            <div class="nav-actions">
+                <button class="nav-icon-btn" id="searchBtn" aria-label="Search">
+                    <span class="material-icons">search</span>
+                </button>
+                
+                <a href="wishlist.html" class="nav-icon-btn" aria-label="Wishlist">
+                    <span class="material-icons">favorite_border</span>
+                    <span class="icon-badge" id="wishlistCount">0</span>
+                </a>
+                
+                <a href="cart.html" class="nav-icon-btn" aria-label="Shopping Cart">
+                    <span class="material-icons">shopping_cart</span>
+                    <span class="icon-badge" id="cartCount">0</span>
+                </a>
+                
+                <button class="nav-icon-btn" id="accountBtn" aria-label="Account">
+                    <span class="material-icons">person_outline</span>
+                </button>
+            </div>
+
+            <!-- Mobile Menu Toggle -->
+            <button class="hamburger" id="hamburger" aria-label="Toggle Menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- SHOP HEADER -->
+    <section class="shop-header">
+        <div class="shop-header-content">
+            <h1 class="shop-title">Our Collections</h1>
+            <p class="shop-subtitle">Premium Nigerian Fashion - Handcrafted Excellence</p>
+        </div>
+    </section>
+
+    <!-- SHOP CONTENT -->
+    <section class="shop-section">
+        <div class="container">
+            <div class="shop-layout">
+                <!-- SIDEBAR FILTERS -->
+                <aside class="shop-sidebar">
+                    <div class="filter-section">
+                        <h3 class="filter-title">Categories</h3>
+                        <ul class="filter-list">
+                            <li>
+                                <label class="filter-checkbox">
+                                    <input type="checkbox" value="all" checked>
+                                    <span>All Products</span>
+                                    <span class="filter-count">(32)</span>
+                                </label>
+                            </li>
+                            <li>
+                                <label class="filter-checkbox">
+                                    <input type="checkbox" value="caftans">
+                                    <span>Premium Caftans</span>
+                                    <span class="filter-count">(12)</span>
+                                </label>
+                            </li>
+                            <li>
+                                <label class="filter-checkbox">
+                                    <input type="checkbox" value="english">
+                                    <span>English Wears</span>
+                                    <span class="filter-count">(10)</span>
+                                </label>
+                            </li>
+                            <li>
+                                <label class="filter-checkbox">
+                                    <input type="checkbox" value="yoruba-caps">
+                                    <span>Yoruba Caps</span>
+                                    <span class="filter-count">(6)</span>
+                                </label>
+                            </li>
+                            <li>
+                                <label class="filter-checkbox">
+                                    <input type="checkbox" value="face-caps">
+                                    <span>Face Caps</span>
+                                    <span class="filter-count">(4)</span>
+                                </label>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="filter-section">
+                        <h3 class="filter-title">Price Range</h3>
+                        <div class="price-range">
+                            <input type="number" placeholder="Min" class="price-input" id="minPrice">
+                            <span class="price-separator">-</span>
+                            <input type="number" placeholder="Max" class="price-input" id="maxPrice">
+                        </div>
+                        <button class="btn-apply-price">Apply</button>
+                    </div>
+
+                    <div class="filter-section">
+                        <h3 class="filter-title">Size</h3>
+                        <div class="size-filters">
+                            <button class="size-btn">S</button>
+                            <button class="size-btn">M</button>
+                            <button class="size-btn">L</button>
+                            <button class="size-btn">XL</button>
+                            <button class="size-btn">XXL</button>
+                        </div>
+                    </div>
+
+                    <div class="filter-section">
+                        <h3 class="filter-title">Availability</h3>
+                        <ul class="filter-list">
+                            <li>
+                                <label class="filter-checkbox">
+                                    <input type="checkbox" value="in-stock">
+                                    <span>In Stock</span>
+                                </label>
+                            </li>
+                            <li>
+                                <label class="filter-checkbox">
+                                    <input type="checkbox" value="pre-order">
+                                    <span>Pre-Order</span>
+                                </label>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <button class="btn-reset-filters">Reset All Filters</button>
+                </aside>
+
+                <!-- PRODUCTS AREA -->
+                <div class="shop-main">
+                    <!-- TOOLBAR -->
+                    <div class="shop-toolbar">
+                        <div class="toolbar-left">
+                            <p class="results-count">Showing <span id="productCount">32</span> products</p>
+                        </div>
+                        <div class="toolbar-right">
+                            <div class="sort-dropdown">
+                                <label for="sortBy">Sort by:</label>
+                                <select id="sortBy" class="sort-select">
+                                    <option value="featured">Featured</option>
+                                    <option value="newest">Newest</option>
+                                    <option value="price-low">Price: Low to High</option>
+                                    <option value="price-high">Price: High to Low</option>
+                                    <option value="name">Name: A-Z</option>
+                                </select>
+                            </div>
+                            
+                            <div class="view-toggle">
+                                <button class="view-btn active" data-view="grid">
+                                    <span class="material-icons">grid_view</span>
+                                </button>
+                                <button class="view-btn" data-view="list">
+                                    <span class="material-icons">view_list</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PRODUCTS GRID -->
+                    <div class="products-grid" id="shopProducts">
+                        <!-- Products will be loaded here dynamically -->
+                    </div>
+
+                    <!-- PAGINATION -->
+                    <div class="pagination">
+                        <button class="pagination-btn" disabled>
+                            <span class="material-icons">chevron_left</span>
+                        </button>
+                        <button class="pagination-btn active">1</button>
+                        <button class="pagination-btn">2</button>
+                        <button class="pagination-btn">3</button>
+                        <button class="pagination-btn">
+                            <span class="material-icons">chevron_right</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <!-- Brand Column -->
+                <div class="footer-col">
+                    <div class="footer-logo">
+                        <span class="logo-main">AURANOVA</span>
+                        <span class="logo-sub">AFRIQUE</span>
+                    </div>
+                    <p class="footer-desc">
+                        Premium Nigerian fashion brand redefining African luxury. 
+                        Handcrafted excellence in every stitch.
+                    </p>
+                    <div class="social-links">
+                        <a href="#" class="social-link" aria-label="Instagram"><span class="material-icons">camera_alt</span></a>
+                        <a href="#" class="social-link" aria-label="Facebook"><span class="material-icons">facebook</span></a>
+                        <a href="#" class="social-link" aria-label="Twitter"><span class="material-icons">chat_bubble_outline</span></a>
+                        <a href="#" class="social-link" aria-label="WhatsApp"><span class="material-icons">chat</span></a>
+                    </div>
+                </div>
+
+                <!-- Quick Links -->
+                <div class="footer-col">
+                    <h4 class="footer-heading">Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="shop.html">Shop</a></li>
+                        <li><a href="custom-orders.html">Custom Orders</a></li>
+                        <li><a href="booking.html">Book Appointment</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+
+                <!-- Customer Service -->
+                <div class="footer-col">
+                    <h4 class="footer-heading">Customer Service</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Size Guide</a></li>
+                        <li><a href="#">Shipping & Returns</a></li>
+                        <li><a href="#">FAQs</a></li>
+                        <li><a href="#">Track Order</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact Info -->
+                <div class="footer-col">
+                    <h4 class="footer-heading">Get In Touch</h4>
+                    <ul class="footer-contact">
+                        <li>
+                            <span class="material-icons">location_on</span>
+                            <span>Lagos, Nigeria</span>
+                        </li>
+                        <li>
+                            <span class="material-icons">phone</span>
+                            <span>+234 XXX XXX XXXX</span>
+                        </li>
+                        <li>
+                            <span class="material-icons">email</span>
+                            <span>info@auranova-afrique.com</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2026 AURANOVA-AFRIQUE. All rights reserved. | Designed & Developed with Excellence</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript Files -->
+    <script src="../assets/js/main.js"></script>
+    <script src="../assets/js/shop.js"></script>
+    <script src="../assets/js/products.js"></script>
+    <script src="../assets/js/cart.js"></script>
+</body>
+</html>
