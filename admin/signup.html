@@ -1,0 +1,602 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Signup - AURANOVA AFRIQUE</title>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Icons"
+    />
+    <link rel="stylesheet" href="assets/css/admin.css" />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+      }
+
+      .auth-container {
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        width: 100%;
+        max-width: 500px;
+        padding: 40px;
+        animation: slideUp 0.5s ease-out;
+      }
+
+      @keyframes slideUp {
+        from {
+          transform: translateY(30px);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+
+      .auth-header {
+        text-align: center;
+        margin-bottom: 30px;
+      }
+
+      .auth-header h1 {
+        color: #1a1a1a;
+        font-size: 28px;
+        margin-bottom: 10px;
+      }
+
+      .auth-header p {
+        color: #666;
+        font-size: 14px;
+      }
+
+      .warning-box {
+        background: #fff3cd;
+        border-left: 4px solid #ffc107;
+        padding: 12px;
+        border-radius: 4px;
+        margin-bottom: 20px;
+        font-size: 13px;
+        color: #856404;
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+      }
+
+      .form-group label {
+        display: block;
+        color: #333;
+        font-weight: 600;
+        margin-bottom: 8px;
+        font-size: 14px;
+      }
+
+      .form-group input,
+      .form-group select {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        font-size: 14px;
+        transition: border-color 0.3s;
+      }
+
+      .form-group input:focus,
+      .form-group select:focus {
+        outline: none;
+        border-color: #c41e3a;
+        box-shadow: 0 0 0 3px rgba(196, 30, 58, 0.1);
+      }
+
+      .password-field {
+        position: relative;
+      }
+
+      .toggle-password {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: #666;
+        padding: 5px;
+        margin-top: 20px;
+      }
+
+      .toggle-password:hover {
+        color: #333;
+      }
+
+      .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+      }
+
+      .form-row .form-group {
+        margin-bottom: 20px;
+      }
+
+      .password-requirements {
+        background: #f5f5f5;
+        padding: 12px;
+        border-radius: 6px;
+        margin-top: 10px;
+        font-size: 12px;
+        color: #666;
+      }
+
+      .requirement {
+        display: flex;
+        align-items: center;
+        margin: 6px 0;
+      }
+
+      .requirement.met {
+        color: #27ae60;
+      }
+
+      .requirement.pending {
+        color: #e74c3c;
+      }
+
+      .requirement i {
+        margin-right: 8px;
+      }
+
+      .btn-auth {
+        width: 100%;
+        padding: 12px;
+        background: linear-gradient(135deg, #c41e3a 0%, #a01730 100%);
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition:
+          transform 0.3s,
+          box-shadow 0.3s;
+        margin-top: 10px;
+      }
+
+      .btn-auth:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 20px rgba(196, 30, 58, 0.3);
+      }
+
+      .btn-auth:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      .auth-footer {
+        text-align: center;
+        margin-top: 20px;
+      }
+
+      .auth-footer p {
+        color: #666;
+        font-size: 14px;
+      }
+
+      .auth-footer a {
+        color: #c41e3a;
+        text-decoration: none;
+        font-weight: 600;
+      }
+
+      .auth-footer a:hover {
+        text-decoration: underline;
+      }
+
+      .notification {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 15px 20px;
+        background: white;
+        border-left: 4px solid #27ae60;
+        border-radius: 4px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+        animation: slideIn 0.3s ease-out;
+      }
+
+      .notification.error {
+        border-left-color: #e74c3c;
+      }
+
+      .notification.info {
+        border-left-color: #3498db;
+      }
+
+      @keyframes slideIn {
+        from {
+          transform: translateX(400px);
+          opacity: 0;
+        }
+        to {
+          transform: translateX(0);
+          opacity: 1;
+        }
+      }
+
+      @media (max-width: 600px) {
+        .auth-container {
+          padding: 30px 20px;
+        }
+
+        .form-row {
+          grid-template-columns: 1fr;
+        }
+
+        .auth-header h1 {
+          font-size: 24px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="auth-container">
+      <div class="auth-header">
+        <h1>Admin Registration</h1>
+        <p>Create your admin account for AURANOVA AFRIQUE</p>
+      </div>
+
+      <div class="warning-box">
+        <strong>⚠️ Admin Access Required:</strong> Admin registration requires a
+        valid invitation code sent by management.
+      </div>
+
+      <form id="adminRegisterForm">
+        <div class="form-group">
+          <label for="inviteCode">Invitation Code</label>
+          <input
+            type="text"
+            id="inviteCode"
+            name="inviteCode"
+            placeholder="Enter your admin invitation code"
+            required
+          />
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="firstName">First Name</label>
+            <input
+              type="text"
+              id="firstName"
+              name="firstName"
+              placeholder="John"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="lastName">Last Name</label>
+            <input
+              type="text"
+              id="lastName"
+              name="lastName"
+              placeholder="Doe"
+              required
+            />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            placeholder="admin@auranova.com"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="phone">Phone Number</label>
+          <input
+            type="tel"
+            id="phone"
+            name="phone"
+            placeholder="+234 XXXXXXXXXX"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="role">Admin Role</label>
+          <select id="role" name="role" required>
+            <option value="">Select a role</option>
+            <option value="products">Product Manager</option>
+            <option value="orders">Order Manager</option>
+            <option value="customers">Customer Support</option>
+            <option value="messaging">Messaging</option>
+            <option value="superadmin">Super Admin</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <div class="password-field">
+            <input
+              type="password"
+              id="password"
+              name="password"
+              placeholder="Create a strong password"
+              required
+            />
+            <button
+              type="button"
+              class="toggle-password"
+              data-target="password"
+            >
+              <span class="material-icons">visibility</span>
+            </button>
+          </div>
+          <div class="password-requirements">
+            <div class="requirement pending" id="req-length">
+              <span>✓</span> At least 8 characters
+            </div>
+            <div class="requirement pending" id="req-uppercase">
+              <span>✓</span> One uppercase letter
+            </div>
+            <div class="requirement pending" id="req-number">
+              <span>✓</span> One number
+            </div>
+            <div class="requirement pending" id="req-special">
+              <span>✓</span> One special character
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="confirmPassword">Confirm Password</label>
+          <div class="password-field">
+            <input
+              type="password"
+              id="confirmPassword"
+              name="confirmPassword"
+              placeholder="Re-enter your password"
+              required
+            />
+            <button
+              type="button"
+              class="toggle-password"
+              data-target="confirmPassword"
+            >
+              <span class="material-icons">visibility</span>
+            </button>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-auth">Create Admin Account</button>
+      </form>
+
+      <div class="auth-footer">
+        <p>Already have an admin account? <a href="login.html">Sign In</a></p>
+      </div>
+    </div>
+
+    <script src="assets/js/firebaseConfig.js"></script>
+    <script src="assets/js/validator.js"></script>
+    <script src="assets/js/error-handler.js"></script>
+    <script src="assets/js/admin.js"></script>
+    <script>
+      // VALID INVITATION CODES (would be managed in Firebase in production)
+      const VALID_CODES = {
+        "AURANOVA-ADMIN-2024": "superadmin",
+        "AURANOVA-PROD-MANAGER": "products",
+        "AURANOVA-ORDER-MGR": "orders",
+        "AURANOVA-SUPPORT": "customers",
+        "AURANOVA-MSG": "messaging",
+      };
+
+      document.addEventListener("DOMContentLoaded", function () {
+        initPasswordToggles();
+        initAdminRegisterForm();
+      });
+
+      function initPasswordToggles() {
+        const toggleButtons = document.querySelectorAll(".toggle-password");
+
+        toggleButtons.forEach((btn) => {
+          btn.addEventListener("click", function (e) {
+            e.preventDefault();
+            const targetId = this.dataset.target;
+            const input = document.getElementById(targetId);
+            const icon = this.querySelector(".material-icons");
+
+            if (input.type === "password") {
+              input.type = "text";
+              icon.textContent = "visibility_off";
+            } else {
+              input.type = "password";
+              icon.textContent = "visibility";
+            }
+          });
+        });
+      }
+
+      function initAdminRegisterForm() {
+        const form = document.getElementById("adminRegisterForm");
+        if (!form) return;
+
+        form.addEventListener("submit", async function (e) {
+          e.preventDefault();
+
+          const inviteCode = form.inviteCode.value.trim().toUpperCase();
+          const firstName = form.firstName.value.trim();
+          const lastName = form.lastName.value.trim();
+          const email = form.email.value.trim();
+          const phone = form.phone.value.trim();
+          const role = form.role.value;
+          const password = form.password.value;
+          const confirmPassword = form.confirmPassword.value;
+
+          // Validate invite code
+          if (!VALID_CODES[inviteCode]) {
+            showNotification(
+              "Invalid invitation code. Please check and try again.",
+              "error",
+            );
+            return;
+          }
+
+          // Validate inputs
+          if (!window.InputValidator?.isValidName(firstName)) {
+            showNotification("First name is invalid", "error");
+            return;
+          }
+
+          if (!window.InputValidator?.isValidName(lastName)) {
+            showNotification("Last name is invalid", "error");
+            return;
+          }
+
+          if (!window.InputValidator?.isValidEmail(email)) {
+            showNotification("Email address is invalid", "error");
+            return;
+          }
+
+          if (!window.InputValidator?.isValidPhoneNigeria(phone)) {
+            showNotification("Please enter a valid phone number", "error");
+            return;
+          }
+
+          if (!window.InputValidator?.isValidPassword(password)) {
+            showNotification(
+              "Password must have 8+ chars, uppercase, number, and special char",
+              "error",
+            );
+            return;
+          }
+
+          if (password !== confirmPassword) {
+            showNotification("Passwords do not match", "error");
+            return;
+          }
+
+          const submitBtn = form.querySelector(".btn-auth");
+          submitBtn.disabled = true;
+          submitBtn.textContent = "Creating Admin Account...";
+
+          try {
+            // Validate role matches code
+            if (
+              VALID_CODES[inviteCode] !== "superadmin" &&
+              VALID_CODES[inviteCode] !== role
+            ) {
+              showNotification(
+                "Your invitation code is not valid for this role",
+                "error",
+              );
+              submitBtn.disabled = false;
+              submitBtn.textContent = "Create Admin Account";
+              return;
+            }
+
+            const adminData = {
+              firstName: firstName,
+              lastName: lastName,
+              email: email,
+              phone: phone,
+              password: password,
+              role:
+                VALID_CODES[inviteCode] === "superadmin"
+                  ? role
+                  : VALID_CODES[inviteCode],
+              inviteCode: inviteCode,
+              createdAt: new Date().toISOString(),
+              status: "active",
+            };
+
+            console.log(
+              "Admin registration data (ready for Firebase):",
+              adminData,
+            );
+
+            // TODO: Firebase Admin Auth
+            // const auth = firebase.auth();
+            // const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+            // const user = userCredential.user;
+
+            // Store in Firestore with admin role
+            // const db = firebase.firestore();
+            // await db.collection('admins').doc(user.uid).set(adminData);
+
+            // Simulate delay
+            await new Promise((resolve) => setTimeout(resolve, 1000));
+
+            showNotification("Admin account created successfully!", "success");
+
+            setTimeout(() => {
+              window.location.href = "login.html";
+            }, 2000);
+          } catch (error) {
+            console.error("Admin registration error:", error);
+            showNotification("Registration failed. Please try again.", "error");
+            submitBtn.disabled = false;
+            submitBtn.textContent = "Create Admin Account";
+          }
+        });
+      }
+
+      // Password requirement checker
+      document
+        .getElementById("password")
+        ?.addEventListener("input", function () {
+          const password = this.value;
+
+          updateRequirement("req-length", password.length >= 8);
+          updateRequirement("req-uppercase", /[A-Z]/.test(password));
+          updateRequirement("req-number", /\d/.test(password));
+          updateRequirement(
+            "req-special",
+            /[!@#$%^&*(),.?":{}|<>]/.test(password),
+          );
+        });
+
+      function updateRequirement(id, met) {
+        const element = document.getElementById(id);
+        if (met) {
+          element.classList.remove("pending");
+          element.classList.add("met");
+        } else {
+          element.classList.remove("met");
+          element.classList.add("pending");
+        }
+      }
+
+      function showNotification(message, type) {
+        const notification = document.createElement("div");
+        notification.className = `notification ${type}`;
+        notification.textContent = message;
+        document.body.appendChild(notification);
+
+        setTimeout(() => {
+          notification.remove();
+        }, 4000);
+      }
+    </script>
+  </body>
+</html>

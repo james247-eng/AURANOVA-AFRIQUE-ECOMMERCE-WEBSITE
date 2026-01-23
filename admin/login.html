@@ -1,197 +1,327 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Admin Login - AURANOVA-AFRIQUE</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
 
-        body {
-            font-family: 'Outfit', sans-serif;
-            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
+      body {
+        font-family: "Outfit", sans-serif;
+        background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
 
-        .login-container {
-            background: white;
-            padding: 3rem;
-            border-radius: 12px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            width: 100%;
-            max-width: 450px;
-        }
+      .login-container {
+        background: white;
+        padding: 3rem;
+        border-radius: 12px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        width: 100%;
+        max-width: 450px;
+      }
 
-        .login-header {
-            text-align: center;
-            margin-bottom: 2rem;
-        }
+      .login-header {
+        text-align: center;
+        margin-bottom: 2rem;
+      }
 
-        .logo {
-            font-size: 2rem;
-            font-weight: 700;
-            color: #D4AF37;
-            margin-bottom: 0.5rem;
-        }
+      .logo {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #d4af37;
+        margin-bottom: 0.5rem;
+      }
 
-        .subtitle {
-            color: #666;
-            font-size: 0.9rem;
-        }
+      .subtitle {
+        color: #666;
+        font-size: 0.9rem;
+      }
 
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
+      .form-group {
+        margin-bottom: 1.5rem;
+      }
 
-        label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-            color: #333;
-        }
+      label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+        color: #333;
+      }
 
-        input {
-            width: 100%;
-            padding: 1rem;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 1rem;
-            transition: border-color 0.3s;
-        }
+      input {
+        width: 100%;
+        padding: 1rem;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: border-color 0.3s;
+      }
 
-        input:focus {
-            outline: none;
-            border-color: #D4AF37;
-        }
+      input:focus {
+        outline: none;
+        border-color: #d4af37;
+      }
 
-        .btn-login {
-            width: 100%;
-            padding: 1rem;
-            background: #D4AF37;
-            color: #000;
-            border: none;
-            border-radius: 8px;
-            font-size: 1rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
+      .btn-login {
+        width: 100%;
+        padding: 1rem;
+        background: #d4af37;
+        color: #000;
+        border: none;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.3s;
+      }
 
-        .btn-login:hover {
-            background: #B8941F;
-            transform: translateY(-2px);
-        }
+      .btn-login:hover {
+        background: #b8941f;
+        transform: translateY(-2px);
+      }
 
-        .alert {
-            padding: 1rem;
-            margin-bottom: 1rem;
-            border-radius: 8px;
-            display: none;
-        }
+      .alert {
+        padding: 1rem;
+        margin-bottom: 1rem;
+        border-radius: 8px;
+        display: none;
+      }
 
-        .alert.error {
-            background: #ffebee;
-            color: #c62828;
-            border: 1px solid #ef5350;
-        }
+      .alert.error {
+        background: #ffebee;
+        color: #c62828;
+        border: 1px solid #ef5350;
+      }
 
-        .alert.success {
-            background: #e8f5e9;
-            color: #2e7d32;
-            border: 1px solid #66bb6a;
-        }
+      .alert.success {
+        background: #e8f5e9;
+        color: #2e7d32;
+        border: 1px solid #66bb6a;
+      }
 
-        .back-link {
-            text-align: center;
-            margin-top: 1.5rem;
-        }
+      .back-link {
+        text-align: center;
+        margin-top: 1.5rem;
+      }
 
-        .back-link a {
-            color: #D4AF37;
-            text-decoration: none;
-        }
+      .back-link a {
+        color: #d4af37;
+        text-decoration: none;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="login-container">
-        <div class="login-header">
-            <div class="logo">AURANOVA-AFRIQUE</div>
-            <p class="subtitle">Admin Panel Login</p>
+      <div class="login-header">
+        <div class="logo">AURANOVA-AFRIQUE</div>
+        <p class="subtitle">Admin Panel Login</p>
+      </div>
+
+      <div class="alert" id="alert"></div>
+
+      <form id="adminLoginForm">
+        <div class="form-group">
+          <label>Email Address</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            placeholder="admin@example.com"
+            required
+            autofocus
+          />
         </div>
 
-        <div class="alert" id="alert"></div>
-
-        <form id="adminLoginForm">
-            <div class="form-group">
-                <label>Email Address</label>
-                <input type="email" name="email" required autofocus>
-            </div>
-
-            <div class="form-group">
-                <label>Password</label>
-                <input type="password" name="password" required>
-            </div>
-
-            <button type="submit" class="btn-login">Login to Admin Panel</button>
-        </form>
-
-        <div class="back-link">
-            <a href="../index.html">← Back to Main Site</a>
+        <div class="form-group">
+          <label>Password</label>
+          <div style="position: relative">
+            <input
+              type="password"
+              id="password"
+              name="password"
+              placeholder="Enter your password"
+              required
+            />
+            <button
+              type="button"
+              id="togglePassword"
+              style="
+                position: absolute;
+                right: 1rem;
+                top: 2.6rem;
+                background: none;
+                border: none;
+                cursor: pointer;
+                color: #666;
+              "
+            >
+              <span class="material-icons">visibility</span>
+            </button>
+          </div>
         </div>
+
+        <div
+          style="
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 1.5rem;
+          "
+        >
+          <a
+            href="#"
+            id="forgotPasswordLink"
+            style="color: #d4af37; text-decoration: none; font-size: 0.9rem"
+            >Forgot password?</a
+          >
+        </div>
+
+        <button type="submit" class="btn-login" id="loginBtn">
+          Login to Admin Panel
+        </button>
+      </form>
+
+      <div
+        style="
+          text-align: center;
+          margin-top: 1.5rem;
+          color: #666;
+          font-size: 0.9rem;
+        "
+      >
+        Don't have an admin account?
+        <a
+          href="signup.html"
+          style="color: #d4af37; text-decoration: none; font-weight: 600"
+          >Request access</a
+        >
+      </div>
+
+      <div class="back-link">
+        <a href="../index.html">← Back to Main Site</a>
+      </div>
     </div>
 
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
+    <script src="assets/js/firebaseConfig.js"></script>
+    <script src="assets/js/admin-auth.js"></script>
+
     <script>
-        document.getElementById('adminLoginForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            const email = this.email.value;
-            const password = this.password.value;
-            const alert = document.getElementById('alert');
-            const btn = this.querySelector('.btn-login');
-            
-            btn.textContent = 'Logging in...';
-            btn.disabled = true;
-            
-            // TODO: Firebase Auth with role check
-            // const auth = firebase.auth();
-            // const userCredential = await auth.signInWithEmailAndPassword(email, password);
-            // const user = userCredential.user;
-            // const db = firebase.firestore();
-            // const userDoc = await db.collection('users').doc(user.uid).get();
-            // if (userDoc.data().role !== 'admin') {
-            //     throw new Error('Unauthorized');
-            // }
-            
-            // Mock login (REMOVE IN PRODUCTION)
-            setTimeout(() => {
-                if (email === 'admin@auranova.com' && password === 'admin123') {
-                    localStorage.setItem('admin_user', JSON.stringify({
-                        email: email,
-                        role: 'admin',
-                        uid: 'admin_123'
-                    }));
-                    alert.className = 'alert success';
-                    alert.textContent = 'Login successful! Redirecting...';
-                    alert.style.display = 'block';
-                    setTimeout(() => window.location.href = 'index.html', 1000);
-                } else {
-                    alert.className = 'alert error';
-                    alert.textContent = 'Invalid credentials or unauthorized access';
-                    alert.style.display = 'block';
-                    btn.textContent = 'Login to Admin Panel';
-                    btn.disabled = false;
-                }
-            }, 1000);
+      // Password visibility toggle
+      document
+        .getElementById("togglePassword")
+        .addEventListener("click", function () {
+          const passwordInput = document.getElementById("password");
+          const icon = this.querySelector(".material-icons");
+
+          if (passwordInput.type === "password") {
+            passwordInput.type = "text";
+            icon.textContent = "visibility_off";
+          } else {
+            passwordInput.type = "password";
+            icon.textContent = "visibility";
+          }
+        });
+
+      // Login form submission
+      document
+        .getElementById("adminLoginForm")
+        .addEventListener("submit", async function (e) {
+          e.preventDefault();
+
+          const email = document.getElementById("email").value.trim();
+          const password = document.getElementById("password").value;
+          const alert = document.getElementById("alert");
+          const btn = this.querySelector(".btn-login");
+
+          if (!email || !password) {
+            alert.className = "alert error";
+            alert.textContent = "Please fill in all fields";
+            alert.style.display = "block";
+            return;
+          }
+
+          btn.textContent = "Logging in...";
+          btn.disabled = true;
+
+          try {
+            // Use Firebase Authentication
+            await window.adminAuth.loginAdmin(email, password);
+          } catch (error) {
+            alert.className = "alert error";
+
+            // Handle specific Firebase errors
+            if (error.code === "auth/user-not-found") {
+              alert.textContent =
+                "Email not found. Please check and try again.";
+            } else if (error.code === "auth/wrong-password") {
+              alert.textContent = "Incorrect password. Please try again.";
+            } else if (error.code === "auth/too-many-requests") {
+              alert.textContent =
+                "Too many failed login attempts. Please try again later.";
+            } else {
+              alert.textContent =
+                error.message || "Login failed. Please try again.";
+            }
+
+            alert.style.display = "block";
+            btn.textContent = "Login to Admin Panel";
+            btn.disabled = false;
+          }
+        });
+
+      // Forgot password
+      document
+        .getElementById("forgotPasswordLink")
+        .addEventListener("click", function (e) {
+          e.preventDefault();
+          const email = document.getElementById("email").value.trim();
+
+          if (!email) {
+            alert.className = "alert warning";
+            alert.textContent = "Please enter your email address first";
+            alert.style.display = "block";
+            return;
+          }
+
+          // Send password reset email
+          firebase
+            .auth()
+            .sendPasswordResetEmail(email)
+            .then(() => {
+              const alert = document.getElementById("alert");
+              alert.className = "alert success";
+              alert.textContent =
+                "Password reset email sent. Check your inbox.";
+              alert.style.display = "block";
+            })
+            .catch((error) => {
+              const alert = document.getElementById("alert");
+              alert.className = "alert error";
+              alert.textContent = error.message;
+              alert.style.display = "block";
+            });
         });
     </script>
-</body>
+  </body>
 </html>

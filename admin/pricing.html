@@ -1,0 +1,577 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Easblink Tech - Pricing Packages</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      @media print {
+        body {
+          width: 297mm;
+          height: 210mm;
+        }
+        .no-print {
+          display: none;
+        }
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: #ffffff;
+        color: #000000;
+        line-height: 1.4;
+        padding: 20px;
+      }
+
+      .container {
+        max-width: 1400px;
+        margin: 0 auto;
+        background: white;
+      }
+
+      /* Header */
+      .header {
+        border-bottom: 4px solid #ff6600;
+        padding-bottom: 15px;
+        margin-bottom: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .logo {
+        font-size: 32px;
+        font-weight: 800;
+        color: #003366;
+        letter-spacing: -1px;
+      }
+
+      .logo span {
+        color: #ff6600;
+      }
+
+      .contact-info {
+        text-align: right;
+        font-size: 11px;
+        color: #003366;
+      }
+
+      .contact-info div {
+        margin: 3px 0;
+      }
+
+      .contact-info strong {
+        color: #000000;
+      }
+
+      /* Intro */
+      .intro {
+        text-align: center;
+        margin-bottom: 20px;
+        font-size: 13px;
+        color: #003366;
+      }
+
+      /* Packages Grid */
+      .packages-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 15px;
+        margin-bottom: 20px;
+      }
+
+      .package {
+        border: 2px solid #003366;
+        padding: 15px;
+        background: #ffffff;
+        position: relative;
+      }
+
+      .package.featured {
+        border-color: #ff6600;
+        border-width: 3px;
+      }
+
+      .package-header {
+        background: #003366;
+        color: white;
+        padding: 10px;
+        margin: -15px -15px 12px -15px;
+        text-align: center;
+      }
+
+      .package.featured .package-header {
+        background: #ff6600;
+      }
+
+      .package-name {
+        font-size: 16px;
+        font-weight: 700;
+        margin-bottom: 3px;
+      }
+
+      .package-subtitle {
+        font-size: 10px;
+        opacity: 0.9;
+      }
+
+      .package-price {
+        text-align: center;
+        padding: 8px 0;
+        margin-bottom: 10px;
+        border-bottom: 2px solid #f0f0f0;
+      }
+
+      .price {
+        font-size: 20px;
+        font-weight: 800;
+        color: #ff6600;
+      }
+
+      .package-features {
+        font-size: 10px;
+        line-height: 1.6;
+      }
+
+      .package-features h4 {
+        font-size: 11px;
+        color: #003366;
+        margin: 8px 0 4px 0;
+        font-weight: 700;
+      }
+
+      .package-features ul {
+        list-style: none;
+        padding-left: 0;
+      }
+
+      .package-features li {
+        padding: 2px 0 2px 12px;
+        position: relative;
+      }
+
+      .package-features li:before {
+        content: "•";
+        position: absolute;
+        left: 0;
+        color: #ff6600;
+        font-weight: bold;
+      }
+
+      .timeline {
+        text-align: center;
+        margin-top: 10px;
+        padding-top: 8px;
+        border-top: 2px solid #f0f0f0;
+        font-size: 10px;
+        font-weight: 600;
+        color: #003366;
+      }
+
+      /* Add-ons Section */
+      .addons-section {
+        margin-bottom: 15px;
+      }
+
+      .section-title {
+        background: #003366;
+        color: white;
+        padding: 8px 15px;
+        font-size: 14px;
+        font-weight: 700;
+        margin-bottom: 10px;
+      }
+
+      .addons-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+      }
+
+      .addon-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 6px 10px;
+        background: #f8f8f8;
+        border-left: 3px solid #ff6600;
+        font-size: 10px;
+      }
+
+      .addon-name {
+        font-weight: 600;
+        color: #000000;
+      }
+
+      .addon-price {
+        color: #003366;
+        font-weight: 700;
+      }
+
+      /* Payment Section */
+      .payment-section {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+        margin-bottom: 15px;
+      }
+
+      .payment-option {
+        background: #f8f8f8;
+        padding: 10px;
+        border-top: 3px solid #003366;
+        font-size: 10px;
+      }
+
+      .payment-option strong {
+        display: block;
+        color: #ff6600;
+        margin-bottom: 4px;
+        font-size: 11px;
+      }
+
+      /* Footer */
+      .footer {
+        text-align: center;
+        padding-top: 10px;
+        border-top: 3px solid #003366;
+        font-size: 10px;
+        color: #003366;
+      }
+
+      .footer strong {
+        color: #ff6600;
+        font-size: 12px;
+      }
+
+      /* Print Button */
+      .print-btn {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: #ff6600;
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        border-radius: 4px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+      }
+
+      .print-btn:hover {
+        background: #003366;
+      }
+
+      @media screen and (max-width: 1200px) {
+        .packages-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .addons-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .payment-section {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      @media screen and (max-width: 768px) {
+        .packages-grid {
+          grid-template-columns: 1fr;
+        }
+        .addons-grid {
+          grid-template-columns: 1fr;
+        }
+        .payment-section {
+          grid-template-columns: 1fr;
+        }
+        .header {
+          flex-direction: column;
+          text-align: center;
+        }
+        .contact-info {
+          text-align: center;
+          margin-top: 10px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <button class="print-btn no-print" onclick="window.print()">
+      Print / Download PDF
+    </button>
+
+    <div class="container">
+      <!-- Header -->
+      <div class="header">
+        <div class="logo">EASBLINK<span>TECH</span></div>
+        <div class="contact-info">
+          <div><strong>Email:</strong> easblinktech@gmail.com</div>
+          <div><strong>Phone:</strong> +234 816 748 7996</div>
+          <div><strong>Web:</strong> www.easblinktech.com.ng</div>
+        </div>
+      </div>
+
+      <!-- Intro -->
+      <div class="intro">
+        <strong>Professional Web Development Packages</strong> - Custom
+        solutions for businesses and brands ready to grow online
+      </div>
+
+      <!-- Packages -->
+      <div class="packages-grid">
+        <!-- Package 1: Starter -->
+        <div class="package">
+          <div class="package-header">
+            <div class="package-name">STARTER</div>
+            <div class="package-subtitle">Entry Point Package</div>
+          </div>
+          <div class="package-price">
+            <div class="price">₦150K - ₦250K</div>
+          </div>
+          <div class="package-features">
+            <h4>Core Features</h4>
+            <ul>
+              <li>Responsive landing page (5 sections)</li>
+              <li>Mobile-optimized design</li>
+              <li>Contact form with notifications</li>
+              <li>SSL certificate & security</li>
+              <li>Google Analytics integration</li>
+              <li>Basic SEO setup</li>
+              <li>Social media links</li>
+              <li>Netlify/Vercel deployment</li>
+            </ul>
+
+            <h4>Support & Training</h4>
+            <ul>
+              <li>1 round of revisions</li>
+              <li>2 weeks post-launch support</li>
+              <li>Tutorial video on updates</li>
+            </ul>
+
+            <h4>Free Bonuses</h4>
+            <ul>
+              <li>30-min strategy call</li>
+              <li>Speed optimization</li>
+              <li>Performance report</li>
+            </ul>
+          </div>
+          <div class="timeline">Timeline: 1-2 weeks</div>
+        </div>
+
+        <!-- Package 2: Professional -->
+        <div class="package featured">
+          <div class="package-header">
+            <div class="package-name">PROFESSIONAL</div>
+            <div class="package-subtitle">Most Popular</div>
+          </div>
+          <div class="package-price">
+            <div class="price">₦400K - ₦600K</div>
+          </div>
+          <div class="package-features">
+            <h4>Core Features</h4>
+            <ul>
+              <li>All Starter features +</li>
+              <li>Multi-page website (up to 10 pages)</li>
+              <li>Custom brand-tailored design</li>
+              <li>Blog/News section with CMS</li>
+              <li>Google Maps integration</li>
+              <li>Advanced contact forms</li>
+              <li>Image gallery/portfolio</li>
+              <li>Content writing (5 pages)</li>
+            </ul>
+
+            <h4>Support & Training</h4>
+            <ul>
+              <li>3 rounds of revisions</li>
+              <li>2 months post-launch support</li>
+              <li>1-hour training session</li>
+            </ul>
+
+            <h4>Free Bonuses</h4>
+            <ul>
+              <li>Business email setup guide</li>
+              <li>Social media graphics (3 platforms)</li>
+              <li>SEO audit & recommendations</li>
+              <li>Maintenance checklist</li>
+              <li>6-month check-in call</li>
+            </ul>
+          </div>
+          <div class="timeline">Timeline: 2-3 weeks</div>
+        </div>
+
+        <!-- Package 3: E-Commerce Pro -->
+        <div class="package">
+          <div class="package-header">
+            <div class="package-name">E-COMMERCE PRO</div>
+            <div class="package-subtitle">High Value Package</div>
+          </div>
+          <div class="package-price">
+            <div class="price">₦800K - ₦1.3M</div>
+          </div>
+          <div class="package-features">
+            <h4>Core Features</h4>
+            <ul>
+              <li>All Professional features +</li>
+              <li>Full e-commerce functionality</li>
+              <li>Product catalog (100 products)</li>
+              <li>Shopping cart & checkout</li>
+              <li>Payment integration (Paystack/Flutterwave)</li>
+              <li>Customer accounts & order history</li>
+              <li>Inventory management</li>
+              <li>Admin dashboard</li>
+              <li>Automated email notifications</li>
+              <li>Product search & filtering</li>
+              <li>Discount/coupon system</li>
+            </ul>
+
+            <h4>Support & Training</h4>
+            <ul>
+              <li>Unlimited revisions (development)</li>
+              <li>3 months premium support</li>
+              <li>2 training sessions</li>
+            </ul>
+
+            <h4>Free Bonuses</h4>
+            <ul>
+              <li>Conversion optimization consult</li>
+              <li>Abandoned cart recovery</li>
+              <li>E-commerce tracking setup</li>
+              <li>Product upload (first 50 items)</li>
+              <li>Review system integration</li>
+              <li>Monthly reports (3 months)</li>
+              <li>Priority 24hr support</li>
+            </ul>
+          </div>
+          <div class="timeline">Timeline: 4-6 weeks</div>
+        </div>
+
+        <!-- Package 4: Custom/Enterprise -->
+        <div class="package">
+          <div class="package-header">
+            <div class="package-name">CUSTOM</div>
+            <div class="package-subtitle">Enterprise Solutions</div>
+          </div>
+          <div class="package-price">
+            <div class="price">₦1.5M - ₦5M+</div>
+          </div>
+          <div class="package-features">
+            <h4>Core Features</h4>
+            <ul>
+              <li>Fully custom web application</li>
+              <li>Advanced user authentication</li>
+              <li>Real-time database (Firebase)</li>
+              <li>Custom admin dashboard</li>
+              <li>API integrations</li>
+              <li>Advanced analytics & reporting</li>
+              <li>Cloud Functions backend</li>
+              <li>Progressive Web App (PWA)</li>
+              <li>Comprehensive documentation</li>
+            </ul>
+
+            <h4>Support & Training</h4>
+            <ul>
+              <li>Unlimited revisions (development)</li>
+              <li>6 months premium support</li>
+              <li>Monthly strategy calls (3 months)</li>
+              <li>Multiple staff training sessions</li>
+            </ul>
+
+            <h4>Free Bonuses</h4>
+            <ul>
+              <li>Technical architecture consult</li>
+              <li>Scalability planning</li>
+              <li>Security audit basics</li>
+              <li>CI/CD deployment automation</li>
+              <li>API documentation</li>
+              <li>Performance monitoring</li>
+              <li>Quarterly feature recommendations</li>
+            </ul>
+          </div>
+          <div class="timeline">Timeline: 6-12 weeks</div>
+        </div>
+      </div>
+
+      <!-- Add-ons Section 
+      <div class="addons-section">
+        <div class="section-title">STRATEGIC ADD-ONS & UPGRADES</div>
+        <div class="addons-grid">
+          <div class="addon-item">
+            <span class="addon-name">Rush Delivery (50% faster)</span>
+            <span class="addon-price">+50% of package</span>
+          </div>
+          <div class="addon-item">
+            <span class="addon-name">Additional Page</span>
+            <span class="addon-price">₦25K - ₦50K</span>
+          </div>
+          <div class="addon-item">
+            <span class="addon-name">Professional Copywriting (per page)</span>
+            <span class="addon-price">₦30K - ₦50K</span>
+          </div>
+          <div class="addon-item">
+            <span class="addon-name">Logo Design</span>
+            <span class="addon-price">₦80K - ₦150K</span>
+          </div>
+          <div class="addon-item">
+            <span class="addon-name">Monthly Maintenance</span>
+            <span class="addon-price">₦30K - ₦100K/mo</span>
+          </div>
+          <div class="addon-item">
+            <span class="addon-name">SEO Premium Package</span>
+            <span class="addon-price">₦80K - ₦150K/mo</span>
+          </div>
+          <div class="addon-item">
+            <span class="addon-name">Email Marketing Setup</span>
+            <span class="addon-price">₦100K - ₦200K</span>
+          </div>
+          <div class="addon-item">
+            <span class="addon-name">Booking/Reservation System</span>
+            <span class="addon-price">₦200K - ₦400K</span>
+          </div>
+          <div class="addon-item">
+            <span class="addon-name">Social Media Auto-posting</span>
+            <span class="addon-price">₦80K - ₦120K</span>
+          </div>
+        </div>
+      </div>
+-->
+      <!-- Payment Options -->
+      <div class="addons-section">
+        <div class="section-title">FLEXIBLE PAYMENT OPTIONS</div>
+        <div class="payment-section">
+          <div class="payment-option">
+            <strong>Full Payment</strong>
+            Pay 100% upfront and receive 5% discount. Best for Starter package.
+          </div>
+          <div class="payment-option">
+            <strong>50/50 Split</strong>
+            50% to start project, 50% upon completion. Most common for
+            Professional package.
+          </div>
+          <div class="payment-option">
+            <strong>Milestone-Based</strong>
+            40% start, 30% halfway (design approval), 30% completion. For
+            E-commerce Pro & Custom.
+          </div>
+          <div class="payment-option">
+            <strong>Monthly Retainer</strong>
+            For ongoing maintenance, updates, and SEO services. Predictable
+            recurring investment.
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="footer">
+        <strong>Ready to get started?</strong> Contact us at
+        easblinktech@gmail.com | +234 816 748 7996 | www.easblinktech.com.ng
+      </div>
+    </div>
+  </body>
+</html>
