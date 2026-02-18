@@ -2,8 +2,6 @@
    ADMIN MESSAGES MANAGEMENT
    ========================================== */
 
-const { db, showNotification, formatDateTime } = window.firebaseApp;
-
 let allMessages = [];
 let filteredMessages = [];
 let currentFilter = 'all';
@@ -11,47 +9,61 @@ let selectedMessage = null;
 let selectedMessages = new Set();
 
 /* ==========================================
+   WAIT FOR FIREBASE
+   ========================================== */
+function waitForFirebase(callback) {
+    if (window.firebaseApp && window.firebaseApp.auth && window.firebaseApp.db) {
+        callback();
+    } else {
+        setTimeout(function () { waitForFirebase(callback); }, 100);
+    }
+}
+
+/* ==========================================
    PAGE LOAD
    ========================================== */
-window.loadPageData = async function() {
-    await loadMessages();
-    initializeFilters();
-    initializeSearch();
-    initializeActions();
-    updateMessagesBadge();
+window.loadPageData = async function () {
+    waitForFirebase(async function () {
+        await loadMessages();
+        initializeFilters();
+        initializeSearch();
+        initializeActions();
+        updateMessagesBadge();
+    });
 };
 
 /* ==========================================
    LOAD MESSAGES
    ========================================== */
 async function loadMessages() {
+    const { db, showNotification } = window.firebaseApp;
+
     try {
         const snapshot = await db.collection('contact_messages')
             .orderBy('createdAt', 'desc')
             .get();
-        
+
         allMessages = [];
-        snapshot.forEach(doc => {
+        snapshot.forEach(function (doc) {
             allMessages.push({ id: doc.id, ...doc.data() });
         });
-        
+
         filteredMessages = [...allMessages];
-        
         displayMessages();
         updateCounts();
-        
+
     } catch (error) {
         console.error('Error loading messages:', error);
         showNotification('Failed to load messages', 'error');
-        
-        // Show empty state
+
         const messagesList = document.getElementById('messagesList');
-        messagesList.innerHTML = `
-            <div class="empty-state">
-                <span class="material-icons">mail_outline</span>
-                <p>No messages yet</p>
-            </div>
-        `;
+        if (messagesList) {
+            messagesList.innerHTML = `
+                <div class="empty-state">
+                    <span class="material-icons">mail_outline</span>
+                    <p>No messages yet</p>
+                </div>`;
+        }
     }
 }
 
@@ -59,29 +71,31 @@ async function loadMessages() {
    DISPLAY MESSAGES LIST
    ========================================== */
 function displayMessages() {
+    const { formatDateTime } = window.firebaseApp;
     const messagesList = document.getElementById('messagesList');
-    
+    if (!messagesList) return;
+
     if (filteredMessages.length === 0) {
         messagesList.innerHTML = `
             <div class="empty-state">
                 <span class="material-icons">mail_outline</span>
                 <p>No messages found</p>
-            </div>
-        `;
+            </div>`;
         return;
     }
-    
-    messagesList.innerHTML = filteredMessages.map(message => {
+
+    messagesList.innerHTML = filteredMessages.map(function (message) {
         const isUnread = !message.read;
+        const isActive = selectedMessage?.id === message.id;
         const isSelected = selectedMessages.has(message.id);
-        
+
         return `
-            <div class="message-item ${isUnread ? 'unread' : ''} ${selectedMessage?.id === message.id ? 'active' : ''}" 
+            <div class="message-item ${isUnread ? 'unread' : ''} ${isActive ? 'active' : ''}"
                  data-message-id="${message.id}"
                  onclick="selectMessage('${message.id}')">
-                <input 
-                    type="checkbox" 
-                    class="message-checkbox" 
+                <input
+                    type="checkbox"
+                    class="message-checkbox"
                     ${isSelected ? 'checked' : ''}
                     onclick="event.stopPropagation(); toggleMessageSelection('${message.id}')"
                 >
@@ -90,39 +104,37 @@ function displayMessages() {
                     <span class="message-date">${formatDateTime(message.createdAt)}</span>
                 </div>
                 <div class="message-subject">${message.subject || 'No Subject'}</div>
-                <div class="message-preview">${message.message?.substring(0, 60) || ''}...</div>
-            </div>
-        `;
+                <div class="message-preview">${(message.message || '').substring(0, 60)}...</div>
+            </div>`;
     }).join('');
 }
 
 /* ==========================================
    SELECT MESSAGE
    ========================================== */
-window.selectMessage = async function(messageId) {
-    const message = allMessages.find(m => m.id === messageId);
+window.selectMessage = async function (messageId) {
+    const { db } = window.firebaseApp;
+
+    const message = allMessages.find(function (m) { return m.id === messageId; });
     if (!message) return;
-    
+
     selectedMessage = message;
-    
-    // Mark as read if unread
+
     if (!message.read) {
         try {
             await db.collection('contact_messages').doc(messageId).update({
                 read: true,
                 readAt: firebase.firestore.FieldValue.serverTimestamp()
             });
-            
             message.read = true;
             updateCounts();
             updateMessagesBadge();
             displayMessages();
-            
         } catch (error) {
             console.error('Error marking as read:', error);
         }
     }
-    
+
     displayMessageDetails();
 };
 
@@ -130,10 +142,10 @@ window.selectMessage = async function(messageId) {
    DISPLAY MESSAGE DETAILS
    ========================================== */
 function displayMessageDetails() {
-    if (!selectedMessage) return;
-    
+    const { formatDateTime } = window.firebaseApp;
     const panel = document.getElementById('messageDetailsPanel');
-    
+    if (!panel || !selectedMessage) return;
+
     panel.innerHTML = `
         <div class="message-details-header">
             <div class="message-details-info">
@@ -156,62 +168,61 @@ function displayMessageDetails() {
         </div>
         <div class="message-details-body">
             <p>${(selectedMessage.message || '').replace(/\n/g, '<br>')}</p>
-        </div>
-    `;
+        </div>`;
 }
 
 /* ==========================================
    REPLY TO MESSAGE
    ========================================== */
-window.replyToMessage = function() {
+window.replyToMessage = function () {
     if (!selectedMessage) return;
-    
-    const email = selectedMessage.email;
-    const subject = `Re: ${selectedMessage.subject || 'Your message'}`;
-    
-    // Open email client
-    window.location.href = `mailto:${email}?subject=${encodeURIComponent(subject)}`;
+    const subject = encodeURIComponent('Re: ' + (selectedMessage.subject || 'Your message'));
+    window.location.href = 'mailto:' + selectedMessage.email + '?subject=' + subject;
 };
 
 /* ==========================================
    DELETE MESSAGE
    ========================================== */
-window.deleteMessage = function(messageId) {
+window.deleteMessage = function (messageId) {
+    const { db, showNotification } = window.firebaseApp;
     const modal = document.getElementById('deleteModal');
+    if (!modal) return;
+
     modal.style.display = 'flex';
-    
-    document.getElementById('confirmDelete').onclick = async () => {
+
+    document.getElementById('confirmDelete').onclick = async function () {
         modal.style.display = 'none';
-        
+
         try {
             await db.collection('contact_messages').doc(messageId).delete();
-            
-            allMessages = allMessages.filter(m => m.id !== messageId);
-            filteredMessages = filteredMessages.filter(m => m.id !== messageId);
-            
+
+            allMessages = allMessages.filter(function (m) { return m.id !== messageId; });
+            filteredMessages = filteredMessages.filter(function (m) { return m.id !== messageId; });
+
             if (selectedMessage?.id === messageId) {
                 selectedMessage = null;
-                document.getElementById('messageDetailsPanel').innerHTML = `
-                    <div class="no-message-selected">
-                        <span class="material-icons">mail_outline</span>
-                        <p>Select a message to view details</p>
-                    </div>
-                `;
+                const panel = document.getElementById('messageDetailsPanel');
+                if (panel) {
+                    panel.innerHTML = `
+                        <div class="no-message-selected">
+                            <span class="material-icons">mail_outline</span>
+                            <p>Select a message to view details</p>
+                        </div>`;
+                }
             }
-            
+
             displayMessages();
             updateCounts();
             updateMessagesBadge();
-            
             showNotification('Message deleted', 'success');
-            
+
         } catch (error) {
             console.error('Error deleting message:', error);
             showNotification('Failed to delete message', 'error');
         }
     };
-    
-    document.getElementById('cancelDelete').onclick = () => {
+
+    document.getElementById('cancelDelete').onclick = function () {
         modal.style.display = 'none';
     };
 };
@@ -219,31 +230,27 @@ window.deleteMessage = function(messageId) {
 /* ==========================================
    TOGGLE MESSAGE SELECTION
    ========================================== */
-window.toggleMessageSelection = function(messageId) {
+window.toggleMessageSelection = function (messageId) {
     if (selectedMessages.has(messageId)) {
         selectedMessages.delete(messageId);
     } else {
         selectedMessages.add(messageId);
     }
-    
     updateDeleteButton();
     displayMessages();
 };
 
 /* ==========================================
-   INITIALIZE FILTERS
+   INITIALIZE FILTERS (tabs)
    ========================================== */
 function initializeFilters() {
     const tabButtons = document.querySelectorAll('.tab-btn');
-    
-    tabButtons.forEach(btn => {
-        btn.addEventListener('click', function() {
-            const filter = this.dataset.filter;
-            
-            tabButtons.forEach(b => b.classList.remove('active'));
+
+    tabButtons.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            tabButtons.forEach(function (b) { b.classList.remove('active'); });
             this.classList.add('active');
-            
-            currentFilter = filter;
+            currentFilter = this.dataset.filter;
             applyFilter();
         });
     });
@@ -253,17 +260,13 @@ function initializeFilters() {
    APPLY FILTER
    ========================================== */
 function applyFilter() {
-    switch(currentFilter) {
-        case 'unread':
-            filteredMessages = allMessages.filter(m => !m.read);
-            break;
-        case 'read':
-            filteredMessages = allMessages.filter(m => m.read);
-            break;
-        default:
-            filteredMessages = [...allMessages];
+    if (currentFilter === 'unread') {
+        filteredMessages = allMessages.filter(function (m) { return !m.read; });
+    } else if (currentFilter === 'read') {
+        filteredMessages = allMessages.filter(function (m) { return m.read; });
+    } else {
+        filteredMessages = [...allMessages];
     }
-    
     displayMessages();
 }
 
@@ -272,31 +275,29 @@ function applyFilter() {
    ========================================== */
 function initializeSearch() {
     const searchInput = document.getElementById('searchMessages');
-    
-    searchInput.addEventListener('input', debounce(function(e) {
+    if (!searchInput) return;
+
+    searchInput.addEventListener('input', debounce(function (e) {
         const query = e.target.value.toLowerCase().trim();
-        
+
         if (!query) {
             applyFilter();
             return;
         }
-        
-        filteredMessages = allMessages.filter(message => {
-            return (
-                (message.name || '').toLowerCase().includes(query) ||
-                (message.email || '').toLowerCase().includes(query) ||
-                (message.subject || '').toLowerCase().includes(query) ||
-                (message.message || '').toLowerCase().includes(query)
-            );
+
+        filteredMessages = allMessages.filter(function (message) {
+            return (message.name || '').toLowerCase().includes(query) ||
+                   (message.email || '').toLowerCase().includes(query) ||
+                   (message.subject || '').toLowerCase().includes(query) ||
+                   (message.message || '').toLowerCase().includes(query);
         });
-        
-        // Apply current filter on top of search
+
         if (currentFilter === 'unread') {
-            filteredMessages = filteredMessages.filter(m => !m.read);
+            filteredMessages = filteredMessages.filter(function (m) { return !m.read; });
         } else if (currentFilter === 'read') {
-            filteredMessages = filteredMessages.filter(m => m.read);
+            filteredMessages = filteredMessages.filter(function (m) { return m.read; });
         }
-        
+
         displayMessages();
     }, 300));
 }
@@ -305,44 +306,47 @@ function initializeSearch() {
    INITIALIZE ACTIONS
    ========================================== */
 function initializeActions() {
-    // Mark all read
     const markAllReadBtn = document.getElementById('markAllReadBtn');
-    markAllReadBtn.addEventListener('click', markAllAsRead);
-    
-    // Delete selected
+    if (markAllReadBtn) {
+        markAllReadBtn.addEventListener('click', markAllAsRead);
+    }
+
     const deleteSelectedBtn = document.getElementById('deleteSelectedBtn');
-    deleteSelectedBtn.addEventListener('click', deleteSelectedMessages);
+    if (deleteSelectedBtn) {
+        deleteSelectedBtn.addEventListener('click', deleteSelectedMessages);
+    }
 }
 
 /* ==========================================
    MARK ALL AS READ
    ========================================== */
 async function markAllAsRead() {
+    const { db, showNotification } = window.firebaseApp;
+
     try {
         const batch = db.batch();
-        const unreadMessages = allMessages.filter(m => !m.read);
-        
-        unreadMessages.forEach(message => {
+        const unreadMessages = allMessages.filter(function (m) { return !m.read; });
+
+        unreadMessages.forEach(function (message) {
             const docRef = db.collection('contact_messages').doc(message.id);
-            batch.update(docRef, { 
+            batch.update(docRef, {
                 read: true,
                 readAt: firebase.firestore.FieldValue.serverTimestamp()
             });
         });
-        
+
         await batch.commit();
-        
-        allMessages.forEach(m => m.read = true);
-        
+
+        allMessages.forEach(function (m) { m.read = true; });
+
         displayMessages();
         updateCounts();
         updateMessagesBadge();
-        
         showNotification('All messages marked as read', 'success');
-        
+
     } catch (error) {
         console.error('Error marking all as read:', error);
-        showNotification('Failed to mark messages as read', 'error');
+        window.firebaseApp.showNotification('Failed to mark messages as read', 'error');
     }
 }
 
@@ -350,34 +354,33 @@ async function markAllAsRead() {
    DELETE SELECTED MESSAGES
    ========================================== */
 async function deleteSelectedMessages() {
+    const { db, showNotification } = window.firebaseApp;
+
     if (selectedMessages.size === 0) return;
-    
-    if (!confirm(`Delete ${selectedMessages.size} message(s)?`)) return;
-    
+    if (!confirm('Delete ' + selectedMessages.size + ' message(s)?')) return;
+
     try {
         const batch = db.batch();
-        
-        selectedMessages.forEach(messageId => {
+
+        selectedMessages.forEach(function (messageId) {
             const docRef = db.collection('contact_messages').doc(messageId);
             batch.delete(docRef);
         });
-        
+
         await batch.commit();
-        
-        allMessages = allMessages.filter(m => !selectedMessages.has(m.id));
-        filteredMessages = filteredMessages.filter(m => !selectedMessages.has(m.id));
-        
+
+        allMessages = allMessages.filter(function (m) { return !selectedMessages.has(m.id); });
+        filteredMessages = filteredMessages.filter(function (m) { return !selectedMessages.has(m.id); });
+
         selectedMessages.clear();
         updateDeleteButton();
-        
         displayMessages();
         updateCounts();
-        
         showNotification('Messages deleted', 'success');
-        
+
     } catch (error) {
         console.error('Error deleting messages:', error);
-        showNotification('Failed to delete messages', 'error');
+        window.firebaseApp.showNotification('Failed to delete messages', 'error');
     }
 }
 
@@ -386,23 +389,27 @@ async function deleteSelectedMessages() {
    ========================================== */
 function updateDeleteButton() {
     const btn = document.getElementById('deleteSelectedBtn');
+    if (!btn) return;
     btn.style.display = selectedMessages.size > 0 ? 'inline-flex' : 'none';
     btn.innerHTML = `
         <span class="material-icons">delete</span>
-        Delete Selected (${selectedMessages.size})
-    `;
+        Delete Selected (${selectedMessages.size})`;
 }
 
 /* ==========================================
    UPDATE COUNTS
    ========================================== */
 function updateCounts() {
-    const unreadCount = allMessages.filter(m => !m.read).length;
-    const readCount = allMessages.filter(m => m.read).length;
-    
-    document.getElementById('countAll').textContent = allMessages.length;
-    document.getElementById('countUnread').textContent = unreadCount;
-    document.getElementById('countRead').textContent = readCount;
+    const unreadCount = allMessages.filter(function (m) { return !m.read; }).length;
+    const readCount = allMessages.filter(function (m) { return m.read; }).length;
+
+    const countAll = document.getElementById('countAll');
+    const countUnread = document.getElementById('countUnread');
+    const countRead = document.getElementById('countRead');
+
+    if (countAll) countAll.textContent = allMessages.length;
+    if (countUnread) countUnread.textContent = unreadCount;
+    if (countRead) countRead.textContent = readCount;
 }
 
 /* ==========================================
@@ -411,24 +418,19 @@ function updateCounts() {
 function updateMessagesBadge() {
     const badge = document.getElementById('messagesBadge');
     if (!badge) return;
-    
-    const unreadCount = allMessages.filter(m => !m.read).length;
-    
+
+    const unreadCount = allMessages.filter(function (m) { return !m.read; }).length;
     badge.textContent = unreadCount;
     badge.style.display = unreadCount > 0 ? 'flex' : 'none';
 }
 
 /* ==========================================
-   UTILITY
+   UTILITY: DEBOUNCE
    ========================================== */
 function debounce(func, wait) {
     let timeout;
-    return function executedFunction(...args) {
-        const later = () => {
-            clearTimeout(timeout);
-            func(...args);
-        };
+    return function (...args) {
         clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
+        timeout = setTimeout(function () { func(...args); }, wait);
     };
 }

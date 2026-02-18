@@ -3,48 +3,76 @@
    Load, display, filter, update order status
    ========================================== */
 
-const { db, showNotification, formatPrice, formatDateTime, showLoading, showError } = window.firebaseApp;
-
 let allOrders = [];
 let filteredOrders = [];
 let currentPage = 1;
 const ordersPerPage = 15;
 
 /* ==========================================
-   PAGE LOAD
+   WAIT FOR FIREBASE (fixes timing/race condition)
    ========================================== */
-window.loadPageData = async function() {
-    await loadOrders();
-    initializeFilters();
-    updateOrdersBadge();
+function waitForFirebase(callback) {
+    if (window.firebaseApp && window.firebaseApp.auth && window.firebaseApp.db) {
+        callback();
+    } else {
+        setTimeout(function () {
+            waitForFirebase(callback);
+        }, 100);
+    }
+}
+
+/* ==========================================
+   PAGE LOAD - called by admin-auth-new.js after auth confirmed
+   ========================================== */
+window.loadPageData = async function () {
+    waitForFirebase(async function () {
+        await loadOrders();
+        initializeFilters();
+        updateOrdersBadge();
+        initRealtimeListener();
+    });
 };
 
 /* ==========================================
    LOAD ORDERS FROM FIRESTORE
    ========================================== */
 async function loadOrders() {
+    const { db, showNotification } = window.firebaseApp;
     const tableBody = document.getElementById('ordersTableBody');
-    showLoading(tableBody, 'Loading orders...');
-    
+
+    if (tableBody) {
+        tableBody.innerHTML = `
+            <tr>
+                <td colspan="7" style="text-align:center;padding:2rem;">
+                    <div class="spinner" style="margin:0 auto;"></div>
+                    <p>Loading orders...</p>
+                </td>
+            </tr>`;
+    }
+
     try {
         const snapshot = await db.collection('orders')
             .orderBy('createdAt', 'desc')
             .get();
-        
+
         allOrders = [];
-        snapshot.forEach(doc => {
-            allOrders.push({
-                id: doc.id,
-                ...doc.data()
-            });
+        snapshot.forEach(function (doc) {
+            allOrders.push({ id: doc.id, ...doc.data() });
         });
-        
+
         filteredOrders = [...allOrders];
         displayOrders();
-        
+
     } catch (error) {
         console.error('Error loading orders:', error);
-        showError(tableBody, 'Failed to load orders. Please refresh the page.');
+        if (tableBody) {
+            tableBody.innerHTML = `
+                <tr>
+                    <td colspan="7" style="text-align:center;padding:2rem;color:#f44336;">
+                        Failed to load orders. Please refresh the page.
+                    </td>
+                </tr>`;
+        }
         showNotification('Failed to load orders', 'error');
     }
 }
@@ -53,42 +81,42 @@ async function loadOrders() {
    DISPLAY ORDERS IN TABLE
    ========================================== */
 function displayOrders() {
+    const { formatPrice, formatDateTime } = window.firebaseApp;
     const tableBody = document.getElementById('ordersTableBody');
-    
+    if (!tableBody) return;
+
     if (filteredOrders.length === 0) {
         tableBody.innerHTML = `
             <tr>
                 <td colspan="7" class="no-data">
-                    <span class="material-icons" style="font-size: 3rem; color: #ccc;">shopping_bag</span>
+                    <span class="material-icons" style="font-size:3rem;color:#ccc;">shopping_bag</span>
                     <p>No orders found</p>
                 </td>
-            </tr>
-        `;
+            </tr>`;
         updatePagination();
         return;
     }
-    
-    // Calculate pagination
+
     const startIndex = (currentPage - 1) * ordersPerPage;
     const endIndex = startIndex + ordersPerPage;
     const ordersToShow = filteredOrders.slice(startIndex, endIndex);
-    
-    // Build table rows
-    tableBody.innerHTML = ordersToShow.map(order => {
-        const customerName = order.customerInfo?.firstName && order.customerInfo?.lastName
-            ? `${order.customerInfo.firstName} ${order.customerInfo.lastName}`
+
+    tableBody.innerHTML = ordersToShow.map(function (order) {
+        const customerName = (order.customerInfo?.firstName && order.customerInfo?.lastName)
+            ? order.customerInfo.firstName + ' ' + order.customerInfo.lastName
             : order.customerInfo?.email || 'Unknown';
-        
+
         const itemCount = order.items ? order.items.length : 0;
         const statusClass = getStatusClass(order.status);
-        
+        const orderNumber = order.orderNumber || order.id.substring(0, 8).toUpperCase();
+
         return `
-            <tr data-order-id="${order.id}" style="cursor: pointer;" onclick="viewOrder('${order.id}')">
-                <td><strong>#${order.orderNumber || order.id.substring(0, 8).toUpperCase()}</strong></td>
+            <tr data-order-id="${order.id}" style="cursor:pointer;" onclick="viewOrder('${order.id}')">
+                <td><strong>#${orderNumber}</strong></td>
                 <td>
                     <div>
-                        <strong style="display: block;">${customerName}</strong>
-                        <small style="color: #666;">${order.customerInfo?.email || ''}</small>
+                        <strong style="display:block;">${customerName}</strong>
+                        <small style="color:#666;">${order.customerInfo?.email || ''}</small>
                     </div>
                 </td>
                 <td>${formatDateTime(order.createdAt)}</td>
@@ -100,8 +128,8 @@ function displayOrders() {
                     </span>
                 </td>
                 <td>
-                    <select 
-                        class="status-select ${statusClass}" 
+                    <select
+                        class="status-select ${statusClass}"
                         data-order-id="${order.id}"
                         onclick="event.stopPropagation()"
                         onchange="updateOrderStatus('${order.id}', this.value)"
@@ -113,10 +141,9 @@ function displayOrders() {
                         <option value="cancelled" ${order.status === 'cancelled' ? 'selected' : ''}>Cancelled</option>
                     </select>
                 </td>
-            </tr>
-        `;
+            </tr>`;
     }).join('');
-    
+
     updatePagination();
 }
 
@@ -151,25 +178,21 @@ function formatPaymentMethod(method) {
    INITIALIZE FILTERS
    ========================================== */
 function initializeFilters() {
-    // Search input
     const searchInput = document.getElementById('searchOrders');
     if (searchInput) {
         searchInput.addEventListener('input', debounce(handleSearch, 300));
     }
-    
-    // Status filter
+
     const statusFilter = document.getElementById('statusFilter');
     if (statusFilter) {
         statusFilter.addEventListener('change', applyFilters);
     }
-    
-    // Date filter
+
     const dateFilter = document.getElementById('dateFilter');
     if (dateFilter) {
         dateFilter.addEventListener('change', applyFilters);
     }
-    
-    // Export button
+
     const exportBtn = document.getElementById('exportOrders');
     if (exportBtn) {
         exportBtn.addEventListener('click', exportOrders);
@@ -181,25 +204,23 @@ function initializeFilters() {
    ========================================== */
 function handleSearch(e) {
     const query = e.target.value.toLowerCase().trim();
-    
+
     if (!query) {
         filteredOrders = [...allOrders];
     } else {
-        filteredOrders = allOrders.filter(order => {
-            const orderNumber = order.orderNumber || order.id.substring(0, 8);
-            const customerName = order.customerInfo?.firstName || '';
-            const customerLastName = order.customerInfo?.lastName || '';
-            const customerEmail = order.customerInfo?.email || '';
-            
-            return (
-                orderNumber.toLowerCase().includes(query) ||
-                customerName.toLowerCase().includes(query) ||
-                customerLastName.toLowerCase().includes(query) ||
-                customerEmail.toLowerCase().includes(query)
-            );
+        filteredOrders = allOrders.filter(function (order) {
+            const orderNumber = (order.orderNumber || order.id.substring(0, 8)).toLowerCase();
+            const firstName = (order.customerInfo?.firstName || '').toLowerCase();
+            const lastName = (order.customerInfo?.lastName || '').toLowerCase();
+            const email = (order.customerInfo?.email || '').toLowerCase();
+
+            return orderNumber.includes(query) ||
+                firstName.includes(query) ||
+                lastName.includes(query) ||
+                email.includes(query);
         });
     }
-    
+
     currentPage = 1;
     displayOrders();
 }
@@ -210,35 +231,29 @@ function handleSearch(e) {
 function applyFilters() {
     const statusFilter = document.getElementById('statusFilter')?.value;
     const dateFilter = document.getElementById('dateFilter')?.value;
-    
-    filteredOrders = allOrders.filter(order => {
-        // Status filter
+
+    filteredOrders = allOrders.filter(function (order) {
         const statusMatch = !statusFilter || order.status === statusFilter;
-        
-        // Date filter
+
         let dateMatch = true;
         if (dateFilter && order.createdAt) {
             const orderDate = order.createdAt.toDate ? order.createdAt.toDate() : new Date(order.createdAt);
             const now = new Date();
-            
-            switch(dateFilter) {
-                case 'today':
-                    dateMatch = orderDate.toDateString() === now.toDateString();
-                    break;
-                case 'week':
-                    const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-                    dateMatch = orderDate >= weekAgo;
-                    break;
-                case 'month':
-                    const monthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
-                    dateMatch = orderDate >= monthAgo;
-                    break;
+
+            if (dateFilter === 'today') {
+                dateMatch = orderDate.toDateString() === now.toDateString();
+            } else if (dateFilter === 'week') {
+                const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+                dateMatch = orderDate >= weekAgo;
+            } else if (dateFilter === 'month') {
+                const monthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+                dateMatch = orderDate >= monthAgo;
             }
         }
-        
+
         return statusMatch && dateMatch;
     });
-    
+
     currentPage = 1;
     displayOrders();
 }
@@ -246,44 +261,37 @@ function applyFilters() {
 /* ==========================================
    UPDATE ORDER STATUS
    ========================================== */
-window.updateOrderStatus = async function(orderId, newStatus) {
+window.updateOrderStatus = async function (orderId, newStatus) {
+    const { db, showNotification } = window.firebaseApp;
+
     try {
         await db.collection('orders').doc(orderId).update({
             status: newStatus,
             updatedAt: firebase.firestore.FieldValue.serverTimestamp()
         });
-        
-        // Update local array
-        const order = allOrders.find(o => o.id === orderId);
-        if (order) {
-            order.status = newStatus;
-        }
-        
-        const filteredOrder = filteredOrders.find(o => o.id === orderId);
-        if (filteredOrder) {
-            filteredOrder.status = newStatus;
-        }
-        
-        showNotification(`Order status updated to ${newStatus}`, 'success');
+
+        // Update local arrays
+        const order = allOrders.find(function (o) { return o.id === orderId; });
+        if (order) order.status = newStatus;
+
+        const filteredOrder = filteredOrders.find(function (o) { return o.id === orderId; });
+        if (filteredOrder) filteredOrder.status = newStatus;
+
+        showNotification('Order status updated to ' + newStatus, 'success');
         updateOrdersBadge();
-        
-        // Send notification to customer (TODO: implement email)
-        // await sendOrderStatusEmail(orderId, newStatus);
-        
+
     } catch (error) {
         console.error('Error updating order status:', error);
-        showNotification('Failed to update order status', 'error');
-        
-        // Revert UI
-        displayOrders();
+        window.firebaseApp.showNotification('Failed to update order status', 'error');
+        displayOrders(); // Revert UI
     }
 };
 
 /* ==========================================
    VIEW ORDER DETAILS
    ========================================== */
-window.viewOrder = function(orderId) {
-    window.location.href = `order-details.html?id=${orderId}`;
+window.viewOrder = function (orderId) {
+    window.location.href = 'order-details.html?id=' + orderId;
 };
 
 /* ==========================================
@@ -292,9 +300,8 @@ window.viewOrder = function(orderId) {
 function updateOrdersBadge() {
     const badge = document.getElementById('ordersBadge');
     if (!badge) return;
-    
-    const pendingCount = allOrders.filter(o => o.status === 'pending').length;
-    
+
+    const pendingCount = allOrders.filter(function (o) { return o.status === 'pending'; }).length;
     badge.textContent = pendingCount;
     badge.style.display = pendingCount > 0 ? 'flex' : 'none';
 }
@@ -303,27 +310,29 @@ function updateOrdersBadge() {
    PAGINATION
    ========================================== */
 function updatePagination() {
-    const totalPages = Math.ceil(filteredOrders.length / ordersPerPage);
-    
-    document.getElementById('currentPage').textContent = currentPage;
-    document.getElementById('totalPages').textContent = totalPages || 1;
-    
+    const totalPages = Math.ceil(filteredOrders.length / ordersPerPage) || 1;
+
+    const currentPageEl = document.getElementById('currentPage');
+    const totalPagesEl = document.getElementById('totalPages');
+    if (currentPageEl) currentPageEl.textContent = currentPage;
+    if (totalPagesEl) totalPagesEl.textContent = totalPages;
+
     const prevBtn = document.getElementById('prevPage');
     const nextBtn = document.getElementById('nextPage');
-    
+
     if (prevBtn) {
         prevBtn.disabled = currentPage === 1;
-        prevBtn.onclick = () => {
+        prevBtn.onclick = function () {
             if (currentPage > 1) {
                 currentPage--;
                 displayOrders();
             }
         };
     }
-    
+
     if (nextBtn) {
-        nextBtn.disabled = currentPage === totalPages || totalPages === 0;
-        nextBtn.onclick = () => {
+        nextBtn.disabled = currentPage >= totalPages;
+        nextBtn.onclick = function () {
             if (currentPage < totalPages) {
                 currentPage++;
                 displayOrders();
@@ -333,41 +342,81 @@ function updatePagination() {
 }
 
 /* ==========================================
-   EXPORT ORDERS
+   EXPORT ORDERS TO CSV
    ========================================== */
 function exportOrders() {
+    const { formatDateTime, formatPrice, showNotification } = window.firebaseApp;
+
     try {
         const headers = ['Order ID', 'Customer', 'Email', 'Date', 'Items', 'Total', 'Status', 'Payment Method'];
-        const rows = filteredOrders.map(o => [
-            o.orderNumber || o.id.substring(0, 8).toUpperCase(),
-            `${o.customerInfo?.firstName || ''} ${o.customerInfo?.lastName || ''}`.trim(),
-            o.customerInfo?.email || '',
-            formatDateTime(o.createdAt),
-            o.items?.length || 0,
-            o.total || 0,
-            o.status || '',
-            formatPaymentMethod(o.paymentMethod)
-        ]);
-        
+        const rows = filteredOrders.map(function (o) {
+            return [
+                o.orderNumber || o.id.substring(0, 8).toUpperCase(),
+                ((o.customerInfo?.firstName || '') + ' ' + (o.customerInfo?.lastName || '')).trim(),
+                o.customerInfo?.email || '',
+                formatDateTime(o.createdAt),
+                o.items?.length || 0,
+                o.total || 0,
+                o.status || '',
+                formatPaymentMethod(o.paymentMethod)
+            ];
+        });
+
         const csv = [
             headers.join(','),
-            ...rows.map(row => row.map(cell => `"${cell}"`).join(','))
+            ...rows.map(function (row) {
+                return row.map(function (cell) { return '"' + cell + '"'; }).join(',');
+            })
         ].join('\n');
-        
+
         const blob = new Blob([csv], { type: 'text/csv' });
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `orders-${Date.now()}.csv`;
+        a.download = 'orders-' + Date.now() + '.csv';
         a.click();
         window.URL.revokeObjectURL(url);
-        
+
         showNotification('Orders exported successfully', 'success');
-        
+
     } catch (error) {
         console.error('Export error:', error);
-        showNotification('Failed to export orders', 'error');
+        window.firebaseApp.showNotification('Failed to export orders', 'error');
     }
+}
+
+/* ==========================================
+   REAL-TIME LISTENER FOR NEW ORDERS
+   ========================================== */
+function initRealtimeListener() {
+    const { db, showNotification } = window.firebaseApp;
+
+    db.collection('orders')
+        .where('status', '==', 'pending')
+        .onSnapshot(function (snapshot) {
+            snapshot.docChanges().forEach(function (change) {
+                if (change.type === 'added') {
+                    const newOrder = { id: change.doc.id, ...change.doc.data() };
+
+                    // Only act on truly new orders (not existing ones loaded on page start)
+                    const alreadyExists = allOrders.find(function (o) { return o.id === newOrder.id; });
+                    if (!alreadyExists) {
+                        allOrders.unshift(newOrder);
+                        filteredOrders.unshift(newOrder);
+
+                        showNotification('New order received!', 'success');
+
+                        const audio = document.getElementById('notificationSound');
+                        if (audio) audio.play().catch(function (e) { console.log('Sound play failed:', e); });
+
+                        displayOrders();
+                        updateOrdersBadge();
+                    }
+                }
+            });
+        }, function (error) {
+            console.error('Realtime listener error:', error);
+        });
 }
 
 /* ==========================================
@@ -375,49 +424,10 @@ function exportOrders() {
    ========================================== */
 function debounce(func, wait) {
     let timeout;
-    return function executedFunction(...args) {
-        const later = () => {
-            clearTimeout(timeout);
-            func(...args);
-        };
+    return function (...args) {
         clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
+        timeout = setTimeout(function () {
+            func(...args);
+        }, wait);
     };
 }
-
-/* ==========================================
-   REAL-TIME ORDER LISTENER (OPTIONAL)
-   ========================================== */
-function initRealtimeListener() {
-    db.collection('orders')
-        .where('status', '==', 'pending')
-        .onSnapshot((snapshot) => {
-            snapshot.docChanges().forEach((change) => {
-                if (change.type === 'added') {
-                    const newOrder = { id: change.doc.id, ...change.doc.data() };
-                    
-                    // Check if order is new (not in our local array)
-                    if (!allOrders.find(o => o.id === newOrder.id)) {
-                        allOrders.unshift(newOrder);
-                        filteredOrders.unshift(newOrder);
-                        
-                        // Show notification
-                        showNotification('New order received!', 'success');
-                        
-                        // Play sound
-                        const audio = document.getElementById('notificationSound');
-                        if (audio) audio.play().catch(e => console.log('Sound play failed'));
-                        
-                        // Update display
-                        displayOrders();
-                        updateOrdersBadge();
-                    }
-                }
-            });
-        }, (error) => {
-            console.error('Realtime listener error:', error);
-        });
-}
-
-// Initialize realtime listener
-setTimeout(initRealtimeListener, 2000);

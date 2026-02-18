@@ -3,8 +3,12 @@
    View and manage single order
    ========================================== */
 
-const { db, showNotification, formatPrice, formatDateTime } = window.firebaseApp;
-
+// Remove the top-level destructuring entirely.
+// Then inside each function, reference it directly:
+async function loadOrders() {
+    const { db, showNotification } = window.firebaseApp;
+    // rest of function...
+}
 let currentOrder = null;
 let orderId = null;
 

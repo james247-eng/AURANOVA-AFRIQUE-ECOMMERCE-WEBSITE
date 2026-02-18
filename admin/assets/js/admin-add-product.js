@@ -178,8 +178,8 @@ async function uploadImagesToCloudinary() {
   try {
     // Get Cloudinary config from environment or global
     const cloudinaryConfig = {
-      cloudName: window.CLOUDINARY_NAME || "auranova", // Default for demo
-      uploadPreset: window.CLOUDINARY_PRESET || "auranova_preset", // Default for demo
+      cloudName: window.CLOUDINARY_NAME || "dkbadi6hs", // Default for demo
+      uploadPreset: window.CLOUDINARY_PRESET || "AuranovaAfrique", // Default for demo
     };
 
     console.log("Starting image upload to Cloudinary...");

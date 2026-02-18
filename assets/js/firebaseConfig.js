@@ -1,66 +1,62 @@
 /* ==========================================
+
+assets/js/firebaseConfig.js
+
+
    FIREBASE CONFIGURATION (SHARED)
    Used by both admin and client pages
    ========================================== */
 
-(function () {
-  // Safely build firebase config (guard process usage in browser)
-  const env = typeof process !== "undefined" && process && process.env ? process.env : {};
-  const firebaseConfig = {
-    apiKey: window.FIREBASE_API_KEY || env.REACT_APP_FIREBASE_API_KEY || "",
-    authDomain: window.FIREBASE_AUTH_DOMAIN || env.REACT_APP_FIREBASE_AUTH_DOMAIN || "",
-    projectId: window.FIREBASE_PROJECT_ID || env.REACT_APP_FIREBASE_PROJECT_ID || "",
-    storageBucket:
-      window.FIREBASE_STORAGE_BUCKET || env.REACT_APP_FIREBASE_STORAGE_BUCKET || "",
-    messagingSenderId:
-      window.FIREBASE_MESSAGING_SENDER_ID || env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID || "",
-    appId: window.FIREBASE_APP_ID || env.REACT_APP_FIREBASE_APP_ID || "",
-  };
 
-  if (!firebaseConfig.apiKey || !firebaseConfig.projectId) {
-    console.error("Firebase configuration is missing. Please set the required variables.");
-  }
+const firebaseConfig = {
+  apiKey: "AIzaSyBjhtSMrL-m1rwhj9o8UFB_2hNvWZ2tQ98",
 
-  // If firebase already initialized (e.g., page included it twice), reuse it
-  if (!window.firebaseApp) {
-    if (!window.firebase || (typeof firebase === 'undefined')) {
-      console.error('Firebase SDK not loaded. Ensure firebase-app and services are included before this file.');
-      return;
-    }
+  authDomain: "new-project-form-ee68c.firebaseapp.com",
 
-    if (!firebase.apps || firebase.apps.length === 0) {
+  projectId: "new-project-form-ee68c",
+
+  storageBucket: "new-project-form-ee68c.firebasestorage.app",
+
+  messagingSenderId: "691717190873",
+
+  appId: "1:691717190873:web:c6a609d2d5bdcf9025fac8"
+
+};
+
+// Initialize Firebase and attach services to window.firebaseApp
+if (typeof firebase === "undefined") {
+  console.error("Firebase SDK not loaded. Include firebase-app and services before this file.");
+} else {
+  if (!firebase.apps || firebase.apps.length === 0) {
+    try {
       firebase.initializeApp(firebaseConfig);
+    } catch (e) {
+      console.error('Firebase initializeApp error', e);
     }
-
-    const _auth = firebase.auth();
-    const _db = firebase.firestore();
-
-    _db.enablePersistence && _db.enablePersistence().catch((err) => {
-      // Ignore persistence errors
-    });
-
-    window.firebaseApp = {
-      auth: _auth,
-      db: _db,
-      CLOUDINARY_CONFIG: {
-        cloudName: window.CLOUDINARY_NAME || env.REACT_APP_CLOUDINARY_NAME || "",
-        uploadPreset: window.CLOUDINARY_PRESET || env.REACT_APP_CLOUDINARY_PRESET || "",
-        apiKey: window.CLOUDINARY_KEY || env.REACT_APP_CLOUDINARY_KEY || "",
-      },
-      showNotification: function (msg, t) {
-        // Minimal fallback notifier if other helpers not available
-        const type = t || 'info';
-        console.log('notify', type, msg);
-      },
-      formatPrice: function (a) { return '₦' + (a || 0).toLocaleString('en-NG'); },
-      formatDate: function (ts) { return ts && ts.toDate ? ts.toDate().toLocaleDateString() : 'N/A'; },
-      formatDateTime: function (ts) { return ts && ts.toDate ? ts.toDate().toLocaleString() : 'N/A'; },
-      showLoading: function () {},
-      showError: function () {},
-      showEmpty: function () {},
-    };
   }
-})();
+
+  const auth = firebase.auth();
+  const db = firebase.firestore();
+
+  db.enablePersistence && db.enablePersistence().catch(() => {});
+
+  window.firebaseApp = {
+    auth,
+    db,
+    CLOUDINARY_CONFIG: {
+      cloudName: "dkbadi6hs",
+      uploadPreset: "AuranovaAfrique",
+      apiKey: "265822913537625",
+    },
+    showNotification: function (m, t) { console.log('notify', t || 'info', m); },
+    formatPrice: function (a) { return '₦' + (a || 0).toLocaleString('en-NG'); },
+    formatDate: function (ts) { return ts && ts.toDate ? ts.toDate().toLocaleDateString() : 'N/A'; },
+    formatDateTime: function (ts) { return ts && ts.toDate ? ts.toDate().toLocaleString() : 'N/A'; },
+    showLoading: function () {},
+    showError: function () {},
+    showEmpty: function () {},
+  };
+}
 
 /* ==========================================
    CLOUDINARY CONFIGURATION
@@ -68,10 +64,10 @@
 
 const CLOUDINARY_CONFIG = {
   cloudName:
-    window.CLOUDINARY_NAME || process.env.REACT_APP_CLOUDINARY_NAME || "",
+    window.CLOUDINARY_NAME || "",
   uploadPreset:
-    window.CLOUDINARY_PRESET || process.env.REACT_APP_CLOUDINARY_PRESET || "", // Create unsigned preset in Cloudinary dashboard
-  apiKey: window.CLOUDINARY_KEY || process.env.REACT_APP_CLOUDINARY_KEY || "", // Optional, only needed for signed uploads
+    window.CLOUDINARY_PRESET || "", // Create unsigned preset in Cloudinary dashboard
+  apiKey: window.CLOUDINARY_KEY || "", // Optional, only needed for signed uploads
 };
 
 /* ==========================================
@@ -186,17 +182,3 @@ function showEmpty(element, message = "No data available") {
         `;
   }
 }
-
-// Export for use in other files
-window.firebaseApp = {
-  auth,
-  db,
-  CLOUDINARY_CONFIG,
-  showNotification,
-  formatPrice,
-  formatDate,
-  formatDateTime,
-  showLoading,
-  showError,
-  showEmpty,
-};

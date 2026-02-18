@@ -41,7 +41,8 @@ function initLoginForm() {
     const password = form.password.value;
     const submitBtn = form.querySelector(".btn-auth");
 
-    if (!window.InputValidator?.isValidEmail(email)) {
+    // Basic email check (Firebase will validate more strictly)
+    if (!email || !email.includes("@")) {
       window.auranovaFunctions?.showNotification("Please enter a valid email address", "error");
       return;
     }
