@@ -48,20 +48,34 @@ function initProfileRouting() {
     });
   });
 
-  // Also handle profile button with id
+  // Also handle profile button with id (attach directly to the button)
   const accountBtn = document.getElementById("accountBtn");
-  if (accountBtn && accountBtn.parentElement.href === "pages/my-account.html") {
-    accountBtn.parentElement.addEventListener("click", function (e) {
+  if (accountBtn) {
+    accountBtn.addEventListener("click", function (e) {
       const userStr = localStorage.getItem("auranova_user");
       const adminStr = localStorage.getItem("auranova_admin");
 
+      const currentPath = window.location.pathname;
+
       if (adminStr) {
         e.preventDefault();
-        window.location.href = "../admin/index.html";
-      } else if (!userStr) {
-        e.preventDefault();
-        window.location.href = "pages/login.html";
+        const isInAdmin = currentPath.includes("/admin/");
+        window.location.href = isInAdmin ? "index.html" : "../admin/index.html";
+        return;
       }
+
+      if (userStr) {
+        // Signed-in user -> go to account page
+        e.preventDefault();
+        const inPages = currentPath.includes("/pages/");
+        window.location.href = inPages ? "my-account.html" : "pages/my-account.html";
+        return;
+      }
+
+      // Not signed in -> go to login
+      e.preventDefault();
+      const basePath = currentPath.includes("/pages/") ? "../" : "";
+      window.location.href = basePath + "pages/login.html";
     });
   }
 }
@@ -74,7 +88,7 @@ function initPreloader() {
 
   window.addEventListener("load", function () {
     setTimeout(function () {
-      preloader.classList.add("hide");
+      if (preloader) preloader.classList.add("hide");
     }, 1500);
   });
 }
@@ -84,6 +98,8 @@ function initPreloader() {
    ========================================== */
 function initNavbar() {
   const navbar = document.getElementById("navbar");
+  if (!navbar) return;
+
   let lastScroll = 0;
 
   window.addEventListener("scroll", function () {

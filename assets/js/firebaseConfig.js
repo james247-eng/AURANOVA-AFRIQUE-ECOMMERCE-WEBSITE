@@ -3,48 +3,64 @@
    Used by both admin and client pages
    ========================================== */
 
-// Get Firebase config from environment variables
-// For Vercel: Add these as environment variables in project settings
-const firebaseConfig = {
-  apiKey: window.FIREBASE_API_KEY || process.env.REACT_APP_FIREBASE_API_KEY,
-  authDomain:
-    window.FIREBASE_AUTH_DOMAIN || process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
-  projectId:
-    window.FIREBASE_PROJECT_ID || process.env.REACT_APP_FIREBASE_PROJECT_ID,
-  storageBucket:
-    window.FIREBASE_STORAGE_BUCKET ||
-    process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId:
-    window.FIREBASE_MESSAGING_SENDER_ID ||
-    process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
-  appId: window.FIREBASE_APP_ID || process.env.REACT_APP_FIREBASE_APP_ID,
-};
+(function () {
+  // Safely build firebase config (guard process usage in browser)
+  const env = typeof process !== "undefined" && process && process.env ? process.env : {};
+  const firebaseConfig = {
+    apiKey: window.FIREBASE_API_KEY || env.REACT_APP_FIREBASE_API_KEY || "",
+    authDomain: window.FIREBASE_AUTH_DOMAIN || env.REACT_APP_FIREBASE_AUTH_DOMAIN || "",
+    projectId: window.FIREBASE_PROJECT_ID || env.REACT_APP_FIREBASE_PROJECT_ID || "",
+    storageBucket:
+      window.FIREBASE_STORAGE_BUCKET || env.REACT_APP_FIREBASE_STORAGE_BUCKET || "",
+    messagingSenderId:
+      window.FIREBASE_MESSAGING_SENDER_ID || env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID || "",
+    appId: window.FIREBASE_APP_ID || env.REACT_APP_FIREBASE_APP_ID || "",
+  };
 
-// Validate Firebase config
-if (!firebaseConfig.apiKey || !firebaseConfig.projectId) {
-  console.error(
-    "Firebase configuration is missing. Please set environment variables.",
-  );
-  console.error(
-    "Required variables: FIREBASE_API_KEY, FIREBASE_PROJECT_ID, etc.",
-  );
-}
-
-// Initialize Firebase
-firebase.initializeApp(firebaseConfig);
-
-// Initialize services
-const auth = firebase.auth();
-const db = firebase.firestore();
-
-// Enable offline persistence
-db.enablePersistence().catch((err) => {
-  if (err.code === "failed-precondition") {
-    // Multiple tabs open - offline persistence disabled
-  } else if (err.code === "unimplemented") {
-    // Offline persistence not available in this browser
+  if (!firebaseConfig.apiKey || !firebaseConfig.projectId) {
+    console.error("Firebase configuration is missing. Please set the required variables.");
   }
-});
+
+  // If firebase already initialized (e.g., page included it twice), reuse it
+  if (!window.firebaseApp) {
+    if (!window.firebase || (typeof firebase === 'undefined')) {
+      console.error('Firebase SDK not loaded. Ensure firebase-app and services are included before this file.');
+      return;
+    }
+
+    if (!firebase.apps || firebase.apps.length === 0) {
+      firebase.initializeApp(firebaseConfig);
+    }
+
+    const _auth = firebase.auth();
+    const _db = firebase.firestore();
+
+    _db.enablePersistence && _db.enablePersistence().catch((err) => {
+      // Ignore persistence errors
+    });
+
+    window.firebaseApp = {
+      auth: _auth,
+      db: _db,
+      CLOUDINARY_CONFIG: {
+        cloudName: window.CLOUDINARY_NAME || env.REACT_APP_CLOUDINARY_NAME || "",
+        uploadPreset: window.CLOUDINARY_PRESET || env.REACT_APP_CLOUDINARY_PRESET || "",
+        apiKey: window.CLOUDINARY_KEY || env.REACT_APP_CLOUDINARY_KEY || "",
+      },
+      showNotification: function (msg, t) {
+        // Minimal fallback notifier if other helpers not available
+        const type = t || 'info';
+        console.log('notify', type, msg);
+      },
+      formatPrice: function (a) { return '₦' + (a || 0).toLocaleString('en-NG'); },
+      formatDate: function (ts) { return ts && ts.toDate ? ts.toDate().toLocaleDateString() : 'N/A'; },
+      formatDateTime: function (ts) { return ts && ts.toDate ? ts.toDate().toLocaleString() : 'N/A'; },
+      showLoading: function () {},
+      showError: function () {},
+      showEmpty: function () {},
+    };
+  }
+})();
 
 /* ==========================================
    CLOUDINARY CONFIGURATION
