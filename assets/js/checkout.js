@@ -158,30 +158,147 @@ function initPaymentToggle() {
 function initFormSubmit() {
     const form = document.getElementById('checkoutForm');
     
+    function activateStep(step) {
+        // clear active/completed classes
+        document.querySelectorAll('.form-step').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.step').forEach(el => el.classList.remove('active', 'completed'));
+
+        // mark previous steps as completed
+        for (let i = 1; i < step; i++) {
+            const ind = document.querySelector(`.step[data-step="${i}"]`);
+            if (ind) ind.classList.add('completed');
+        }
+
+        const stepEl = document.getElementById(`step${step}`);
+        const stepInd = document.querySelector(`.step[data-step="${step}"]`);
+        if (stepEl) stepEl.classList.add('active');
+        if (stepInd) stepInd.classList.add('active');
+        currentStep = step;
+    }
+
+    function validateAllSteps() {
+        // Validate required inputs across all steps; if any missing, activate that step and return false
+        for (let s = 1; s <= 4; s++) {
+            const stepEl = document.getElementById(`step${s}`);
+            if (!stepEl) continue;
+            const inputs = stepEl.querySelectorAll('input[required], select[required]');
+            for (let input of inputs) {
+                if (!input.value || !String(input.value).trim()) {
+                    activateStep(s);
+                    // try to focus if possible
+                    try { input.focus(); } catch (e) {}
+                    window.auranovaFunctions?.showNotification('Please fill in all required fields', 'info');
+                    return false;
+                }
+            }
+        }
+        // All required fields present
+        // Save all steps data
+        for (let s = 1; s <= 4; s++) saveStepData(s);
+        return true;
+    }
+
     form.addEventListener('submit', function(e) {
         e.preventDefault();
-        
+
+        // run script validation instead of native
+        if (!validateAllSteps()) return;
+
         const termsAgree = document.getElementById('termsAgree');
-        if (!termsAgree.checked) {
+        if (!termsAgree || !termsAgree.checked) {
             window.auranovaFunctions?.showNotification('Please agree to terms and conditions', 'info');
+            activateStep(4);
             return;
         }
-        
+
         placeOrder();
     });
 }
 
 function placeOrder() {
     window.auranovaFunctions?.showNotification('Processing your order...', 'info');
-    
-    setTimeout(() => {
-        localStorage.removeItem('auranova_cart');
-        window.auranovaFunctions?.updateCartCount?.();
-        
-        window.auranovaFunctions?.showNotification('Order placed successfully!', 'success');
-        
+
+    // Prepare order payload
+    const order = {
+        user: null,
+        items: cart,
+        form: formData,
+        subtotal: cart.reduce((s, it) => s + ((it.price || 0) * (it.quantity || 1)), 0),
+        delivery: 0,
+        total: 0,
+        paymentMethod: formData.paymentMethod || 'unknown',
+        status: 'pending',
+        createdAt: null,
+    };
+
+    order.delivery = order.subtotal >= 50000 ? 0 : 2500;
+    order.total = order.subtotal + order.delivery;
+
+    // Attach user info if available
+    try {
+        const userStr = localStorage.getItem('auranova_user');
+        if (userStr) {
+            const usr = JSON.parse(userStr);
+            order.user = { uid: usr.uid || usr.id || null, email: usr.email || null, name: usr.displayName || null };
+        }
+    } catch (err) {
+        // ignore parse errors
+    }
+
+    // If Firestore is available via admin firebaseConfig (window.firebaseApp.db), persist order
+    const db = window.firebaseApp?.db || (window.firebase && window.firebase.firestore ? window.firebase.firestore() : null);
+
+    if (!db) {
+        // Backend not configured - fallback to simulated behavior
+        window.auranovaFunctions?.showNotification('Backend not configured. Order saved locally.', 'warning');
+
+        // Save a local copy for debugging
+        try {
+            const localOrders = JSON.parse(localStorage.getItem('auranova_orders') || '[]');
+            order.createdAt = new Date().toISOString();
+            localOrders.push(order);
+            localStorage.setItem('auranova_orders', JSON.stringify(localOrders));
+        } catch (err) {
+            // ignore
+        }
+
         setTimeout(() => {
-            window.location.href = '../index.html';
-        }, 2000);
-    }, 2000);
+            localStorage.removeItem('auranova_cart');
+            window.auranovaFunctions?.updateCartCount?.();
+            window.auranovaFunctions?.showNotification('Order placed (local).', 'success');
+            setTimeout(() => window.location.href = '../index.html', 1500);
+        }, 800);
+
+        return;
+    }
+
+    // Use Firestore (compat or instance) to add order
+    try {
+        const ordersCol = db.collection ? db.collection('orders') : db;
+
+        // Use server timestamp where supported
+        if (window.firebase && window.firebase.firestore && window.firebase.firestore.FieldValue) {
+            order.createdAt = window.firebase.firestore.FieldValue.serverTimestamp();
+        }
+
+        ordersCol.add ? ordersCol.add(order).then(() => {
+            // Success
+            localStorage.removeItem('auranova_cart');
+            window.auranovaFunctions?.updateCartCount?.();
+            window.auranovaFunctions?.showNotification('Order placed successfully!', 'success');
+            setTimeout(() => window.location.href = '../index.html', 1500);
+        }).catch(err => {
+            console.error('Error saving order:', err);
+            window.auranovaFunctions?.showNotification('Failed to save order. Try again later.', 'error');
+        }) : Promise.resolve().then(() => {
+            // If db is already a reference to collection.add function (unlikely), fallback
+            localStorage.removeItem('auranova_cart');
+            window.auranovaFunctions?.updateCartCount?.();
+            window.auranovaFunctions?.showNotification('Order placed (fallback).', 'success');
+            setTimeout(() => window.location.href = '../index.html', 1500);
+        });
+    } catch (err) {
+        console.error('Order persistence error:', err);
+        window.auranovaFunctions?.showNotification('An unexpected error occurred', 'error');
+    }
 }

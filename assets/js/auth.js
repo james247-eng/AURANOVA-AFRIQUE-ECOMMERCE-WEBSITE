@@ -1,4 +1,9 @@
-/* AUTH SYSTEM - FIREBASE READY */
+/* AUTH SYSTEM - FIREBASE BACKED
+   - Login/Register use Firebase Auth + Firestore
+   - Session stored briefly in localStorage as `auranova_user` for UI
+   - Role-based redirect: admin -> /admin, others -> /pages/my-account.html
+*/
+
 document.addEventListener("DOMContentLoaded", function () {
   initPasswordToggles();
   initLoginForm();
@@ -6,16 +11,14 @@ document.addEventListener("DOMContentLoaded", function () {
   initGoogleAuth();
 });
 
-/* PASSWORD VISIBILITY TOGGLE */
 function initPasswordToggles() {
   const toggleButtons = document.querySelectorAll(".toggle-password");
-
   toggleButtons.forEach((btn) => {
     btn.addEventListener("click", function () {
       const targetId = this.dataset.target;
       const input = document.getElementById(targetId);
       const icon = this.querySelector(".material-icons");
-
+      if (!input) return;
       if (input.type === "password") {
         input.type = "text";
         icon.textContent = "visibility_off";
@@ -27,35 +30,23 @@ function initPasswordToggles() {
   });
 }
 
-/* LOGIN FORM */
+/* LOGIN */
 function initLoginForm() {
   const form = document.getElementById("loginForm");
   if (!form) return;
 
   form.addEventListener("submit", async function (e) {
     e.preventDefault();
-
     const email = form.email.value.trim();
     const password = form.password.value;
-    const remember = form.remember?.checked || false;
-
     const submitBtn = form.querySelector(".btn-auth");
 
-    // Validate email format
     if (!window.InputValidator?.isValidEmail(email)) {
-      window.auranovaFunctions?.showNotification(
-        "Please enter a valid email address",
-        "error",
-      );
+      window.auranovaFunctions?.showNotification("Please enter a valid email address", "error");
       return;
     }
-
-    // Validate password not empty
     if (!password || password.length < 6) {
-      window.auranovaFunctions?.showNotification(
-        "Password must be at least 6 characters",
-        "error",
-      );
+      window.auranovaFunctions?.showNotification("Password must be at least 6 characters", "error");
       return;
     }
 
@@ -63,289 +54,138 @@ function initLoginForm() {
     submitBtn.textContent = "Logging in...";
 
     try {
-      // TODO: Firebase Auth
-      // const auth = firebase.auth();
-      // const userCredential = await auth.signInWithEmailAndPassword(email, password);
-      // const user = userCredential.user;
+      if (!window.firebaseApp?.auth || !window.firebaseApp?.db) throw new Error('Firebase not initialized');
+      const auth = window.firebaseApp.auth;
+      const db = window.firebaseApp.db;
 
-      // Simulate delay
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const cred = await auth.signInWithEmailAndPassword(email, password);
+      const user = cred.user;
+      const userDoc = await db.collection('users').doc(user.uid).get();
+      const userData = userDoc.exists ? userDoc.data() : { role: 'auranove_user' };
 
-      // Mock user data
-      const mockUser = {
-        uid: "mock_uid_123",
-        email: email,
-        displayName: "Test User",
+      const sessionUser = {
+        uid: user.uid,
+        email: user.email,
+        displayName: user.displayName || userData.firstName || 'User',
+        role: userData.role || 'auranove_user'
       };
 
-      // Store in localStorage
-      localStorage.setItem("auranova_user", JSON.stringify(mockUser));
+      localStorage.setItem('auranova_user', JSON.stringify(sessionUser));
 
-      window.auranovaFunctions?.showNotification(
-        "Login successful!",
-        "success",
-      );
+      window.auranovaFunctions?.showNotification('Login successful!', 'success');
 
       setTimeout(() => {
-        window.location.href = "../index.html";
-      }, 1000);
-    } catch (error) {
-      console.error("Login error:", error);
-      window.auranovaFunctions?.showNotification(
-        "Invalid email or password",
-        "info",
-      );
+        if (sessionUser.role === 'admin' || sessionUser.role === 'super_admin') {
+          window.location.href = '../admin/index.html';
+        } else {
+          window.location.href = 'my-account.html';
+        }
+      }, 700);
+    } catch (err) {
+      console.error('Login error:', err);
+      let errorMsg = 'Invalid email or password';
+      if (err.code === 'auth/user-not-found') errorMsg = 'No account found with this email';
+      if (err.code === 'auth/wrong-password') errorMsg = 'Incorrect password';
+      if (err.code === 'auth/invalid-email') errorMsg = 'Invalid email format';
+      window.auranovaFunctions?.showNotification(errorMsg, 'info');
     } finally {
       submitBtn.disabled = false;
-      submitBtn.textContent = "Login";
+      submitBtn.textContent = 'Login';
     }
   });
 }
 
-/* REGISTER FORM */
+/* REGISTER */
 function initRegisterForm() {
-  const form = document.getElementById("registerForm");
+  const form = document.getElementById('registerForm');
   if (!form) return;
 
-  form.addEventListener("submit", async function (e) {
+  form.addEventListener('submit', async function (e) {
     e.preventDefault();
 
-    const password = form.password.value;
-    const confirmPassword = form.confirmPassword.value;
-
-    // Validate inputs
     const firstName = form.firstName.value.trim();
     const lastName = form.lastName.value.trim();
     const email = form.email.value.trim();
     const phone = form.phone.value.trim();
+    const password = form.password.value;
+    const confirmPassword = form.confirmPassword.value;
 
-    if (!window.InputValidator?.isValidName(firstName)) {
-      window.auranovaFunctions?.showNotification(
-        "First name is invalid",
-        "error",
-      );
-      return;
-    }
+    if (!window.InputValidator?.isValidName(firstName)) return window.auranovaFunctions?.showNotification('First name is invalid','error');
+    if (!window.InputValidator?.isValidName(lastName)) return window.auranovaFunctions?.showNotification('Last name is invalid','error');
+    if (!window.InputValidator?.isValidEmail(email)) return window.auranovaFunctions?.showNotification('Email address is invalid','error');
+    if (!window.InputValidator?.isValidPhoneNigeria(phone)) return window.auranovaFunctions?.showNotification('Please enter a valid Nigerian phone number','error');
+    if (!window.InputValidator?.isValidPassword(password)) return window.auranovaFunctions?.showNotification('Password must have 8+ chars, uppercase, number, and special char','error');
+    if (password !== confirmPassword) return window.auranovaFunctions?.showNotification('Passwords do not match','error');
 
-    if (!window.InputValidator?.isValidName(lastName)) {
-      window.auranovaFunctions?.showNotification(
-        "Last name is invalid",
-        "error",
-      );
-      return;
-    }
-
-    if (!window.InputValidator?.isValidEmail(email)) {
-      window.auranovaFunctions?.showNotification(
-        "Email address is invalid",
-        "error",
-      );
-      return;
-    }
-
-    if (!window.InputValidator?.isValidPhoneNigeria(phone)) {
-      window.auranovaFunctions?.showNotification(
-        "Please enter a valid Nigerian phone number",
-        "error",
-      );
-      return;
-    }
-
-    if (!window.InputValidator?.isValidPassword(password)) {
-      window.auranovaFunctions?.showNotification(
-        "Password must have 8+ chars, uppercase, number, and special char",
-        "error",
-      );
-      return;
-    }
-
-    // Validate passwords match
-    if (password !== confirmPassword) {
-      window.auranovaFunctions?.showNotification(
-        "Passwords do not match",
-        "error",
-      );
-      return;
-    }
-
-    const userData = {
-      firstName: firstName,
-      lastName: lastName,
-      email: email,
-      phone: phone,
-      password: password,
-      createdAt: new Date().toISOString(),
-    };
-
-    const submitBtn = form.querySelector(".btn-auth");
+    const submitBtn = form.querySelector('.btn-auth');
     submitBtn.disabled = true;
-    submitBtn.textContent = "Creating Account...";
+    submitBtn.textContent = 'Creating Account...';
 
     try {
-      // TODO: Firebase Auth
-      // const auth = firebase.auth();
-      // const userCredential = await auth.createUserWithEmailAndPassword(userData.email, userData.password);
-      // const user = userCredential.user;
+      if (!window.firebaseApp?.auth || !window.firebaseApp?.db) throw new Error('Firebase not initialized');
+      const auth = window.firebaseApp.auth;
+      const db = window.firebaseApp.db;
 
-      // Update user profile
-      // await user.updateProfile({
-      //     displayName: `${userData.firstName} ${userData.lastName}`
-      // });
+      const cred = await auth.createUserWithEmailAndPassword(email, password);
+      const user = cred.user;
 
-      // Store additional user data in Firestore
-      // const db = firebase.firestore();
-      // await db.collection('users').doc(user.uid).set({
-      //     firstName: userData.firstName,
-      //     lastName: userData.lastName,
-      //     phone: userData.phone,
-      //     email: userData.email,
-      //     createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-      //     role: 'customer'
-      // });
+      await user.updateProfile({ displayName: `${firstName} ${lastName}` });
 
-      console.log("Registration data (ready for Firebase):", userData);
-      // User data prepared for Firebase
-      // Simulate delay
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await db.collection('users').doc(user.uid).set({
+        firstName,
+        lastName,
+        phone,
+        email,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+        role: 'auranove_user'
+      });
 
-      window.auranovaFunctions?.showNotification(
-        "Account created successfully!",
-        "success",
-      );
+      const sessionUser = { uid: user.uid, email: user.email, displayName: `${firstName} ${lastName}`, role: 'auranove_user' };
+      localStorage.setItem('auranova_user', JSON.stringify(sessionUser));
 
-      setTimeout(() => {
-        window.location.href = "login.html";
-      }, 1000);
-    } catch (error) {
-      console.error("Registration error:", error);
-      // Handle specific Firebase errors
-      let errorMessage = "Registration failed. Please try again.";
-
-      // TODO: Handle Firebase error codes
-      // if (error.code === 'auth/email-already-in-use') {
-      //     errorMessage = 'Email already in use';
-      // } else if (error.code === 'auth/weak-password') {
-      //     errorMessage = 'Password is too weak';
-      // }
-
-      window.auranovaFunctions?.showNotification(errorMessage, "info");
+      window.auranovaFunctions?.showNotification('Account created successfully!', 'success');
+      setTimeout(() => { window.location.href = 'my-account.html'; }, 700);
+    } catch (err) {
+      console.error('Registration error:', err);
+      let msg = 'Registration failed. Please try again.';
+      if (err.code === 'auth/email-already-in-use') msg = 'Email already in use';
+      if (err.code === 'auth/weak-password') msg = 'Password is too weak';
+      if (err.code === 'auth/invalid-email') msg = 'Invalid email format';
+      window.auranovaFunctions?.showNotification(msg, 'info');
     } finally {
       submitBtn.disabled = false;
-      submitBtn.textContent = "Create Account";
+      submitBtn.textContent = 'Create Account';
     }
   });
 }
 
-/* GOOGLE AUTH */
+/* GOOGLE AUTH placeholder */
 function initGoogleAuth() {
-  const googleLoginBtn = document.getElementById("googleLogin");
-  const googleRegisterBtn = document.getElementById("googleRegister");
-
-  if (googleLoginBtn) {
-    googleLoginBtn.addEventListener("click", handleGoogleAuth);
-  }
-
-  if (googleRegisterBtn) {
-    googleRegisterBtn.addEventListener("click", handleGoogleAuth);
-  }
+  const googleLoginBtn = document.getElementById('googleLogin');
+  const googleRegisterBtn = document.getElementById('googleRegister');
+  if (googleLoginBtn) googleLoginBtn.addEventListener('click', handleGoogleAuth);
+  if (googleRegisterBtn) googleRegisterBtn.addEventListener('click', handleGoogleAuth);
 }
-
 async function handleGoogleAuth() {
-  try {
-    // TODO: Firebase Google Auth
-    // const provider = new firebase.auth.GoogleAuthProvider();
-    // const result = await firebase.auth().signInWithPopup(provider);
-    // const user = result.user;
-
-    // Check if new user, store additional data in Firestore
-    // const db = firebase.firestore();
-    // const userDoc = await db.collection('users').doc(user.uid).get();
-
-    // if (!userDoc.exists) {
-    //     await db.collection('users').doc(user.uid).set({
-    //         email: user.email,
-    //         displayName: user.displayName,
-    //         photoURL: user.photoURL,
-    //         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-    //         role: 'customer'
-    //     });
-    // }
-
-    console.log("Google auth triggered");
-    window.auranovaFunctions?.showNotification(
-      "Google sign-in coming soon!",
-      "info",
-    );
-  } catch (error) {
-    console.error("Google auth error:", error);
-    window.auranovaFunctions?.showNotification("Google sign-in failed", "info");
-  }
+  window.auranovaFunctions?.showNotification('Google sign-in coming soon!', 'info');
 }
-/* CHECK AUTH STATE */
-function checkAuthState() {
-  // TODO: Firebase Auth State Observer
-  // firebase.auth().onAuthStateChanged((user) => {
-  //     if (user) {
-  //         console.log('User is signed in:', user);
-  //         // User is signed in
-  //     } else {
-  //         console.log('User is signed out');
-  //         // User is signed out
-  //     }
-  // });
 
-  // For now, check localStorage
-  const user = localStorage.getItem("auranova_user");
+/* Returns session user previously stored (synchronous helper) */
+function checkAuthState() {
+  const user = localStorage.getItem('auranova_user');
   return user ? JSON.parse(user) : null;
 }
 
-/* LOGOUT */
-function logout() {
-  // TODO: Firebase Auth
-  // firebase.auth().signOut();
-
-  localStorage.removeItem("auranova_user");
-  window.auranovaFunctions?.showNotification(
-    "Logged out successfully",
-    "success",
-  );
-  window.location.href = "login.html";
+/* Logout - Firebase signOut + clear session */
+async function logout() {
+  try {
+    if (window.firebaseApp?.auth) await window.firebaseApp.auth.signOut();
+  } catch (e) {
+    console.error('Firebase signOut failed', e);
+  }
+  localStorage.removeItem('auranova_user');
+  window.auranovaFunctions?.showNotification('Logged out successfully', 'success');
+  window.location.href = 'login.html';
 }
 
-/* 
-FIREBASE SETUP CHECKLIST:
-========================
-1. Create Firebase project
-2. Enable Authentication (Email/Password & Google)
-3. Create Firestore database
-4. Set up security rules
-5. Add Firebase config to project
-6. Initialize Firebase in HTML before this script
-7. Replace mock functions with real Firebase calls
-
-FIRESTORE STRUCTURE:
-====================
-/users/{userId}
-  - firstName
-  - lastName
-  - email
-  - phone
-  - photoURL
-  - createdAt
-  - role (customer/admin)
-  
-/orders/{orderId}
-  - userId
-  - items[]
-  - total
-  - status
-  - createdAt
-  
-/products/{productId}
-  - name
-  - category
-  - price
-  - images[]
-  - stock
-  - createdAt
-*/
+window.auranovaAuth = { checkAuthState, logout };

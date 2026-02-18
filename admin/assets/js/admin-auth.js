@@ -102,38 +102,27 @@ async function loginAdmin(email, password) {
     const originalText = loginBtn.innerHTML;
     loginBtn.innerHTML = '<span class="spinner"></span> Logging in...';
     loginBtn.disabled = true;
+    // Use Firebase Auth
+    if (!auth) throw new Error('Firebase auth not initialized');
+    const userCredential = await auth.signInWithEmailAndPassword(email, password);
+    const user = userCredential.user;
 
-    // TODO: Firebase Auth when backend is ready
-    // const userCredential = await auth.signInWithEmailAndPassword(email, password);
-    // const user = userCredential.user;
+    // Verify role in Firestore
+    const isAdmin = await checkAdminRole(user);
+    if (!isAdmin) {
+      // Not an admin: sign out and reject
+      await auth.signOut();
+      showNotification('Access denied. Admin privileges required.', 'error');
+      return false;
+    }
 
-    // For demo: Simple validation with mock data
-    console.log("Admin login attempt:", { email });
+    // Store minimal admin session for UI convenience
+    const adminUser = { uid: user.uid, email: user.email, displayName: user.displayName || email.split('@')[0], role: 'admin' };
+    localStorage.setItem('auranova_admin', JSON.stringify(adminUser));
+    localStorage.removeItem('auranova_user');
 
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 800));
-
-    // Mock admin user
-    const adminUser = {
-      uid: "admin_" + Date.now(),
-      email: email,
-      displayName: email.split("@")[0],
-      role: "admin",
-      loginTime: new Date().toISOString(),
-    };
-
-    // Store in localStorage for demo
-    localStorage.setItem("auranova_admin", JSON.stringify(adminUser));
-    // Remove customer user if logged in
-    localStorage.removeItem("auranova_user");
-
-    showNotification("Admin login successful! Redirecting...", "success");
-
-    // Redirect to dashboard
-    setTimeout(() => {
-      window.location.href = "index.html";
-    }, 1000);
-
+    showNotification('Admin login successful! Redirecting...', 'success');
+    setTimeout(() => { window.location.href = 'index.html'; }, 800);
     return true;
   } catch (error) {
     console.error("Login error:", error);
@@ -164,7 +153,7 @@ async function loginAdmin(email, password) {
     showNotification(errorMessage, "error");
 
     // Reset button
-    const loginBtn = document.getElementById("loginBtn");
+   // const loginBtn = document.getElementById("loginBtn");
     if (loginBtn) {
       loginBtn.innerHTML = "Login";
       loginBtn.disabled = false;

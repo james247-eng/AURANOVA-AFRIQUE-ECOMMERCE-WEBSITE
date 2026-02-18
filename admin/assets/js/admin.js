@@ -14,31 +14,34 @@ document.addEventListener('DOMContentLoaded', function() {
 
 /* CHECK ADMIN AUTHENTICATION */
 function checkAdminAuth() {
-    // TODO: Firebase Auth
-    // firebase.auth().onAuthStateChanged(async (user) => {
-    //     if (!user) {
-    //         window.location.href = 'login.html';
-    //         return;
-    //     }
-    //     const db = firebase.firestore();
-    //     const userDoc = await db.collection('users').doc(user.uid).get();
-    //     if (userDoc.data().role !== 'admin') {
-    //         alert('Unauthorized access');
-    //         await firebase.auth().signOut();
-    //         window.location.href = 'login.html';
-    //     }
-    //     adminUser = user;
-    //     document.getElementById('adminName').textContent = user.displayName || user.email;
-    // });
-    
-    // Mock check
-    const admin = localStorage.getItem('admin_user');
-    if (!admin) {
-        window.location.href = 'login.html';
+    // Use Firebase Auth state observer
+    if (window.firebaseApp?.auth && window.firebaseApp?.db) {
+        window.firebaseApp.auth.onAuthStateChanged(async (user) => {
+            if (!user) {
+                window.location.href = 'login.html';
+                return;
+            }
+            try {
+                const userDoc = await window.firebaseApp.db.collection('users').doc(user.uid).get();
+                const role = userDoc.exists ? userDoc.data().role : null;
+                if (role !== 'admin' && role !== 'super_admin') {
+                    await window.firebaseApp.auth.signOut();
+                    alert('Unauthorized access');
+                    window.location.href = 'login.html';
+                    return;
+                }
+                adminUser = user;
+                document.getElementById('adminName').textContent = user.displayName || user.email;
+            } catch (err) {
+                console.error('Error verifying admin role', err);
+                window.location.href = 'login.html';
+            }
+        });
         return;
     }
-    adminUser = JSON.parse(admin);
-    document.getElementById('adminName').textContent = adminUser.email;
+
+    // If firebase not available, redirect to login (no mock)
+    window.location.href = 'login.html';
 }
 
 /* SIDEBAR */

@@ -307,15 +307,15 @@ function initFormSubmit() {
 
       console.log("Product data ready:", productData);
 
-      // 4. TODO: Add to Firestore when backend is ready
-      // const db = firebase.firestore();
-      // const docRef = await db.collection("products").add(productData);
+      // 4. Add to Firestore
+      const { db } = window.firebaseApp;
+      const docRef = await db.collection("products").add(productData);
 
-      // For now, save to localStorage for demo
+      // Also save to localStorage as backup
       const products = JSON.parse(
         localStorage.getItem("auranova_products") || "[]",
       );
-      productData.id = Date.now().toString();
+      productData.id = docRef.id;
       products.push(productData);
       localStorage.setItem("auranova_products", JSON.stringify(products));
 

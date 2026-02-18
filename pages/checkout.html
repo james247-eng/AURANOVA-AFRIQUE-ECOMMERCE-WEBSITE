@@ -109,7 +109,7 @@
             <div class="checkout-layout">
                 <!-- CHECKOUT FORM -->
                 <div class="checkout-form">
-                    <form id="checkoutForm">
+                    <form id="checkoutForm" novalidate>
                         <!-- STEP 1: CONTACT INFO -->
                         <div class="form-step active" id="step1">
                             <h2 class="step-title">Contact Information</h2>
@@ -357,6 +357,12 @@
             </div>
         </div>
     </footer>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="../assets/js/firebaseConfig.js"></script>
 
     <script src="../assets/js/main.js"></script>
     <script src="../assets/js/checkout.js"></script>

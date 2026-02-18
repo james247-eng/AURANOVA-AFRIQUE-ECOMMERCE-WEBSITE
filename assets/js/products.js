@@ -276,18 +276,82 @@ function searchProducts(query) {
    GET PRODUCT BY ID
    ========================================== */
 function getProductById(id) {
-  return productsData.find((product) => product.id === parseInt(id));
+  // Handle both string and number IDs (Firestore uses strings)
+  return productsData.find((product) => product.id === id || product.id === parseInt(id));
 }
 
 /* ==========================================
-   LOAD LATEST PRODUCTS ON HOME PAGE
+   LOAD PRODUCTS FROM FIRESTORE
    ========================================== */
-document.addEventListener("DOMContentLoaded", function () {
+async function loadProductsFromFirestore() {
+  try {
+    if (!window.firebaseApp?.db) {
+      console.warn('Firebase not initialized, using sample data');
+      return null;
+    }
+
+    const snapshot = await window.firebaseApp.db.collection('products').get();
+    const products = [];
+    
+    snapshot.forEach(doc => {
+      products.push({
+        id: doc.id,
+        ...doc.data()
+      });
+    });
+    
+    console.log(`Loaded ${products.length} products from Firestore`);
+    return products;
+  } catch (error) {
+    console.error('Error loading products from Firestore:', error);
+    return null;
+  }
+}
+
+/* ==========================================
+   LOAD PRODUCTS FROM LOCALSTORAGE
+   ========================================== */
+function loadProductsFromLocalStorage() {
+  try {
+    const stored = localStorage.getItem('auranova_products');
+    if (stored) {
+      const products = JSON.parse(stored);
+      console.log(`Loaded ${products.length} products from localStorage`);
+      return products;
+    }
+  } catch (error) {
+    console.error('Error loading from localStorage:', error);
+  }
+  return null;
+}
+
+/* ==========================================
+   LATEST PRODUCTS ON HOME PAGE
+   ========================================== */
+document.addEventListener("DOMContentLoaded", async function () {
+  // Load products from Firestore, localStorage, or use sample data
+  let loadedProducts = await loadProductsFromFirestore();
+  
+  if (!loadedProducts) {
+    loadedProducts = loadProductsFromLocalStorage();
+  }
+  
+  if (loadedProducts) {
+    // Replace productsData with loaded data
+    window.auranovaProducts.productsData = loadedProducts;
+    Object.assign(productsData, loadedProducts);
+  }
+  
   const latestProductsContainer = document.getElementById("latestProducts");
 
   if (latestProductsContainer) {
-    // Get latest 8 products (those with 'new' badge)
-    const latestProducts = productsData.slice(0, 8);
+    // Get latest 8 products (those with 'new' badge or first 8)
+    const latestProducts = productsData
+      .filter(p => p.badges && p.badges.includes('new'))
+      .slice(0, 8)
+      .length > 0 
+      ? productsData.filter(p => p.badges && p.badges.includes('new')).slice(0, 8)
+      : productsData.slice(0, 8);
     displayProducts(latestProducts, "latestProducts");
   }
 
@@ -350,4 +414,6 @@ window.auranovaProducts = {
   searchProducts,
   getProductById,
   createProductCard,
+  loadProductsFromFirestore,
+  loadProductsFromLocalStorage,
 };

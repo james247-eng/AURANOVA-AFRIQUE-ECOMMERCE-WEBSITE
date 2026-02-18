@@ -134,11 +134,15 @@ function initCartControls() {
         clearBtn.addEventListener('click', clearCart);
     }
     
-    // Checkout
+    // Checkout - navigate to checkout page when cart has items
     const checkoutBtn = document.getElementById('checkoutBtn');
     if (checkoutBtn) {
         checkoutBtn.addEventListener('click', function() {
-            window.auranovaFunctions?.showNotification('Checkout coming soon!', 'info');
+            if ((cart && cart.length > 0) || (window.auranovaFunctions?.getCart?.() || []).length > 0) {
+                window.location.href = 'checkout.html';
+            } else {
+                window.auranovaFunctions?.showNotification('Your cart is empty', 'info');
+            }
         });
     }
     

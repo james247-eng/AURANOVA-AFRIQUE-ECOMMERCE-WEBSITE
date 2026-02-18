@@ -16,7 +16,26 @@ let currentView = 'grid';
 /* ==========================================
    INITIALIZE SHOP PAGE
    ========================================== */
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', async function() {
+    // Wait for products to be loaded if not available yet
+    let retries = 0;
+    while (!window.auranovaProducts?.productsData?.length && retries < 10) {
+        await new Promise(resolve => setTimeout(resolve, 100));
+        retries++;
+    }
+    
+    // If still no products, load directly
+    if (!window.auranovaProducts?.productsData?.length) {
+        if (window.auranovaProducts?.loadProductsFromFirestore) {
+            const products = await window.auranovaProducts.loadProductsFromFirestore();
+            if (products) window.auranovaProducts.productsData = products;
+        }
+        if (!window.auranovaProducts?.productsData?.length) {
+            const products = window.auranovaProducts?.loadProductsFromLocalStorage?.();
+            if (products) window.auranovaProducts.productsData = products;
+        }
+    }
+    
     loadShopProducts();
     initFilters();
     initSorting();
