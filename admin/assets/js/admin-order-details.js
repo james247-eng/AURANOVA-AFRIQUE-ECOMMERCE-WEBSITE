@@ -3,28 +3,22 @@
    View and manage single order
    ========================================== */
 
-// Remove the top-level destructuring entirely.
-// Then inside each function, reference it directly:
-async function loadOrders() {
-    const { db, showNotification } = window.firebaseApp;
-    // rest of function...
-}
 let currentOrder = null;
 let orderId = null;
 
 /* ==========================================
-   PAGE LOAD
+   PAGE LOAD - called by admin-auth-new.js after auth confirmed
    ========================================== */
-window.loadPageData = async function() {
+window.loadPageData = async function () {
     const urlParams = new URLSearchParams(window.location.search);
     orderId = urlParams.get('id');
-    
+
     if (!orderId) {
-        showNotification('No order ID provided', 'error');
+        window.firebaseApp.showNotification('No order ID provided', 'error');
         window.location.href = 'orders.html';
         return;
     }
-    
+
     await loadOrder();
     initUpdateStatusButton();
     initPrintButton();
@@ -34,27 +28,28 @@ window.loadPageData = async function() {
    LOAD ORDER FROM FIRESTORE
    ========================================== */
 async function loadOrder() {
+    const { db, showNotification } = window.firebaseApp;
     const loadingState = document.getElementById('loadingState');
     const contentDiv = document.getElementById('orderDetailsContent');
-    
-    loadingState.style.display = 'block';
-    contentDiv.style.display = 'none';
-    
+
+    if (loadingState) loadingState.style.display = 'block';
+    if (contentDiv) contentDiv.style.display = 'none';
+
     try {
         const doc = await db.collection('orders').doc(orderId).get();
-        
+
         if (!doc.exists) {
             showNotification('Order not found', 'error');
             window.location.href = 'orders.html';
             return;
         }
-        
+
         currentOrder = { id: doc.id, ...doc.data() };
         displayOrderDetails();
-        
-        loadingState.style.display = 'none';
-        contentDiv.style.display = 'block';
-        
+
+        if (loadingState) loadingState.style.display = 'none';
+        if (contentDiv) contentDiv.style.display = 'block';
+
     } catch (error) {
         console.error('Error loading order:', error);
         showNotification('Failed to load order', 'error');
@@ -71,31 +66,33 @@ function displayOrderDetails() {
     displayDeliveryAddress();
     displayPaymentInfo();
     displayOrderTimeline();
-    
-    // Set current status
-    document.getElementById('orderStatus').value = currentOrder.status || 'pending';
+
+    const statusSelect = document.getElementById('orderStatus');
+    if (statusSelect) statusSelect.value = currentOrder.status || 'pending';
 }
 
 /* ==========================================
    DISPLAY ORDER ITEMS
    ========================================== */
 function displayOrderItems() {
+    const { formatPrice } = window.firebaseApp;
     const container = document.getElementById('orderItemsList');
-    
+    if (!container) return;
+
     if (!currentOrder.items || currentOrder.items.length === 0) {
         container.innerHTML = '<p style="color: #999;">No items in this order</p>';
         return;
     }
-    
-    container.innerHTML = currentOrder.items.map(item => {
-        const imageUrl = item.image || item.images?.[0] || 'https://via.placeholder.com/80';
+
+    container.innerHTML = currentOrder.items.map(function (item) {
+        const imageUrl = item.image || (item.images && item.images[0]) || 'https://via.placeholder.com/80';
         const itemTotal = (item.price || 0) * (item.quantity || 1);
-        
+
         return `
             <div class="order-item">
-                <img src="${imageUrl}" alt="${item.name}">
+                <img src="${imageUrl}" alt="${item.name || 'Product'}">
                 <div class="order-item-details">
-                    <h4>${item.name}</h4>
+                    <h4>${item.name || 'Unnamed Product'}</h4>
                     <div class="order-item-meta">
                         <span><strong>Size:</strong> ${item.selectedSize || 'N/A'}</span>
                         <span><strong>Color:</strong> ${item.selectedColor || 'N/A'}</span>
@@ -113,22 +110,28 @@ function displayOrderItems() {
             </div>
         `;
     }).join('');
-    
-    // Display totals
-    document.getElementById('orderSubtotal').textContent = formatPrice(currentOrder.subtotal || 0);
-    document.getElementById('orderDelivery').textContent = currentOrder.delivery === 0 
-        ? 'FREE' 
+
+    const subtotalEl = document.getElementById('orderSubtotal');
+    const deliveryEl = document.getElementById('orderDelivery');
+    const totalEl = document.getElementById('orderTotal');
+
+    if (subtotalEl) subtotalEl.textContent = formatPrice(currentOrder.subtotal || 0);
+    if (deliveryEl) deliveryEl.textContent = currentOrder.delivery === 0
+        ? 'FREE'
         : formatPrice(currentOrder.delivery || 0);
-    document.getElementById('orderTotal').textContent = formatPrice(currentOrder.total || 0);
+    if (totalEl) totalEl.textContent = formatPrice(currentOrder.total || 0);
 }
 
 /* ==========================================
    DISPLAY CUSTOMER INFO
    ========================================== */
 function displayCustomerInfo() {
+    const { formatDateTime } = window.firebaseApp;
     const container = document.getElementById('customerInfo');
+    if (!container) return;
+
     const customer = currentOrder.customerInfo || {};
-    
+
     container.innerHTML = `
         <div class="info-row">
             <strong>Name:</strong>
@@ -158,8 +161,10 @@ function displayCustomerInfo() {
    ========================================== */
 function displayDeliveryAddress() {
     const container = document.getElementById('deliveryAddress');
+    if (!container) return;
+
     const address = currentOrder.deliveryAddress || {};
-    
+
     container.innerHTML = `
         <div class="info-row">
             <strong>Street:</strong>
@@ -190,18 +195,20 @@ function displayDeliveryAddress() {
    DISPLAY PAYMENT INFO
    ========================================== */
 function displayPaymentInfo() {
+    const { formatPrice } = window.firebaseApp;
     const container = document.getElementById('paymentInfo');
-    
+    if (!container) return;
+
     const paymentMethodMap = {
         'card': 'Credit/Debit Card',
         'transfer': 'Bank Transfer',
         'paystack': 'Paystack',
         'pod': 'Pay on Delivery'
     };
-    
+
     const paymentMethod = paymentMethodMap[currentOrder.paymentMethod] || currentOrder.paymentMethod || 'N/A';
     const paymentStatus = currentOrder.paymentStatus || 'pending';
-    
+
     container.innerHTML = `
         <div class="info-row">
             <strong>Payment Method:</strong>
@@ -222,40 +229,14 @@ function displayPaymentInfo() {
    DISPLAY ORDER TIMELINE
    ========================================== */
 function displayOrderTimeline() {
+    const { formatDateTime } = window.firebaseApp;
     const container = document.getElementById('orderTimeline');
-    
-    const timeline = [
-        {
-            status: 'pending',
-            label: 'Order Placed',
-            date: currentOrder.createdAt,
-            completed: true
-        },
-        {
-            status: 'processing',
-            label: 'Processing',
-            date: currentOrder.processingDate,
-            completed: ['processing', 'shipped', 'delivered'].includes(currentOrder.status)
-        },
-        {
-            status: 'shipped',
-            label: 'Shipped',
-            date: currentOrder.shippedDate,
-            completed: ['shipped', 'delivered'].includes(currentOrder.status)
-        },
-        {
-            status: 'delivered',
-            label: 'Delivered',
-            date: currentOrder.deliveredDate,
-            completed: currentOrder.status === 'delivered'
-        }
-    ];
-    
-    // Handle cancelled orders
+    if (!container) return;
+
     if (currentOrder.status === 'cancelled') {
         container.innerHTML = `
             <div class="timeline-item">
-                <div class="timeline-icon" style="background: #f44336;">
+                <div class="timeline-icon" style="background: #f44336; color: white;">
                     <span class="material-icons">cancel</span>
                 </div>
                 <div class="timeline-content">
@@ -266,11 +247,34 @@ function displayOrderTimeline() {
         `;
         return;
     }
-    
-    container.innerHTML = timeline.map(item => {
+
+    const timeline = [
+        {
+            label: 'Order Placed',
+            date: currentOrder.createdAt,
+            completed: true
+        },
+        {
+            label: 'Processing',
+            date: currentOrder.processingDate,
+            completed: ['processing', 'shipped', 'delivered'].includes(currentOrder.status)
+        },
+        {
+            label: 'Shipped',
+            date: currentOrder.shippedDate,
+            completed: ['shipped', 'delivered'].includes(currentOrder.status)
+        },
+        {
+            label: 'Delivered',
+            date: currentOrder.deliveredDate,
+            completed: currentOrder.status === 'delivered'
+        }
+    ];
+
+    container.innerHTML = timeline.map(function (item) {
         const iconClass = item.completed ? 'completed' : '';
         const icon = item.completed ? 'check_circle' : 'radio_button_unchecked';
-        
+
         return `
             <div class="timeline-item">
                 <div class="timeline-icon ${iconClass}">
@@ -291,27 +295,28 @@ function displayOrderTimeline() {
 function initUpdateStatusButton() {
     const updateBtn = document.getElementById('updateStatusBtn');
     const statusSelect = document.getElementById('orderStatus');
-    
-    updateBtn.addEventListener('click', async function() {
+    if (!updateBtn || !statusSelect) return;
+
+    updateBtn.addEventListener('click', async function () {
+        const { db, showNotification } = window.firebaseApp;
         const newStatus = statusSelect.value;
-        
+
         if (newStatus === currentOrder.status) {
             showNotification('Status is already set to ' + newStatus, 'info');
             return;
         }
-        
+
         const btn = this;
-        const originalText = btn.innerHTML;
+        const originalHTML = btn.innerHTML;
         btn.innerHTML = '<span class="spinner"></span> Updating...';
         btn.disabled = true;
-        
+
         try {
             const updateData = {
                 status: newStatus,
                 updatedAt: firebase.firestore.FieldValue.serverTimestamp()
             };
-            
-            // Add timestamp for specific statuses
+
             if (newStatus === 'processing' && !currentOrder.processingDate) {
                 updateData.processingDate = firebase.firestore.FieldValue.serverTimestamp();
             } else if (newStatus === 'shipped' && !currentOrder.shippedDate) {
@@ -321,27 +326,24 @@ function initUpdateStatusButton() {
             } else if (newStatus === 'cancelled' && !currentOrder.cancelledDate) {
                 updateData.cancelledDate = firebase.firestore.FieldValue.serverTimestamp();
             }
-            
+
             await db.collection('orders').doc(orderId).update(updateData);
-            
-            // Update local order
+
+            // Update local order object
             currentOrder.status = newStatus;
             Object.assign(currentOrder, updateData);
-            
-            showNotification(`Order status updated to ${newStatus}`, 'success');
-            
-            // Refresh display
+
+            showNotification('Order status updated to ' + newStatus, 'success');
+
+            // Refresh timeline to reflect new status
             displayOrderTimeline();
-            
-            // TODO: Send email notification to customer
-            // await sendOrderStatusEmail(orderId, newStatus);
-            
+
         } catch (error) {
             console.error('Error updating status:', error);
-            showNotification('Failed to update status', 'error');
+            window.firebaseApp.showNotification('Failed to update status', 'error');
         }
-        
-        btn.innerHTML = originalText;
+
+        btn.innerHTML = originalHTML;
         btn.disabled = false;
     });
 }
@@ -351,8 +353,9 @@ function initUpdateStatusButton() {
    ========================================== */
 function initPrintButton() {
     const printBtn = document.getElementById('printInvoiceBtn');
-    
-    printBtn.addEventListener('click', function() {
+    if (!printBtn) return;
+
+    printBtn.addEventListener('click', function () {
         window.print();
     });
 }
@@ -363,19 +366,19 @@ function initPrintButton() {
 const printStyles = document.createElement('style');
 printStyles.textContent = `
     @media print {
-        .sidebar, .top-bar, .back-link, .action-buttons, 
+        .sidebar, .top-bar, .back-link, .action-buttons,
         #updateStatusBtn, #printInvoiceBtn {
             display: none !important;
         }
-        
+
         .main-content {
             margin-left: 0 !important;
         }
-        
+
         .order-details-grid {
             display: block;
         }
-        
+
         .order-info-card {
             page-break-inside: avoid;
             box-shadow: none;

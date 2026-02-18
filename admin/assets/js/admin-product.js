@@ -1,356 +1,392 @@
 /* ==========================================
-   ADD PRODUCT - WITH CLOUDINARY UPLOAD
+   PRODUCTS PAGE - admin-product.js
+   Loads, filters, paginates and manages
+   products from Firestore.
    ========================================== */
 
-const { db, CLOUDINARY_CONFIG, showNotification } = window.firebaseApp;
-
-let uploadedImages = [];
-let selectedFiles = [];
+const ITEMS_PER_PAGE = 10;
+let allProducts = [];
+let filteredProducts = [];
+let currentPage = 1;
+let productToDelete = null;
+let selectedProducts = new Set();
 
 /* ==========================================
-   PAGE LOAD
+   LOAD PAGE DATA (called by admin-auth)
    ========================================== */
-document.addEventListener("DOMContentLoaded", function () {
-  initImageUpload();
-  initFormSubmit();
-});
-
-/* ==========================================
-   IMAGE UPLOAD INITIALIZATION
-   ========================================== */
-function initImageUpload() {
-  const uploadArea = document.getElementById("imageUploadArea");
-  const imageInput = document.getElementById("imageInput");
-  const previewGrid = document.getElementById("imagePreviewGrid");
-
-  // Click to upload
-  uploadArea.addEventListener("click", () => {
-    imageInput.click();
-  });
-
-  // Drag and drop
-  uploadArea.addEventListener("dragover", (e) => {
-    e.preventDefault();
-    uploadArea.style.borderColor = "var(--primary)";
-    uploadArea.style.background = "rgba(212, 175, 55, 0.05)";
-  });
-
-  uploadArea.addEventListener("dragleave", () => {
-    uploadArea.style.borderColor = "#e0e0e0";
-    uploadArea.style.background = "#f5f5f5";
-  });
-
-  uploadArea.addEventListener("drop", (e) => {
-    e.preventDefault();
-    uploadArea.style.borderColor = "#e0e0e0";
-    uploadArea.style.background = "#f5f5f5";
-
-    const files = Array.from(e.dataTransfer.files).filter((file) =>
-      file.type.startsWith("image/"),
-    );
-
-    if (files.length > 0) {
-      handleFileSelect(files);
-    }
-  });
-
-  // File input change
-  imageInput.addEventListener("change", (e) => {
-    const files = Array.from(e.target.files);
-    if (files.length > 0) {
-      handleFileSelect(files);
-    }
-  });
+function loadPageData() {
+  loadProducts();
+  initFilters();
+  initBulkActions();
+  initDeleteModal();
+  initExport();
+  initLogout();
 }
 
 /* ==========================================
-   HANDLE FILE SELECTION
+   LOAD PRODUCTS FROM FIRESTORE
    ========================================== */
-function handleFileSelect(files) {
-  // Check max files (5)
-  if (selectedFiles.length + files.length > 5) {
-    showNotification("Maximum 5 images allowed", "warning");
+async function loadProducts() {
+  const tbody = document.getElementById("productsTableBody");
+  if (!tbody) return;
+
+  tbody.innerHTML = `<tr><td colspan="8" class="no-data">Loading products...</td></tr>`;
+
+  try {
+    const { db } = window.firebaseApp;
+
+    const snapshot = await db
+      .collection("products")
+      .orderBy("createdAt", "desc")
+      .get();
+
+    allProducts = snapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+
+    console.log("Products loaded:", allProducts.length);
+
+    filteredProducts = [...allProducts];
+    renderProducts();
+  } catch (error) {
+    console.error("Error loading products:", error);
+    tbody.innerHTML = `<tr><td colspan="8" class="no-data">Failed to load products. Please refresh.</td></tr>`;
+  }
+}
+
+/* ==========================================
+   RENDER PRODUCTS TABLE
+   ========================================== */
+function renderProducts() {
+  const tbody = document.getElementById("productsTableBody");
+  if (!tbody) return;
+
+  const totalPages = Math.max(1, Math.ceil(filteredProducts.length / ITEMS_PER_PAGE));
+
+  // Clamp currentPage
+  if (currentPage > totalPages) currentPage = totalPages;
+
+  const start = (currentPage - 1) * ITEMS_PER_PAGE;
+  const end = start + ITEMS_PER_PAGE;
+  const pageProducts = filteredProducts.slice(start, end);
+
+  if (pageProducts.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="8" class="no-data">No products found.</td></tr>`;
+    updatePagination(totalPages);
     return;
   }
 
-  // Check file sizes
-  const maxSize = 5 * 1024 * 1024; // 5MB
-  for (const file of files) {
-    if (file.size > maxSize) {
-      showNotification(`${file.name} is too large. Max size is 5MB`, "error");
-      return;
-    }
-  }
+  tbody.innerHTML = pageProducts.map((product) => {
+    const price = window.firebaseApp.formatPrice(product.price);
+    const date = window.firebaseApp.formatDate(product.createdAt);
+    const statusClass = getStatusClass(product.status);
+    const imageUrl = product.image || product.images?.[0] || "";
+    const checked = selectedProducts.has(product.id) ? "checked" : "";
 
-  selectedFiles = [...selectedFiles, ...files];
-  displayImagePreviews();
-}
+    return `
+      <tr>
+        <td>
+          <input type="checkbox" class="row-checkbox" data-id="${product.id}" ${checked}>
+        </td>
+        <td>
+          <div class="product-cell">
+            ${imageUrl
+              ? `<img src="${imageUrl}" alt="${product.name}" class="product-thumb">`
+              : `<div class="product-thumb-placeholder"><span class="material-icons">image</span></div>`
+            }
+            <div class="product-info">
+              <span class="product-name">${product.name || "Unnamed"}</span>
+              ${product.sku ? `<span class="product-sku">SKU: ${product.sku}</span>` : ""}
+            </div>
+          </div>
+        </td>
+        <td>${product.category || "—"}</td>
+        <td>${price}</td>
+        <td>${product.stock ?? "—"}</td>
+        <td><span class="status-badge ${statusClass}">${product.status || "draft"}</span></td>
+        <td>${date}</td>
+        <td>
+          <div class="action-buttons">
+            <a href="edit-product.html?id=${product.id}" class="btn-icon" title="Edit">
+              <span class="material-icons">edit</span>
+            </a>
+            <button class="btn-icon btn-icon-danger" title="Delete" onclick="openDeleteModal('${product.id}')">
+              <span class="material-icons">delete</span>
+            </button>
+          </div>
+        </td>
+      </tr>
+    `;
+  }).join("");
 
-/* ==========================================
-   DISPLAY IMAGE PREVIEWS
-   ========================================== */
-function displayImagePreviews() {
-  const previewGrid = document.getElementById("imagePreviewGrid");
-
-  previewGrid.innerHTML = "";
-
-  selectedFiles.forEach((file, index) => {
-    const reader = new FileReader();
-
-    reader.onload = (e) => {
-      const previewDiv = document.createElement("div");
-      previewDiv.className = "image-preview-item";
-      previewDiv.innerHTML = `
-                <img src="${e.target.result}" alt="Preview ${index + 1}">
-                <button type="button" class="remove-image" data-index="${index}">
-                    <span class="material-icons">close</span>
-                </button>
-                ${index === 0 ? '<span class="primary-badge">Primary</span>' : ""}
-            `;
-
-      // Remove button
-      previewDiv
-        .querySelector(".remove-image")
-        .addEventListener("click", function () {
-          removeImage(this.dataset.index);
-        });
-
-      previewGrid.appendChild(previewDiv);
-    };
-
-    reader.readAsDataURL(file);
+  // Re-attach checkbox listeners
+  tbody.querySelectorAll(".row-checkbox").forEach((cb) => {
+    cb.addEventListener("change", handleRowCheckbox);
   });
 
-  // Show/hide upload area
-  const uploadArea = document.getElementById("imageUploadArea");
-  if (selectedFiles.length >= 5) {
-    uploadArea.style.display = "none";
-  } else {
-    uploadArea.style.display = "flex";
+  updatePagination(totalPages);
+  updateSelectAll();
+}
+
+/* ==========================================
+   STATUS BADGE CLASS
+   ========================================== */
+function getStatusClass(status) {
+  switch (status) {
+    case "published": return "status-published";
+    case "draft": return "status-draft";
+    case "out-of-stock": return "status-out-of-stock";
+    default: return "status-draft";
   }
 }
 
 /* ==========================================
-   REMOVE IMAGE
+   PAGINATION
    ========================================== */
-function removeImage(index) {
-  selectedFiles.splice(index, 1);
-  displayImagePreviews();
+function updatePagination(totalPages) {
+  const currentPageEl = document.getElementById("currentPage");
+  const totalPagesEl = document.getElementById("totalPages");
+  const prevBtn = document.getElementById("prevPage");
+  const nextBtn = document.getElementById("nextPage");
+
+  if (currentPageEl) currentPageEl.textContent = currentPage;
+  if (totalPagesEl) totalPagesEl.textContent = totalPages;
+  if (prevBtn) prevBtn.disabled = currentPage <= 1;
+  if (nextBtn) nextBtn.disabled = currentPage >= totalPages;
 }
 
-/* ==========================================
-   UPLOAD IMAGES TO CLOUDINARY
-   ========================================== */
-async function uploadImagesToCloudinary() {
-  if (selectedFiles.length === 0) {
-    showNotification("Please select at least one image", "error");
-    return null;
-  }
-
-  const uploadProgress = document.getElementById("uploadProgress");
-  const progressFill = document.getElementById("progressFill");
-  const progressText = document.getElementById("progressText");
-
-  uploadProgress.style.display = "block";
-  uploadedImages = [];
-
-  try {
-    for (let i = 0; i < selectedFiles.length; i++) {
-      const file = selectedFiles[i];
-
-      // Update progress
-      const progress = ((i + 1) / selectedFiles.length) * 100;
-      progressFill.style.width = `${progress}%`;
-      progressText.textContent = `Uploading image ${i + 1} of ${selectedFiles.length}...`;
-
-      // Create form data
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("upload_preset", CLOUDINARY_CONFIG.uploadPreset);
-      formData.append("folder", "auranova-products"); // Optional: organize in folders
-
-      // Upload to Cloudinary
-      const response = await fetch(
-        `https://api.cloudinary.com/v1_1/${CLOUDINARY_CONFIG.cloudName}/image/upload`,
-        {
-          method: "POST",
-          body: formData,
-        },
-      );
-
-      if (!response.ok) {
-        throw new Error(`Upload failed for ${file.name}`);
-      }
-
-      const data = await response.json();
-      uploadedImages.push(data.secure_url);
+document.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("prevPage")?.addEventListener("click", () => {
+    if (currentPage > 1) {
+      currentPage--;
+      renderProducts();
     }
+  });
 
-    progressText.textContent = "Upload complete!";
+  document.getElementById("nextPage")?.addEventListener("click", () => {
+    const totalPages = Math.ceil(filteredProducts.length / ITEMS_PER_PAGE);
+    if (currentPage < totalPages) {
+      currentPage++;
+      renderProducts();
+    }
+  });
+});
 
-    setTimeout(() => {
-      uploadProgress.style.display = "none";
-    }, 1000);
+/* ==========================================
+   FILTERS & SEARCH
+   ========================================== */
+function initFilters() {
+  const searchInput = document.getElementById("searchInput");
+  const categoryFilter = document.getElementById("categoryFilter");
+  const statusFilter = document.getElementById("statusFilter");
 
-    return uploadedImages;
-  } catch (error) {
-    uploadProgress.style.display = "none";
-    showNotification("Failed to upload images. Please try again.", "error");
-    return null;
+  function applyFilters() {
+    const search = (searchInput?.value || "").toLowerCase().trim();
+    const category = categoryFilter?.value || "";
+    const status = statusFilter?.value || "";
+
+    filteredProducts = allProducts.filter((p) => {
+      const matchSearch =
+        !search ||
+        (p.name && p.name.toLowerCase().includes(search)) ||
+        (p.sku && p.sku.toLowerCase().includes(search));
+
+      const matchCategory = !category || p.category === category;
+      const matchStatus = !status || p.status === status;
+
+      return matchSearch && matchCategory && matchStatus;
+    });
+
+    currentPage = 1;
+    renderProducts();
   }
+
+  searchInput?.addEventListener("input", applyFilters);
+  categoryFilter?.addEventListener("change", applyFilters);
+  statusFilter?.addEventListener("change", applyFilters);
 }
 
 /* ==========================================
-   FORM SUBMISSION
+   BULK ACTIONS
    ========================================== */
-function initFormSubmit() {
-  const form = document.getElementById("addProductForm");
+function initBulkActions() {
+  const selectAll = document.getElementById("selectAll");
+  const bulkActions = document.getElementById("bulkActions");
+  const selectedCount = document.getElementById("selectedCount");
+  const bulkDeleteBtn = document.getElementById("bulkDeleteBtn");
+  const bulkPublishBtn = document.getElementById("bulkPublishBtn");
 
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
+  selectAll?.addEventListener("change", (e) => {
+    const checkboxes = document.querySelectorAll(".row-checkbox");
+    checkboxes.forEach((cb) => {
+      cb.checked = e.target.checked;
+      const id = cb.dataset.id;
+      if (e.target.checked) {
+        selectedProducts.add(id);
+      } else {
+        selectedProducts.delete(id);
+      }
+    });
+    updateBulkUI();
+  });
 
-    const submitBtn = document.getElementById("submitBtn");
-    const originalText = submitBtn.innerHTML;
-    submitBtn.innerHTML = '<span class="spinner"></span> Adding Product...';
-    submitBtn.disabled = true;
+  bulkDeleteBtn?.addEventListener("click", async () => {
+    if (selectedProducts.size === 0) return;
+    if (!confirm(`Delete ${selectedProducts.size} selected products? This cannot be undone.`)) return;
 
     try {
-      // 1. Upload images first
-      const imageUrls = await uploadImagesToCloudinary();
+      const { db } = window.firebaseApp;
+      const batch = db.batch();
 
-      if (!imageUrls || imageUrls.length === 0) {
-        submitBtn.innerHTML = originalText;
-        submitBtn.disabled = false;
-        return;
-      }
+      selectedProducts.forEach((id) => {
+        batch.delete(db.collection("products").doc(id));
+      });
 
-      // 2. Collect form data
-      const formData = new FormData(form);
-
-      // Get selected sizes
-      const sizes = Array.from(
-        form.querySelectorAll('input[name="sizes"]:checked'),
-      ).map((cb) => cb.value);
-
-      // Get colors (comma-separated)
-      const colorsInput = formData.get("colors");
-      const colors = colorsInput
-        ? colorsInput
-            .split(",")
-            .map((c) => c.trim())
-            .filter((c) => c)
-        : [];
-
-      // Get badges
-      const badges = Array.from(
-        form.querySelectorAll('input[name="badges"]:checked'),
-      ).map((cb) => cb.value);
-
-      // 3. Create product object
-      const productData = {
-        name: formData.get("name"),
-        description: formData.get("description"),
-        category: formData.get("category"),
-        price: parseFloat(formData.get("price")),
-        stock: parseInt(formData.get("stock")),
-        sku: formData.get("sku") || null,
-        sizes: sizes,
-        colors: colors,
-        badges: badges,
-        images: imageUrls,
-        image: imageUrls[0], // Primary image for backwards compatibility
-        status: formData.get("status"),
-        inStock: form.querySelector('input[name="inStock"]').checked,
-        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-        updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-      };
-
-      // 4. Add to Firestore
-      const docRef = await db.collection("products").add(productData);
-
-      showNotification("Product added successfully!", "success");
-
-      // 5. Redirect to products page after delay
-      setTimeout(() => {
-        window.location.href = "products.html";
-      }, 1500);
+      await batch.commit();
+      selectedProducts.clear();
+      window.firebaseApp.showNotification("Products deleted successfully.", "success");
+      loadProducts();
     } catch (error) {
-      showNotification("Failed to add product. Please try again.", "error");
+      console.error("Bulk delete error:", error);
+      window.firebaseApp.showNotification("Failed to delete products.", "error");
+    }
+  });
 
-      submitBtn.innerHTML = originalText;
-      submitBtn.disabled = false;
+  bulkPublishBtn?.addEventListener("click", async () => {
+    if (selectedProducts.size === 0) return;
+
+    try {
+      const { db } = window.firebaseApp;
+      const batch = db.batch();
+
+      selectedProducts.forEach((id) => {
+        batch.update(db.collection("products").doc(id), { status: "published" });
+      });
+
+      await batch.commit();
+      selectedProducts.clear();
+      window.firebaseApp.showNotification("Products published successfully.", "success");
+      loadProducts();
+    } catch (error) {
+      console.error("Bulk publish error:", error);
+      window.firebaseApp.showNotification("Failed to publish products.", "error");
     }
   });
 }
 
-/* ==========================================
-   CSS FOR IMAGE PREVIEW
-   Add this to admin.css or inline
-   ========================================== */
+function handleRowCheckbox(e) {
+  const id = e.target.dataset.id;
+  if (e.target.checked) {
+    selectedProducts.add(id);
+  } else {
+    selectedProducts.delete(id);
+  }
+  updateBulkUI();
+  updateSelectAll();
+}
 
-// Add styles dynamically
-const style = document.createElement("style");
-style.textContent = `
-    .image-preview-item {
-        position: relative;
-        border-radius: 8px;
-        overflow: hidden;
-        border: 2px solid #e0e0e0;
+function updateBulkUI() {
+  const bulkActions = document.getElementById("bulkActions");
+  const selectedCount = document.getElementById("selectedCount");
+
+  if (selectedProducts.size > 0) {
+    if (bulkActions) bulkActions.style.display = "flex";
+    if (selectedCount) selectedCount.textContent = `${selectedProducts.size} item${selectedProducts.size > 1 ? "s" : ""} selected`;
+  } else {
+    if (bulkActions) bulkActions.style.display = "none";
+  }
+}
+
+function updateSelectAll() {
+  const selectAll = document.getElementById("selectAll");
+  const checkboxes = document.querySelectorAll(".row-checkbox");
+  if (!selectAll || checkboxes.length === 0) return;
+
+  const allChecked = [...checkboxes].every((cb) => cb.checked);
+  const someChecked = [...checkboxes].some((cb) => cb.checked);
+  selectAll.checked = allChecked;
+  selectAll.indeterminate = someChecked && !allChecked;
+}
+
+/* ==========================================
+   DELETE MODAL
+   ========================================== */
+function initDeleteModal() {
+  const modal = document.getElementById("deleteModal");
+  const cancelBtn = document.getElementById("cancelDelete");
+  const confirmBtn = document.getElementById("confirmDelete");
+
+  cancelBtn?.addEventListener("click", () => {
+    modal.style.display = "none";
+    productToDelete = null;
+  });
+
+  confirmBtn?.addEventListener("click", async () => {
+    if (!productToDelete) return;
+
+    try {
+      const { db } = window.firebaseApp;
+      await db.collection("products").doc(productToDelete).delete();
+      window.firebaseApp.showNotification("Product deleted.", "success");
+      modal.style.display = "none";
+      productToDelete = null;
+      loadProducts();
+    } catch (error) {
+      console.error("Delete error:", error);
+      window.firebaseApp.showNotification("Failed to delete product.", "error");
     }
-    
-    .image-preview-item img {
-        width: 100%;
-        height: 150px;
-        object-fit: cover;
+  });
+}
+
+function openDeleteModal(productId) {
+  productToDelete = productId;
+  const modal = document.getElementById("deleteModal");
+  if (modal) modal.style.display = "flex";
+}
+
+/* ==========================================
+   EXPORT
+   ========================================== */
+function initExport() {
+  document.getElementById("exportBtn")?.addEventListener("click", () => {
+    if (filteredProducts.length === 0) {
+      window.firebaseApp.showNotification("No products to export.", "warning");
+      return;
     }
-    
-    .remove-image {
-        position: absolute;
-        top: 0.5rem;
-        right: 0.5rem;
-        background: rgba(255, 0, 0, 0.8);
-        color: white;
-        border: none;
-        border-radius: 50%;
-        width: 30px;
-        height: 30px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        transition: all 0.3s;
+
+    const headers = ["ID", "Name", "Category", "Price", "Stock", "Status", "SKU"];
+    const rows = filteredProducts.map((p) => [
+      p.id,
+      p.name || "",
+      p.category || "",
+      p.price || 0,
+      p.stock || 0,
+      p.status || "",
+      p.sku || "",
+    ]);
+
+    const csvContent = [headers, ...rows]
+      .map((row) => row.map((cell) => `"${cell}"`).join(","))
+      .join("\n");
+
+    const blob = new Blob([csvContent], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `auranova-products-${Date.now()}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  });
+}
+
+/* ==========================================
+   LOGOUT
+   ========================================== */
+function initLogout() {
+  document.getElementById("logoutBtn")?.addEventListener("click", () => {
+    if (window.adminAuth?.logoutAdmin) {
+      window.adminAuth.logoutAdmin();
     }
-    
-    .remove-image:hover {
-        background: #ff0000;
-        transform: scale(1.1);
-    }
-    
-    .primary-badge {
-        position: absolute;
-        bottom: 0.5rem;
-        left: 0.5rem;
-        background: var(--primary);
-        color: #000;
-        padding: 0.25rem 0.5rem;
-        border-radius: 4px;
-        font-size: 0.75rem;
-        font-weight: 600;
-    }
-    
-    .spinner {
-        width: 16px;
-        height: 16px;
-        border: 2px solid #000;
-        border-top-color: transparent;
-        border-radius: 50%;
-        animation: spin 0.8s linear infinite;
-        display: inline-block;
-        margin-right: 0.5rem;
-    }
-    
-    @keyframes spin {
-        to { transform: rotate(360deg); }
-    }
-`;
-document.head.appendChild(style);
+  });
+}

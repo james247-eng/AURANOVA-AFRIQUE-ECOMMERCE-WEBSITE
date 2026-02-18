@@ -42,7 +42,7 @@ async function loadCustomersAndOrders() {
     try {
         // Run both queries in parallel
         const [usersSnapshot, ordersSnapshot] = await Promise.all([
-            db.collection('users').where('role', '==', 'customer').get(),
+           db.collection('users').get(),
             db.collection('orders').get()
         ]);
 
