@@ -511,7 +511,7 @@ ul, ol {
 
 .product-image {
     position: relative;
-    height: 400px;
+    height: 50%;
     overflow: hidden;
     background: var(--light-gray);
 }
@@ -984,7 +984,7 @@ ul, ol {
     }
     
     .product-image {
-        height: 200px;
+        height: 50%;
     }
     
     .product-info {
@@ -1052,8 +1052,10 @@ ul, ol {
         padding: 0.7rem 1.5rem;
         font-size: 0.75rem;
     }
-    
+    .product-card{
+        height: max-content;
+    }
     .product-image {
-        height: 180px;
+        height: 50%;
     }
 }
