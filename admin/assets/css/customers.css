@@ -138,6 +138,8 @@
 /* Table */
 .table-responsive {
     overflow-x: auto;
+    display: block;
+    width: 100%;
 }
 
 .data-table {
@@ -506,6 +508,8 @@
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
         border-radius: 8px;
+        display: block;
+        width: 100%;
     }
     
     .data-table {
