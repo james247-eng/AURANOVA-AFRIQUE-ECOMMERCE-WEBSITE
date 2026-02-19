@@ -233,8 +233,7 @@ function addProductEventListeners(card, product) {
 
   // Click on card to go to product details
   card.addEventListener("click", () => {
-    window.location.href = `product-details.html?id=${product.id}`;
-    // window.location.href = `pages/product-details.html?id=${product.id}`;
+    window.location.href = `pages/product-details.html?id=${product.id}`;
   });
 }
 
