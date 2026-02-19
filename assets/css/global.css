@@ -746,9 +746,34 @@ ul, ol {
 /* ==========================================
    RESPONSIVE DESIGN
    ========================================== */
+
+/* Laptops/Desktops (1024px and above) */
+@media (max-width: 1440px) {
+    .nav-container {
+        padding: 1.5rem 4%;
+    }
+    
+    .nav-menu {
+        gap: 2rem;
+    }
+}
+
+/* Tablets (1024px - 1199px) */
 @media (max-width: 1024px) {
+    .nav-container {
+        padding: 1.2rem 3%;
+    }
+    
     .nav-menu {
         gap: 1.5rem;
+    }
+    
+    .nav-link {
+        font-size: 0.9rem;
+    }
+    
+    .nav-actions {
+        gap: 1rem;
     }
     
     .section-title {
@@ -760,16 +785,29 @@ ul, ol {
     }
 }
 
+/* Large Tablets (768px - 1023px) */
 @media (max-width: 768px) {
+    .nav-container {
+        padding: 1rem 3%;
+    }
+    
+    .logo-main {
+        font-size: 1.5rem;
+    }
+    
+    .logo-sub {
+        font-size: 0.65rem;
+    }
+    
     .nav-menu {
         position: fixed;
-        top: 80px;
+        top: 70px;
         left: -100%;
         width: 100%;
-        height: calc(100vh - 80px);
+        height: calc(100vh - 70px);
         background: var(--white);
         flex-direction: column;
-        padding: 2rem;
+        padding: 1.5rem 3%;
         box-shadow: var(--shadow-md);
         transition: left var(--transition-normal);
         overflow-y: auto;
@@ -777,6 +815,15 @@ ul, ol {
     
     .nav-menu.active {
         left: 0;
+    }
+    
+    .nav-item {
+        position: relative;
+    }
+    
+    .nav-link {
+        font-size: 0.95rem;
+        padding: 0.8rem 0;
     }
     
     /* MOBILE DROPDOWN */
@@ -791,10 +838,17 @@ ul, ol {
         margin-left: 1rem;
         margin-top: 0.5rem;
         display: none;
+        background: var(--light-gray);
+        padding: 0.5rem 0;
     }
     
     .nav-item.dropdown.active .dropdown-menu {
         display: block;
+    }
+    
+    .dropdown-menu a {
+        padding: 0.6rem 1.5rem;
+        font-size: 0.85rem;
     }
     
     .hamburger {
@@ -802,7 +856,22 @@ ul, ol {
     }
     
     .nav-actions {
-        gap: 1rem;
+        gap: 0.8rem;
+    }
+    
+    .nav-icon-btn {
+        width: 35px;
+        height: 35px;
+    }
+    
+    .icon-badge {
+        width: 18px;
+        height: 18px;
+        font-size: 0.65rem;
+    }
+    
+    .section {
+        padding: 3rem 0;
     }
     
     .section-title {
@@ -813,23 +882,178 @@ ul, ol {
         grid-template-columns: 1fr;
         gap: 2rem;
     }
+    
+    .product-card {
+        cursor: pointer;
+    }
+    
+    .product-image {
+        height: 300px;
+    }
 }
 
+/* Mobile (480px - 767px) */
 @media (max-width: 480px) {
+    .nav-container {
+        padding: 0.8rem 2%;
+    }
+    
     .logo-main {
-        font-size: 1.5rem;
+        font-size: 1.3rem;
+        letter-spacing: 2px;
+    }
+    
+    .logo-sub {
+        font-size: 0.6rem;
+    }
+    
+    .nav-logo {
+        margin-right: auto;
+    }
+    
+    .nav-menu {
+        top: 60px;
+        height: calc(100vh - 60px);
+        padding: 1.2rem 2%;
+    }
+    
+    .nav-link {
+        font-size: 0.9rem;
+        font-weight: 600;
+    }
+    
+    .dropdown-icon {
+        font-size: 0.9rem;
+    }
+    
+    .dropdown-menu {
+        margin-left: 0.8rem;
+    }
+    
+    .dropdown-menu a {
+        padding: 0.5rem 1.2rem;
+        font-size: 0.8rem;
+    }
+    
+    .hamburger {
+        display: flex;
+        gap: 4px;
+        width: 28px;
+        height: 22px;
+    }
+    
+    .hamburger span {
+        width: 100%;
+        height: 2px;
+    }
+    
+    .nav-actions {
+        gap: 0.6rem;
+    }
+    
+    .nav-icon-btn {
+        width: 32px;
+        height: 32px;
+    }
+    
+    .nav-icon-btn .material-icons {
+        font-size: 1.3rem;
+    }
+    
+    .icon-badge {
+        width: 16px;
+        height: 16px;
+        font-size: 0.6rem;
     }
     
     .section {
-        padding: 3rem 0;
+        padding: 2rem 0;
     }
     
     .section-title {
-        font-size: 1.8rem;
+        font-size: 1.6rem;
     }
     
     .btn {
-        padding: 0.9rem 2rem;
+        padding: 0.8rem 1.8rem;
+        font-size: 0.8rem;
+    }
+    
+    .product-card {
+        border: 1px solid var(--border-gray);
+    }
+    
+    .product-image {
+        height: 200px;
+    }
+    
+    .product-info {
+        padding: 1rem;
+    }
+    
+    .product-name {
+        font-size: 1.1rem;
+    }
+    
+    .footer-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    
+    .footer-logo .logo-main {
+        font-size: 1.8rem;
+    }
+}
+
+/* Small Mobile (360px - 479px) */
+@media (max-width: 360px) {
+    .nav-container {
+        padding: 0.7rem 2%;
+    }
+    
+    .logo-main {
+        font-size: 1.2rem;
+    }
+    
+    .logo-sub {
+        font-size: 0.55rem;
+    }
+    
+    .nav-menu {
+        padding: 1rem 2%;
+    }
+    
+    .nav-link {
         font-size: 0.85rem;
+    }
+    
+    .hamburger {
+        width: 26px;
+    }
+    
+    .nav-actions {
+        gap: 0.4rem;
+    }
+    
+    .nav-icon-btn {
+        width: 30px;
+        height: 30px;
+    }
+    
+    .nav-icon-btn .material-icons {
+        font-size: 1.2rem;
+    }
+    
+    .section-title {
+        font-size: 1.4rem;
+    }
+    
+    .btn {
+        padding: 0.7rem 1.5rem;
+        font-size: 0.75rem;
+    }
+    
+    .product-image {
+        height: 180px;
     }
 }
