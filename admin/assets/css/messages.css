@@ -356,14 +356,16 @@
 }
 
 /* Responsive */
+
 @media (max-width: 1024px) {
     .messages-container {
         grid-template-columns: 1fr;
         height: auto;
+        gap: 1.2rem;
     }
     
     .messages-sidebar {
-        max-height: 400px;
+        max-height: 500px;
     }
     
     .message-details-panel {
@@ -374,17 +376,32 @@
 @media (max-width: 768px) {
     .page-header {
         flex-direction: column;
-        align-items: flex-start;
-        gap: 1rem;
+        align-items: stretch;
+        gap: 0.8rem;
+    }
+    
+    .page-title {
+        font-size: 1.3rem;
     }
     
     .header-actions {
         width: 100%;
         flex-direction: column;
+        gap: 0.6rem;
+    }
+    
+    .messages-sidebar {
+        max-height: 300px;
+    }
+    
+    .message-details-panel {
+        min-height: 300px;
+        padding: 1.2rem;
     }
     
     .message-tabs {
         flex-direction: column;
+        gap: 0.5rem;
     }
     
     .message-details-header {
@@ -394,6 +411,23 @@
     
     .message-details-actions {
         width: 100%;
-        justify-content: flex-end;
+        justify-content: flex-start;
+        flex-wrap: wrap;
+    }
+}
+
+@media (max-width: 480px) {
+    .messages-sidebar {
+        max-height: 250px;
+    }
+    
+    .page-title {
+        font-size: 1.2rem;
+    }
+}
+
+@media (max-width: 360px) {
+    .messages-container {
+        gap: 0.8rem;
     }
 }

@@ -243,45 +243,85 @@
 }
 
 /* Responsive */
+
 @media (max-width: 1024px) {
   .settings-layout {
     grid-template-columns: 1fr;
+    gap: 1.2rem;
   }
 
   .settings-sidebar {
     position: static;
     display: flex;
     overflow-x: auto;
-    padding: 0.5rem;
+    padding: 0.8rem 0;
+    margin-bottom: 1.5rem;
   }
 
   .settings-tab {
     white-space: nowrap;
     margin-bottom: 0;
-    margin-right: 0.5rem;
+    margin-right: 1rem;
   }
 }
 
 @media (max-width: 768px) {
+  .page-title {
+    font-size: 1.3rem;
+    margin-bottom: 1.5rem;
+  }
+  
   .form-row {
     grid-template-columns: 1fr;
+    gap: 1rem;
   }
 
   .form-card {
-    padding: 1.5rem;
+    padding: 1.2rem;
   }
 
   .settings-sidebar {
-    flex-direction: column;
+    flex-direction: row;
+    overflow-x: auto;
+    margin-bottom: 1.5rem;
+    -webkit-overflow-scrolling: touch;
   }
 
   .settings-tab {
-    margin-right: 0;
-    margin-bottom: 0.5rem;
+    margin-right: 0.8rem;
+    margin-bottom: 0;
+    padding: 0.5rem 0.8rem;
+    font-size: 0.85rem;
+  }
+
+  .form-actions {
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+  
+  .form-actions button {
+    width: 100%;
   }
 
   .profile-info {
     flex-direction: column;
     text-align: center;
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-title {
+    font-size: 1.2rem;
+  }
+  
+  .form-card {
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .settings-sidebar {
+    padding: 0.4rem 0;
   }
 }

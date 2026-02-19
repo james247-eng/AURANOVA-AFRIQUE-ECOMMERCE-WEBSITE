@@ -306,24 +306,35 @@
 }
 
 /* Responsive */
-@media (max-width: 768px) {
+
+/* Tablet (1024px and below) */
+@media (max-width: 1024px) {
+    .page-title {
+        font-size: 1.5rem;
+    }
+    
     .products-toolbar {
-        flex-direction: column;
-        align-items: stretch;
+        gap: 0.8rem;
     }
     
     .search-box {
         max-width: 100%;
+        min-width: 200px;
+        flex: 1;
     }
     
-    .toolbar-filters {
-        flex-direction: column;
+    .toolbar-filters select {
+        padding: 0.6rem 0.8rem;
+        font-size: 0.9rem;
     }
     
-    .page-header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 1rem;
+    .btn {
+        padding: 0.6rem 1.2rem;
+        font-size: 0.9rem;
+    }
+    
+    .page-header .btn {
+        width: 100%;
     }
     
     .data-table {
@@ -332,6 +343,252 @@
     
     .data-table th,
     .data-table td {
-        padding: 0.75rem 0.5rem;
+        padding: 0.8rem 0.6rem;
+    }
+}
+
+/* Mobile (480px - 767px) */
+@media (max-width: 768px) {
+    .page-header {
+        flex-direction: column;
+        align-items: stretch;
+        margin-bottom: 1.5rem;
+        gap: 1rem;
+    }
+    
+    .page-title {
+        font-size: 1.3rem;
+    }
+    
+    .products-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.8rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .search-box {
+        max-width: 100%;
+        min-width: unset;
+        padding: 0.7rem 0.8rem;
+    }
+    
+    .search-box .material-icons {
+        font-size: 1.2rem;
+    }
+    
+    .search-box input {
+        font-size: 0.9rem;
+    }
+    
+    .toolbar-filters {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.6rem;
+    }
+    
+    .toolbar-filters select {
+        padding: 0.6rem 0.8rem;
+        font-size: 0.85rem;
+        width: 100%;
+    }
+    
+    .btn {
+        padding: 0.6rem 1rem;
+        font-size: 0.85rem;
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .page-header .btn-primary {
+        width: 100%;
+    }
+    
+    .bulk-actions {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 1rem;
+    }
+    
+    .dashboard-card {
+        padding: 1.2rem;
+        border-radius: 8px;
+    }
+    
+    .table-responsive {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        border-radius: 8px;
+    }
+    
+    .data-table {
+        font-size: 0.8rem;
+        min-width: 550px;
+    }
+    
+    .data-table thead {
+        background: #f5f5f5;
+    }
+    
+    .data-table th {
+        padding: 0.7rem 0.5rem;
+        font-size: 0.75rem;
+        white-space: nowrap;
+    }
+    
+    .data-table td {
+        padding: 0.7rem 0.5rem;
+        font-size: 0.8rem;
+    }
+    
+    .data-table input[type="checkbox"] {
+        width: 16px;
+        height: 16px;
+    }
+    
+    .no-data {
+        padding: 2rem 1rem;
+        font-size: 0.9rem;
+    }
+    
+    .status-badge {
+        padding: 0.3rem 0.6rem;
+        font-size: 0.75rem;
+    }
+    
+    .btn-icon {
+        width: 32px;
+        height: 32px;
+    }
+    
+    .btn-icon .material-icons {
+        font-size: 1rem;
+    }
+    
+    .pagination {
+        gap: 0.5rem;
+        margin-top: 1.5rem;
+    }
+    
+    .pagination-btn {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.8rem;
+    }
+    
+    .pagination-info {
+        font-size: 0.8rem;
+    }
+    
+    .modal-content {
+        padding: 1.5rem;
+        width: 95%;
+    }
+    
+    .modal-content h3 {
+        font-size: 1.3rem;
+    }
+    
+    .modal-actions {
+        gap: 0.8rem;
+    }
+}
+
+/* Small Mobile (360px - 479px) */
+@media (max-width: 480px) {
+    .page-title {
+        font-size: 1.2rem;
+    }
+    
+    .products-toolbar {
+        gap: 0.6rem;
+    }
+    
+    .search-box {
+        padding: 0.6rem 0.7rem;
+    }
+    
+    .search-box input {
+        font-size: 0.85rem;
+    }
+    
+    .toolbar-filters select {
+        padding: 0.5rem 0.6rem;
+        font-size: 0.8rem;
+    }
+    
+    .btn {
+        padding: 0.5rem 0.8rem;
+        font-size: 0.8rem;
+    }
+    
+    .bulk-actions {
+        padding: 0.8rem;
+    }
+    
+    .bulk-actions span {
+        font-size: 0.9rem;
+    }
+    
+    .data-table {
+        min-width: 400px;
+        font-size: 0.75rem;
+    }
+    
+    .data-table th,
+    .data-table td {
+        padding: 0.5rem 0.4rem;
+    }
+    
+    .status-badge {
+        padding: 0.2rem 0.4rem;
+        font-size: 0.7rem;
+    }
+    
+    .btn-icon {
+        width: 28px;
+        height: 28px;
+    }
+    
+    .pagination-btn {
+        padding: 0.3rem 0.6rem;
+        font-size: 0.75rem;
+    }
+    
+    .modal-content {
+        padding: 1.2rem;
+    }
+    
+    .modal-content h3 {
+        font-size: 1.1rem;
+    }
+}
+
+/* Extra Small Mobile (< 360px) */
+@media (max-width: 360px) {
+    .page-header {
+        gap: 0.8rem;
+    }
+    
+    .page-title {
+        font-size: 1.1rem;
+    }
+    
+    .data-table {
+        min-width: 300px;
+        font-size: 0.7rem;
+    }
+    
+    .data-table th,
+    .data-table td {
+        padding: 0.4rem 0.3rem;
+    }
+    
+    .btn {
+        padding: 0.4rem 0.6rem;
+        font-size: 0.75rem;
+    }
+    
+    .modal-content {
+        width: 100%;
     }
 }
