@@ -9,6 +9,9 @@
     <link rel="stylesheet" href="assets/css/admin.css">
 </head>
 <body>
+    <!-- SIDEBAR OVERLAY (closes sidebar on tap/click) -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
     <!-- SIDEBAR -->
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
@@ -57,9 +60,11 @@
     <div class="main-content">
         <!-- TOP BAR -->
         <header class="top-bar">
-            <button class="menu-toggle" id="menuToggle">
-                <span class="material-icons">menu</span>
-            </button>
+            <div class="top-bar-left">
+                <button class="menu-toggle" id="menuToggle">
+                    <span class="material-icons">menu</span>
+                </button>
+            </div>
 
             <div class="top-bar-right">
                 <!-- Notifications -->

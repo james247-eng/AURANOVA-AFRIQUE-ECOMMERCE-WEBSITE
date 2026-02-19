@@ -54,7 +54,7 @@ function checkAdminAuth() {
 
             const adminNameEl = document.getElementById('adminName');
             if (adminNameEl) {
-                adminNameEl.textContent = user.displayName || user.email.split('@')[0];
+           //     adminNameEl.textContent = user.displayName || user.email.split('@')[0];
             }
 
             // Only load dashboard data if we are on the dashboard page
@@ -82,16 +82,31 @@ function checkAdminAuth() {
 function initSidebar() {
     const menuToggle = document.getElementById('menuToggle');
     const sidebar = document.getElementById('sidebar');
+    const sidebarOverlay = document.getElementById('sidebarOverlay');
 
     if (menuToggle && sidebar) {
         menuToggle.addEventListener('click', function () {
             sidebar.classList.toggle('active');
+            if (sidebarOverlay) {
+                sidebarOverlay.classList.toggle('active');
+            }
         });
 
         sidebar.querySelectorAll('.nav-item').forEach(function (item) {
             item.addEventListener('click', function () {
                 sidebar.classList.remove('active');
+                if (sidebarOverlay) {
+                    sidebarOverlay.classList.remove('active');
+                }
             });
+        });
+    }
+
+    // Close sidebar when overlay is clicked
+    if (sidebarOverlay) {
+        sidebarOverlay.addEventListener('click', function () {
+            sidebar.classList.remove('active');
+            sidebarOverlay.classList.remove('active');
         });
     }
 
