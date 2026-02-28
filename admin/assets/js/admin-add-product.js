@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", function () {
   initImageUpload();
   initFormSubmit();
 });
-
+ 
 /* ==========================================
    IMAGE UPLOAD INITIALIZATION
    ========================================== */
@@ -244,7 +244,7 @@ async function uploadImagesToCloudinary() {
 function initFormSubmit() {
   const form = document.getElementById("addProductForm");
   if (!form) return;
-
+  
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
     console.log("Add product form submitted");

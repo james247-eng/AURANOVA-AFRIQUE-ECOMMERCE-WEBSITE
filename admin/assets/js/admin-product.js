@@ -92,7 +92,7 @@ function renderProducts() {
         <td>
           <div class="product-cell">
             ${imageUrl
-              ? `<img src="${imageUrl}" alt="${product.name}" class="product-thumb">`
+              ? `<img width=40 src="${imageUrl}" alt="${product.name}" class="product-thumb">`
               : `<div class="product-thumb-placeholder"><span class="material-icons">image</span></div>`
             }
             <div class="product-info">

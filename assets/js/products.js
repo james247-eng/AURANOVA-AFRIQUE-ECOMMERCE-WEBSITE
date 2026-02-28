@@ -22,7 +22,7 @@ const productsData = [
     id: 1,
     name: "Royal Ebony Kaftan",
     category: "Premium Caftans",
-    price: 85000,
+    price: 45000,
     image:
       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSXbCVScbJ6S0uWnAsKYzyVh9koxu0nB0C13Q&s",
     badges: ["new", "limited"],
@@ -36,7 +36,7 @@ const productsData = [
     id: 2,
     name: "Executive Senator",
     category: "English Wears",
-    price: 120000,
+    price: 51000,
     image:
       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTA09VuwT4dZ3dm0ILYa_0oB4oW8tgG7j9ipQ&s",
     badges: ["new"],
@@ -49,7 +49,7 @@ const productsData = [
     id: 3,
     name: "Aso Oke Classic",
     category: "Traditional agbada & Yoruba Caps",
-    price: 45000,
+    price: 25000,
     image:
       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQWPAPU7UjvnG1Wpvhj63GTeS6REeCLJvDhqQ&s",
     badges: [],
@@ -63,7 +63,7 @@ const productsData = [
     id: 4,
     name: "Heritage Face Cap",
     category: "Face Caps",
-    price: 25000,
+    price: 20000,
     image:
       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3MHoTYQbgwsFvhYllB2P7aLOSeDjG6VB1ZQ&s",
     badges: [],
